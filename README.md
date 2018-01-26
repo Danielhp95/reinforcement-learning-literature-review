@@ -8,4 +8,4 @@ Literature review for 1st year PhD
 #### Link Q-learning to deep reinforcement learning with Deepqn.
 
 #### Learning environments (each with a citation).
-OpenAI Gym, pysc2, ple.
+OpenAI Gym, pysc2, arcade learning environment, PyGame learning environment.
