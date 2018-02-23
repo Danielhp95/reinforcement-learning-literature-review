@@ -1,0 +1,37 @@
+\documentclass{../main.tex}{subfiles}
+
+\begin{document}
+
+In order to comply with notation used in the field of direct optimization, we shall use $u$ for actions. Consider a stochastic control policy  $\pi$ parameterized by a parameter vector $\theta$, that is, a distribution over actions given a state, and this distribution is paramaterized by $\theta$. Typically, $\theta \in \mathbb{R}^{D}$, where $D$ is the number of parameters. This prameterized policy function will be denoted by $\pi_{\theta}$. The goal of an reinforcement learning agent is to maximize the sum of rewards, generally over a time horizon $H$. This poses the following optimization problem:
+
+\begin{equation}\label{equation:expected-reward-theta}
+\underset{\theta}{\text{max}} = \mathbb{E}[\sum^{H}_{t=0} R(s_t) | \pi_{\theta}]
+\end{equation}
+
+% TODO: how to extend this when gamma != 1.
+
+
+Reasons behind using policy gradient methods:
+\begin{enumerate}
+\item We are approaching RL in a more direct way. Instead of computing the value functions $V$ or $Q$ that tell us the value of a state and the quality of an action in a state respectively, and from those computing a policy function, we are calculating the policy function directly.
+\item using a stochastic policy is that it \"smoothes\" the optimization problem. With a deterministic policy, changing which action to do in a given state can have a dramatic effect on potential future rewards. If we assume a stochastic policy, shifting a distribution over actions slightly will only slightly modify the potential future rewards. This is what is commonly reffered as smooth.
+\item Often $\pi$ can be simpler than $V$ or $Q$.
+\item If we learn $Q$ in a large or continuous actions space, it can be tricky to compute $\underset{\text{u}}{argmax}Q_{\theta}(s,u)$
+\end{enumerate}
+ 
+It is important to know that policy gradient methods are on-policy. You need  to act with your current policy and improve it gradually over time. Whereas in Q-learning you can have your experience gathering policy to gather experience however you like and then learn a separate policy from those experiences. For instance, it is possible to have a more exploratory data collection policy, which can be benefitial at times.
+
+For an episode  of length $H$ let $\tau$ be the trajectory followed by an agent in an episode. This trajectory $\tau$ is a sequence of state-action tuples $\tau = (s_0, a_0, \dots, s_H, a_H)$. We overload the notation of the reward function $R$ thus: $R(\tau) = \sum_{t=0}^{H}R(s_t, u_t)$. From here, the utility of a policy parameterized by $\theta$ is defined as:
+
+\begin{equation}\label{equation:utility}
+U(\theta) = \mathbb{E}[\sum_{t=0}^{H}R(s_t, u_t) ; \pi_{\theta}] = \sum_{\tau}P(\tau ; \theta)R(\tau)
+\end{equation}
+
+Where $P(\tau ; \theta)$ denotes the probability of trajectory $\tau$ happening when taking actions sampled from a policy $\pi_{\theta}$. Going back to equation~\ref{equation:utility}, our optimization problem becomes:
+
+\begin{equation}\label{equation:utility-optimization}
+\underset{\theta}{\text{max}} U(\theta) = \underset{\theta}{\text{max}} \sum_{\tau}P(\tau ; \theta)R(\tau)
+\end{equation}
+
+
+\end{document}

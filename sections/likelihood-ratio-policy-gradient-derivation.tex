@@ -1,0 +1,80 @@
+\documentclass{../main.tex}{subfiles}
+\begin{document}
+
+\begin{equation}
+U(\theta) = \sum_{\tau}P(\tau ; \theta) R(\tau)
+\end{equation}
+
+Takin the gradient w.r.t $\theta$ gives:
+
+\begin{equation}
+\begin{split}
+\nabla_{\theta} U(\theta) & = \nabla_{\theta} \sum_{\tau}P(\tau ; \theta) R(\tau) \\
+& =  \sum_{\tau} \nabla_{\theta} P(\tau ; \theta) R(\tau)
+\end{split}
+\end{equation}
+
+Let's add the term $\frac{P(\tau; \theta)}{P(\tau ; \theta)}$ to the right hand side of the equation
+
+\begin{equation}\label{equation:approximate-gradient}
+\begin{split}
+& =  \sum_{\tau} \nabla_{\theta} \frac{P(\tau; \theta)}{P(\tau ; \theta)} P(\tau ; \theta) R(\tau) \\
+& =  \sum_{\tau} P(\tau; \theta) \frac{\nabla_{\theta} P(\tau ; \theta)}{P(\tau ; \theta)} R(\tau) \\
+& =  \sum_{\tau} P(\tau; \theta) \nabla_{\theta} \log P(\tau ; \theta) R(\tau) \\
+\nabla_{\theta} U(\theta) & = \mathbb{E} [\nabla_{\theta} \log P(\tau ; \theta) R(\tau)] \\
+\end{split}
+\end{equation}
+
+This leaves us with an expectation for the term $\nabla_{\theta} \log P(\tau ; \theta) R(\tau)$. We can compute an empirical approximation of that expresion by taking $m$ sample trajectories (or paths) under the policy $\pi_{\theta}$. Note that as of now we have not discussed how to calculate $P(\tau ; \theta)$. Thus we use a Monte Carlo approach to approximate the gradient of the utility of $\pi_{\theta}$:
+
+\begin{equation}\label{equation:approximate-gradient-vanilla}
+\nabla_{\theta}U(\theta) \approx \hat{g} = \frac{1}{m} \sum_{i = 0}^{m} \nabla_{\theta} \log P(\tau^{(i)} ; \theta) R(\tau^{(i)})
+\end{equation}
+
+This works even if the reward function $R$ is unkown and/or discontinuous. This works in discrete state spaces. The likelihood ratio changes the probability of experienced paths. That is, the probability of sampling trajectories.
+
+Let's define the probability of a trajectory under a policy $\pi_{\theta}$ as: 
+
+\begin{equation}
+$P (\tau; \theta) = \Pi_{t=0}^{H} \underbrace{P (s_{t+1} | s_t, u_t)}_\textrm{dynamics models} \underbrace{\pi_{\theta} (u_t | s_t)}_\textrm{policy}$
+\end{equation}
+
+From here we can calculate the term $\nabla_{\theta} \log P(\tau ; \theta)$ present in equation~\ref{equation:approximate-gradient}
+
+\begin{equation}
+\begin{split}
+\nabla_{\theta} \log P(\tau ; \theta) & = \nabla_{\theta} \log [\Pi_{t=0}^{H} P(s_{t+1} | s_t, u_t) \pi_{\theta}(u_t | s_t)] \\
+ & = \nabla_{\theta} [(\sum_{t=0}^{H} \log P(s_{t+1} | s_t, u_t)) + (\sum_{t=0}^{H} \log \pi_{\theta}(u_t | s_t))] \\ 
+ & = \sum_{t=0}^{H} \underbrace{\nabla_{\theta} \log \pi_{\theta}(u_t | s_t)}_\textrm{no dynamics required!}
+\end{split}
+\end{equation}
+
+Which, if we plug into the original equation, we get:
+
+\begin{equation}
+\nabla_{\theta}U(\theta) \approx \hat{g} = \frac{1}{m} \sum_{i = 0}^{m} \sum_{t=0}^{H-1} \nabla_{\theta} \log \pi_{\theta}(u_t^{(i)} | s_t^{(i)}) (\sum_{k=0}^{H}R(s_t^{(i)}, u_t^{(i)}))
+\end{equation}
+
+This is an unbiased estimate and it works in theory. However it requries an impractical amount of samples, otherwise the approximation is very noisy. In order to overcome this limitation we can do the following tricks:
+\begin{itemize}
+\item Add a baseline
+\item Add temporal structure
+\item Use trust region and natural gradient.
+\end{itemize}
+
+\subsection{Add a baseline}
+Substract a baseline from the equation~\ref{equation:approximate-gradient-vanillla} to reduce variance without introducing varience (cite Williams 1992):
+
+\begin{equation}\label{equation:approximate-gradient-vanilla}
+\nabla_{\theta}U(\theta) \approx \hat{g} = \frac{1}{m} \sum_{i = 0}^{m} \sum_{t=0}^{H-1} \nabla_{\theta} \log \pi_{\theta}(u_t^{(i)} | s_t^{(i)}) (\sum_{k=0}^{H}R(s_t^{(i)}, u_t^{(i)}) - b)
+\end{equation}
+
+The problem with this equation is that each action $u_i$ is being scaled by the whole sum of rewards $R(\tau)$. This means that, for instance, the last action in a trajectory is taking into account rewards that happened much earlier in the episode. A way to compensate for this is to scale the value of an action $u_i$ (clarify what is meant by this) only by rewards that depend on $u_i$. So the equation becomes:
+
+\begin{equation}
+\nabla_{\theta}U(\theta) \approx \hat{g} = \frac{1}{m} \sum_{i = 0}^{m} \sum_{t=0}^{H-1} \nabla_{\theta} \log \pi_{\theta}(u_t^{(i)} | s_t^{(i)}) (\sum_{k=t}^{H}R(s_t^{(i)}, u_t^{(i)}))
+\end{equation}
+
+There are other proposed variance reduction techniques via tweaking the baseline which some researchers have studied (cite Greensmith)
+
+\end{document}
