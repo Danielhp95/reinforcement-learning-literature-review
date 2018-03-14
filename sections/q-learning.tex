@@ -1,6 +1,13 @@
 \documentclass{../main.tex}{subfiles}
 \begin{document}
-Q-learning goodies.
+The Q-learning algorithm was first introduced by Watkins
+\cite{Watkins1992}
 
-References for overestimation of q-learning updates read page 19 onwards: https://project-archive.inf.ed.ac.uk/msc/20162091/msc_proj.pdf
+
+Q-learning goodies. THE Q-learning paper: http://www.gatsby.ucl.ac.uk/~dayan/papers/cjch.pdf
+
+
+References for overestimation of q-learning updates read page 19 onwards: https://project-archive.inf.ed.ac.uk/msc/20162091/msc_proj.pdf (paper Thrun and Schwartz (1993) an analysis was presented that uncovered issues in the way Q-Learning estimates the action-value)
+Overestimation happens mainly due to the joint effort of function approximation methods and the max operator, which always picks the highest value and makes it succeptible to overestimation. Repeated Update Q-Learning (RUQL) (Abdallah and Kaisers, 2013, 2016) is an algo-
+rithm based on Q-Learning and designed with the intention of addressing its overestimation issues. RUQL proposes that an action value must be updated inversely proportional to the probability of the action selected given the policy that is being followed
 \end{document}

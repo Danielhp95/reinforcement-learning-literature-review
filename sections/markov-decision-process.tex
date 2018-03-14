@@ -1,0 +1,15 @@
+\documentclass{../main.tex}{subfiles}
+\begin{document}
+
+A Markov Decision Process (MDP) is fully defined by the tuple $< S, A, P, R, \gamma>$. Whereby $S$ is the set of states $s \in S$ spawned by the Markov chain used in the MDP, $A$ is the set of actions $a \in A$ that can be taken in the MDP. $P$ is a transition kernel which maps a state-action pair to a future state, $P: S x A \Rightarrow S$. If the environment is stochastic, as opposed to deterministic, the function $P$ maps a state-action pair to a distribution over states in $S$. $R$ is a reward function, mapping a state-action pair to an scalar, typically in the range $[-1,1]$. $R: S x A \Rightarrow \mathbb{R}$, a reward $r_t$ represents the immediate reward of taking action $a_t$ in state $s_t$. Finally, $\gamma$ is the \textit{discount factor} is used to reduce the importance of future rewards, giving more importance to rewards closer to the current timestep (pls rephrase).
+
+From here we can introduce the notion of an agent. (link to control theory?), An agent is an entity that on every state $s_t \in S$ it can take an action $a_t \in A$ in an environment transforming the environment from $s_t$ to $s_{t+1}$. The beheviour of an agent is fully defined by a policy $\pi$. A policy $\pi$ is a mapping from states to actions, $\pi: S \Rightarrow A$. The agent chooses which action $a_t$ to take in every state $s_t$ by querying its policy such that $a_t = \pi(s_t)$. If the policy is stochastic, $\pi$ will map an action to a distribution over action $a_t \sim \pi(s_t)$. The objective for an agent is to find an \textit{optimal}
+
+%Talk about. 
+    % Value function.
+    % Quality value function.
+    % Recursive Bellman's equation for both Value functions and Q value functions.
+
+Note that in general it is not the case that all actions $a \in A$ can be taken on every state $s_t \in S$.
+
+\end{document}

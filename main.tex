@@ -2,8 +2,12 @@
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 \usepackage{graphicx}
+\usepackage{amssymb} % For maths symbols like real number R.
 %\usepackage{amsmath}
 \usepackage{mathtools}
+
+\usepackage[round]{natbib}
+
 \graphicspath{{images/}{../images/}}
 
 \usepackage{subfiles}
@@ -22,11 +26,17 @@
 
 % \subfile{sections/abstract}
 % 
-% \section{Introduction}
-% \subfile{sections/introduction}
-%
-% \section{Q-learning}
-% \subfile{sections/q-learning}
+\section{Introduction}
+\subfile{sections/introduction}
+
+    \subsection{Markov Decision Processes}
+    \subfile{sections/markov-decision-process}
+    
+    % \subsection{Value Iteration algorithm}
+    % \subfile{value-iteration}
+    %
+    % \subsection{Q-learning}
+    % \subfile{sections/q-learning}
 % 
 % \section{Policy gradient methods}
 % \subfile{sections/policy-gradient-methods}
@@ -34,14 +44,19 @@
 % \section{Multi-agent reinforcement learning}
 % \subfile{sections/multiagent}
 
-\section{Appendix}
-\subfile{sections/likelihood-ratio-policy-gradient-derivation}
+%\section{Appendix}
+%\subfile{sections/likelihood-ratio-policy-gradient-derivation}
 
 %List of TODOS
 %Define Exploration vs exploitation: The first is finding parts of the state space you haven't been and learning about them
 %\begin{itemize}
 %\item 
 %\end{itemize}
+
+% This was introduced by  \cite{Watkins1992}. This algorithm is very good \citep{Watkins1992}.
+
+\bibliographystyle{apalike}
+\bibliography{main}
 
 \end{document}
 
