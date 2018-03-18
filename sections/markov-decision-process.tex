@@ -1,15 +1,52 @@
 \documentclass{../main.tex}{subfiles}
 \begin{document}
 
-A Markov Decision Process (MDP) is fully defined by the tuple $< S, A, P, R, \gamma>$. Whereby $S$ is the set of states $s \in S$ spawned by the Markov chain used in the MDP, $A$ is the set of actions $a \in A$ that can be taken in the MDP. $P$ is a transition kernel which maps a state-action pair to a future state, $P: S x A \Rightarrow S$. If the environment is stochastic, as opposed to deterministic, the function $P$ maps a state-action pair to a distribution over states in $S$. $R$ is a reward function, mapping a state-action pair to an scalar, typically in the range $[-1,1]$. $R: S x A \Rightarrow \mathbb{R}$, a reward $r_t$ represents the immediate reward of taking action $a_t$ in state $s_t$. Finally, $\gamma$ is the \textit{discount factor} is used to reduce the importance of future rewards, giving more importance to rewards closer to the current timestep (pls rephrase).
+\cite{Bellman1957} introduced the concept of a Markov Decision Process (MDP) as an extension of the famous idea of Markov chains. Markov decision processes are a standard model for sequential decision making and control problems. An MDP is fully defined by the 5-tuple $(\mathcal{S}, \mathcal{A}, \mathcal{P(\cdot | \cdot, \cdot)}, \mathcal{R(\cdot, \cdot)}, \gamma)$. Whereby:
 
-From here we can introduce the notion of an agent. (link to control theory?), An agent is an entity that on every state $s_t \in S$ it can take an action $a_t \in A$ in an environment transforming the environment from $s_t$ to $s_{t+1}$. The beheviour of an agent is fully defined by a policy $\pi$. A policy $\pi$ is a mapping from states to actions, $\pi: S \Rightarrow A$. The agent chooses which action $a_t$ to take in every state $s_t$ by querying its policy such that $a_t = \pi(s_t)$. If the policy is stochastic, $\pi$ will map an action to a distribution over action $a_t \sim \pi(s_t)$. The objective for an agent is to find an \textit{optimal}
+\begin{itemize}
+\item $\mathcal{S}$ is the set of states $s \in \mathcal{S}$.
+\item $\mathcal{A}$ is the set of actions $a \in \mathcal{A}$.
+\item $\mathcal{P}(s' | s, a)$ where $s, s' \in \mathcal{S}$, $a \in \mathcal{A}$ is a transition kernel which states the probability of transitioning to state $s'$ from state $s$ after performig action $a$. $\mathcal{P}: \mathcal{S} \times \mathcal{A} \to \mathcal{S}$. If the environment is stochastic, as opposed to deterministic, the function $\mathcal{P}$ maps a state-action pair to a distribution over states in $\mathcal{S}$. 
+\item $\mathcal{R}(s, a)$ where $s \in \mathcal{S}$, $a \in \mathcal{A}$; is the reward function, which returns the immediate reward (typically in the range $[-1,1]$) of performing action $a$ in state $s$. $\mathcal{R}: \mathcal{S} \times \mathcal{A} \to \mathbb{\mathcal{R}}$. The reward at time step $t$ can be interchangably written as $r_t$ or $r(s_t, a_t)$.
+\item $\gamma \in [0,1]$ is the discount factor, which represent the difference in importance between the current reward and future rewards. This is often used as a variance reduction method,  and aids proofs in infinitely running environments. (links?)
+\end{itemize}
 
-%Talk about. 
-    % Value function.
-    % Quality value function.
-    % Recursive Bellman's equation for both Value functions and Q value functions.
+From here we can introduce the notion of an agent. (link to control theory?), An agent is an entity that on every state $s_t \in \mathcal{S}$ it can take an action $a_t \in \mathcal{A}$ in an environment transforming the environment from $s_t$ to $s_{t+1}$. The beheviour of an agent is fully defined by a policy $\pi$. A policy $\pi$ is a mapping from states to actions, $\pi: \mathcal{S} \to \mathcal{A}$. The agent chooses which action $a_t$ to take in every state $s_t$ by querying its policy such that $a_t = \pi(s_t)$. If the policy is stochastic, $\pi$ will map an action to a distribution over action $a_t \sim \pi(s_t)$. The objective for an agent is to find an \textit{optimal} policy, which tries to maximize the cumulative sum of possibly discounted rewards.
 
-Note that in general it is not the case that all actions $a \in A$ can be taken on every state $s_t \in S$.
+There are two functions of special relevance in reinforcement learning, the \textit{state value} function $V^{\pi}(s)$ and the \textit{action value} function $Q^{\pi}(s, a)$:
+\begin{itemize}
+\item The state value function $V^{\pi}(s)$ under a policy $\pi$, where $s \in \mathcal{S}$, represents the expected sum of rewards obtained by starting in state $s$ and following the policy $\pi$ until termination. Formally defined as $V^{\pi}(s) = \mathbb{E}^{\pi}[\sum^{\infty}_{t=0} r(s_t, a_t) | s_0 = s] $
+\item The state-action value function $Q^{\pi}(s, a)$ under a policy $\pi$, where $s \in \mathcal{S}$, $a \in \mathcal{A}$, represents the expected sum of rewards obtained by performing action $a$ in state $s$ and then following policy $\pi$. Formally defined as: $Q^{\pi}(s, a) = \mathbb{E}^{\pi}[r(s_0, a_0) + \sum^{\infty}_{t=1} r(s_t, a_t) | s_0 = s, a_0 = a]$
+\end{itemize}
+
+The Bellman equations are the most straight forward, dynamic programming approach at solving MDPs \citep{Bertsekas2007, Bellman1957}.
+
+\subsection{Bellman equations and optimality principle}
+
+Note that in general it is not the case that all actions $a \in \mathcal{A}$ can be taken on every state $s_t \in \mathcal{S}$.
+
+The optimality principle, found in~\cite{Bellman1957}, states the following: An optimal policy has the property that whatever the initial state and initial decision are, the remaining decisions must constitute an optimal policy with regard to the state resulting from the first decision. The optimality principle, coupled with the proof of the existance of a deterministic optimal policy for any MDP as outlined in \citep{Borkar1988} give rise to the optimal state value function $V^{*}(s) = \operatorname*{argmax}_{\pi} V^{\pi}(s) = V^{\pi^{*}}(s)$ and the optimal action value function $Q^{*}(s,a) = \operatorname*{argmax}_{\pi} Q^{\pi}(s, a) = Q^{\pi^{*}}(s, a)$. The optimal value functions determine the best possible performance in a MDP\@. An MDP is considered \textit{solved} once the optimal value functions are found. 
+
+Most of the field of reinforcement learning research focuses on approximating these two equations \citep{Tamar2017} \citep{Watkins1992} \citep{Mnih2013}. (cite many more)
+
+% Bellman equations
+\cite{Bellman1957} outlined two analytical equations for the state value and action value function:
+\begin{equation}\label{equation:bellman:state-value-function}
+V^{\pi}(s) = \sum_{a \in \mathcal{A}} \pi(a | s) * (r(s, a) + \sum_{s' \in \mathcal{S}} \mathcal{P}(s' | s, a) * V^{\pi}(s'))
+\end{equation}
+
+\begin{equation}\label{equation:bellman:action-value-function}
+Q^{\pi}(s, a) = r(s, a) + \sum_{s' \in \mathcal{S}} \mathcal{P}(s' | s, a) * (\sum_{a' \in \mathcal{A}} \pi(a' | s') Q^{\pi}(s', a'))
+\end{equation}
+
+% TODO:
+% Add value iteration / policy iteration?
+% Add discount factor
+% Explain notion of environment
+
+Most RL algorithms can be devided into the following categories:
+Policy based
+Value based
+actor critic
 
 \end{document}

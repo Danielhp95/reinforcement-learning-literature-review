@@ -36,7 +36,7 @@ This works even if the reward function $R$ is unkown and/or discontinuous. This 
 Let's define the probability of a trajectory under a policy $\pi_{\theta}$ as: 
 
 \begin{equation}
-$P (\tau; \theta) = \Pi_{t=0}^{H} \underbrace{P (s_{t+1} | s_t, u_t)}_\textrm{dynamics models} \underbrace{\pi_{\theta} (u_t | s_t)}_\textrm{policy}$
+P (\tau; \theta) = \Pi_{t=0}^{H} \underbrace{P (s_{t+1} | s_t, u_t)}_\textrm{dynamics models} \underbrace{\pi_{\theta} (u_t | s_t)}_\textrm{policy}
 \end{equation}
 
 From here we can calculate the term $\nabla_{\theta} \log P(\tau ; \theta)$ present in equation~\ref{equation:approximate-gradient}
@@ -63,7 +63,7 @@ This is an unbiased estimate and it works in theory. However it requries an impr
 \end{itemize}
 
 \subsection{Add a baseline}
-Substract a baseline from the equation~\ref{equation:approximate-gradient-vanillla} to reduce variance without introducing varience (cite Williams 1992):
+Substract a baseline from the equation~\ref{equation:approximate-gradient-vanilla} to reduce variance without introducing varience \citep{ Williams1992}:
 
 \begin{equation}\label{equation:approximate-gradient-vanilla}
 \nabla_{\theta}U(\theta) \approx \hat{g} = \frac{1}{m} \sum_{i = 0}^{m} \sum_{t=0}^{H-1} \nabla_{\theta} \log \pi_{\theta}(u_t^{(i)} | s_t^{(i)}) (\sum_{k=0}^{H}R(s_t^{(i)}, u_t^{(i)}) - b)
@@ -75,6 +75,6 @@ The problem with this equation is that each action $u_i$ is being scaled by the 
 \nabla_{\theta}U(\theta) \approx \hat{g} = \frac{1}{m} \sum_{i = 0}^{m} \sum_{t=0}^{H-1} \nabla_{\theta} \log \pi_{\theta}(u_t^{(i)} | s_t^{(i)}) (\sum_{k=t}^{H}R(s_t^{(i)}, u_t^{(i)}))
 \end{equation}
 
-There are other proposed variance reduction techniques via tweaking the baseline which some researchers have studied (cite Greensmith)
+There are other proposed variance reduction techniques via tweaking the baseline which some researchers have studied~\citep{Greensmith2004}
 
 \end{document}
