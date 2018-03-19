@@ -1,0 +1,11 @@
+\documentclass{../main.tex}{subfiles}
+\begin{document}
+
+Most RL algorithms can be devided into the following categories:
+Policy based
+Value based
+actor critic
+
+A further categorization of algorithms is the notion of \textit{model free} and \textit{model based} algorithms. Consider a \textit{model} of an environment to be the transition function $\mathcal{P}$ and reward function $\mathcal{R}$. Model free algorithms aim to approximate an optimal policy without them. Model based algorithms are either given a prior model that they can use for planning \citep{browne2012survey, Soemers2014}, or they learn a representation via their own interaction with the environment \citep{Sutton1991, Guzdial2017}. Note that an advantage of learning your own model is that you can choose a representation of the environment that is relevant to the agent's actions, which can have the advantage of modelling uninteresting (but perhaps complicated) environment behaviour \citep{Pathak2017}.
+
+\end{document}
