@@ -1,4 +1,5 @@
 \documentclass{../main.tex}{subfiles}
+\newcommand{\var}{\texttt}
 \begin{document}
 
 The Q-learning algorithm was first introduced by~\cite{Watkins1989}, and is arguably one of the most famous and widely implemented methods in the entire field. Given an MDP, Q-learning aims to calculate the corresponding optimal action value function $Q^*$, following the principle of optimality and proof of the existence of an optimal policy as described in Section~\ref{section:markov-decision-processes}. It is model free, learning via interaction with the environment, and it is an offline algorithm. The latter is because, even though we are learning the optimal action value function $Q^*$, we can choose any to gather experience from the environment with any policy of our choosing. This policy is often named an \textit{exploratory} policy. Researchers like~\cite{Tijsma2017} benchmarked the efficiency of using various exploratory policies in grid world stochastic maze environments.
@@ -10,6 +11,15 @@ Q-learning has been proven to converge to the optimal solution for an MDP under 
 \item The learning rate $\alpha$  must decay over time, and such decay must be slow enough so that the agent can learn the optimal Q values. Expressed formally: $\sum_{t} \alpha_t = \infty$ and $\sum_{t} {(\alpha_{t})}^{2} < \infty$.~\citep{Watkins1989}
 \end{enumerate}
   
+\begin{algorithm}
+\Repeat{done} {
+    Select action $\var{a}$ from policy \;
+    Observe successor state $\var{s'}$ and reward $\var{r}$ after taking action $\var{a}$ \;
+    Update $Q(s,a) \leftarrow Q(s,a) + \alpha[r + \argmax_{a'} Q(s', a') - Q(s,a)]$ \;
+
+}
+\caption{Q-learning}
+\end{algorithm}
 
 % TODO: explain q-learningn
 % Talk about q learning being off policy?
