@@ -1,28 +1,26 @@
 \documentclass{../main.tex}{subfiles}
 \begin{document}
 
+Take equation~\ref{equation:utility} from Section~\ref{section:policy-gradient}, representing the utility of a policy $\pi_{\theta}$ parameterized by a D-dimensional real valued parameter vector $\theta \in \mathbb{R}^D$
 \begin{equation}
 U(\theta) = \sum_{\tau}P(\tau ; \theta) R(\tau)
 \end{equation}
 
-Takin the gradient w.r.t $\theta$ gives:
+The goal is to find the expression $\nabla_{\theta} U(\theta)$ that will allow us to update our policy parameter vector $\theta$ in a direction that improves it's estimated utility. Taking the gradient w.r.t $\theta$ gives:
 
-\begin{equation}
-\begin{split}
+%Let's multiply the RHS of the equation by the term $\frac{P(\tau; \theta)}{P(\tau ; \theta)}$, which equals $1$, and therefore the equality still holds.
+\begin{equation}\label{equation:approximate-gradient}
+\begin{aligned}
 \nabla_{\theta} U(\theta) & = \nabla_{\theta} \sum_{\tau}P(\tau ; \theta) R(\tau) \\
-& =  \sum_{\tau} \nabla_{\theta} P(\tau ; \theta) R(\tau)
-\end{split}
+& =  \sum_{\tau} \nabla_{\theta} P(\tau ; \theta) R(\tau) \quad &\text{(Move gradient operator inside sum)} \\
+& =  \sum_{\tau} \nabla_{\theta} \frac{P(\tau; \theta)}{P(\tau ; \theta)} P(\tau ; \theta) R(\tau) \quad & (\text{Multiply by} \frac{P(\tau; \theta)}{P(\tau ; \theta)}  )  \\
+& =  \sum_{\tau} P(\tau; \theta) \frac{\nabla_{\theta} P(\tau ; \theta)}{P(\tau ; \theta)} R(\tau) \quad & (\text{Rearrange}) \\
+& =  \sum_{\tau} P(\tau; \theta) \nabla_{\theta} \log P(\tau ; \theta) R(\tau) \quad & (\text{Note:} \frac{\nabla_{\theta}P(\tau; \theta)}{P(\tau; \theta)} = \nabla_{\theta} \log P(\tau; \theta) ) \\
+\nabla_{\theta} U(\theta) & = \mathbb{E}_{\tau \sim \pi_{\theta}} [\nabla_{\theta} \log P(\tau ; \theta) R(\tau)] & (\mathbb{E}[f(x)] = \sum_{x} xf(x))\\
+\end{aligned}
 \end{equation}
 
-Let's add the term $\frac{P(\tau; \theta)}{P(\tau ; \theta)}$ to the right hand side of the equation
-
-\begin{equation}\label{equation:approximate-gradient}
-\begin{split}
-& =  \sum_{\tau} \nabla_{\theta} \frac{P(\tau; \theta)}{P(\tau ; \theta)} P(\tau ; \theta) R(\tau) \\
-& =  \sum_{\tau} P(\tau; \theta) \frac{\nabla_{\theta} P(\tau ; \theta)}{P(\tau ; \theta)} R(\tau) \\
-& =  \sum_{\tau} P(\tau; \theta) \nabla_{\theta} \log P(\tau ; \theta) R(\tau) \\
-\nabla_{\theta} U(\theta) & = \mathbb{E} [\nabla_{\theta} \log P(\tau ; \theta) R(\tau)] \\
-\end{split}
+\begin{equation}
 \end{equation}
 
 This leaves us with an expectation for the term $\nabla_{\theta} \log P(\tau ; \theta) R(\tau)$. We can compute an empirical approximation of that expresion by taking $m$ sample trajectories (or paths) under the policy $\pi_{\theta}$. Note that as of now we have not discussed how to calculate $P(\tau ; \theta)$. Thus we use a Monte Carlo approach to approximate the gradient of the utility of $\pi_{\theta}$:
@@ -42,11 +40,11 @@ P (\tau; \theta) = \Pi_{t=0}^{H} \underbrace{P (s_{t+1} | s_t, u_t)}_\textrm{dyn
 From here we can calculate the term $\nabla_{\theta} \log P(\tau ; \theta)$ present in equation~\ref{equation:approximate-gradient}
 
 \begin{equation}
-\begin{split}
+\begin{aligned}
 \nabla_{\theta} \log P(\tau ; \theta) & = \nabla_{\theta} \log [\Pi_{t=0}^{H} P(s_{t+1} | s_t, u_t) \pi_{\theta}(u_t | s_t)] \\
  & = \nabla_{\theta} [(\sum_{t=0}^{H} \log P(s_{t+1} | s_t, u_t)) + (\sum_{t=0}^{H} \log \pi_{\theta}(u_t | s_t))] \\ 
  & = \sum_{t=0}^{H} \underbrace{\nabla_{\theta} \log \pi_{\theta}(u_t | s_t)}_\textrm{no dynamics required!}
-\end{split}
+\end{aligned}
 \end{equation}
 
 Which, if we plug into the original equation, we get:
@@ -54,6 +52,8 @@ Which, if we plug into the original equation, we get:
 \begin{equation}
 \nabla_{\theta}U(\theta) \approx \hat{g} = \frac{1}{m} \sum_{i = 0}^{m} \sum_{t=0}^{H-1} \nabla_{\theta} \log \pi_{\theta}(u_t^{(i)} | s_t^{(i)}) (\sum_{k=0}^{H}R(s_t^{(i)}, u_t^{(i)}))
 \end{equation}
+
+\cite{Sutton1999} offers a different approach to this derivation by calculating the gradient for the state value function on an initial state $s_0$, calculating $\nabla_{\theta} V_{\pi_{\theta}}(s_0)$.
 
 This is an unbiased estimate and it works in theory. However it requries an impractical amount of samples, otherwise the approximation is very noisy. In order to overcome this limitation we can do the following tricks:
 \begin{itemize}

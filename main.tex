@@ -1,4 +1,5 @@
 \documentclass{article}
+\usepackage[a4paper,margin=1in,footskip=0.25in]{geometry} % sets margins
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 \usepackage{graphicx}
@@ -40,11 +41,11 @@
     %\subsection{Value Iteration algorithm}
     %\subfile{value-iteration}
     %
-    \subsection{Q-learning}
+    \subsection{Q-learning}\label{section:q-learning}
     \subfile{sections/q-learning}
  
-% \section{Policy gradient methods}
-% \subfile{sections/policy-gradient-methods}
+\section{Policy gradient methods}\label{section:policy-gradient}
+\subfile{sections/policy-gradient-methods}
 %
 % \section{Actor critic methods}
 % \subfile{sections/actor-critic-methods}
@@ -52,8 +53,8 @@
 % \section{Multi-agent reinforcement learning}
 % \subfile{sections/multiagent}
 
-%\section{Appendix}
-%\subfile{sections/likelihood-ratio-policy-gradient-derivation}
+\section{Appendix}
+\subfile{sections/likelihood-ratio-policy-gradient-derivation}
 
 %List of TODOS
 %Define Exploration vs exploitation: The first is finding parts of the state space you haven't been and learning about them
