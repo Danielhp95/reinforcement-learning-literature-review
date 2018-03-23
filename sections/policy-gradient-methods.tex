@@ -4,15 +4,12 @@
 
 In order to comply with notation used in the field of direct optimization, we shall use $u$ for actions.
 
-Consider a stochastic control policy  $\pi_{\theta}(s)$ parameterized by a parameter vector $\theta$, that is, a distribution over the action set $\mathcal{A}$ given a state $s \in \mathcal{S}$. $\theta$ is a D-dimensional real valued vector, $\theta \in \mathbb{R}^{D}$, where $D$ is the number of parameters / dimensions and $D << |\mathcal{S}|$. This prameterized policy function will be denoted by $\pi_{\theta}$.\footnote{Some researchers prefer the notation $\pi(\cdot, \theta)$ to make the parameters of the function approximator explicit parameters of the policy. These notations are equivalent.}. 
-
-% TODO: how to extend this when gamma != 1.
-
+Consider a stochastic control policy  $\pi_{\theta}(s)$ parameterized by a parameter vector $\theta$, that is, a distribution over the action set $\mathcal{A}$ given a state $s \in \mathcal{S}$. $\theta$ is a D-dimensional real valued vector, The parameter vector $\theta \in \mathbb{R}^{D}$, where $D$ is the number of parameters / dimensions and $D << |\mathcal{S}|$. This prameterized policy function will be denoted by $\pi_{\theta}$.\footnote{Some researchers prefer the notation $\pi(\cdot, \theta)$ to make the parameters of the function approximator explicit parameters of the policy. These notations are equivalent.}. 
 
 There are strong motivations for using policy gradient approaches versus the already discussed RL methods:
 \begin{enumerate}
 \item A more direct way of approaching the problem. Instead of computing the value functions $V$ or $Q$ and from those computing a policy function, we are calculating the policy function directly.
-\item using a stochastic policy is that it \"smoothes\" the optimization problem. With a deterministic policy, changing which action to do in a given state can have a dramatic effect on potential future rewards. If we assume a stochastic policy, shifting a distribution over actions slightly will only slightly modify the potential future rewards. This is what is commonly reffered as smooth.
+\item Using a stochastic policy is that it smoothes the optimization problem. With a deterministic policy, changing which action to do in a given state can have a dramatic effect on potential future rewards\footnote{An example of this concept are \textit{greedy} or $\epsilon$-\textit{greedy} policies derived thus: $\pi(s) = \argmax_{a \in \mathcal{A}} Q(s,a)$.}. If we assume a stochastic policy, shifting a distribution over actions slightly will only slightly modify the potential future rewards. This is what is commonly reffered as smooth.
 \item Often $\pi$ can be simpler than $V$ or $Q$.
 \item If we learn $Q$ in a large or continuous actions space, it can be tricky to compute $\underset{\text{u}}{argmax}\; Q_{\theta}(s,u)$
 \end{enumerate}
@@ -21,22 +18,28 @@ Policy gradient methods are on-policy. In them, the agent acts with using a poli
 
 Starting from the basics: the goal of an reinforcement learning agent is to maximize the (possibly discounted)\footnote{\cite{Williams1992, Sutton1999} present proofs of this same derivation using a discount factor.} sum of rewards, generally over a time horizon $H$. This poses the following optimization problem:
 \begin{equation}\label{equation:expected-reward-theta}
-\underset{\theta}{\text{max}} = \mathbb{E}[\sum^{H}_{t=0} R(s_t) | \pi_{\theta}]
+\underset{\theta}{\text{max}} = \mathbb{E}[\sum^{H}_{t=0} r(s_t) | \pi_{\theta}]
 \end{equation}
 
-For an episode  of length $H$ let $\tau$ be the trajectory followed by an agent in an episode. This trajectory $\tau$ is a sequence of state-action tuples $\tau = (s_0, a_0, \dots, s_H, a_H)$. We overload the notation of the reward function $R$ thus: $R(\tau) = \sum_{t=0}^{H}R(s_t, u_t)$. From here, the utility of a policy parameterized by $\theta$ is defined as:
+For an episode of length $H$ let $\tau$ be the trajectory followed by an agent in an episode. This trajectory $\tau$ is a sequence of state-action tuples $\tau = (s_0, a_0, \dots, s_H, a_H)$. We overload the notation of the reward function $\mathcal{R}$ thus: $\mathcal{R}(\tau) = \sum_{t=0}^{H}r(s_t, u_t)$, indicating the total accumulated reward in the trajectory. We will also use $r(s_t) \in \mathbb{R}$ to refer to the scalar reward obtained at timestep $t$ in the trajectory. From here, the utility of a policy parameterized by $\theta$ is defined as:
 
 \begin{equation}\label{equation:utility}
-U(\theta) = \mathbb{E}[\sum_{t=0}^{H}R(s_t, u_t) ; \pi_{\theta}] = \sum_{\tau}P(\tau ; \theta)R(\tau)
+U(\theta) = \mathbb{E}[\sum_{t=0}^{H}r(s_t, u_t) | \pi_{\theta}] = \sum_{\tau}P(\tau ; \theta)\mathcal{R}(\tau)
 \end{equation}
 
-Where $P(\tau ; \theta)$ denotes the probability of trajectory $\tau$ happening when taking actions sampled from a parameterized policy $\pi_{\theta}$. Going back to equation~\ref{equation:utility}, our optimization problem becomes:
+Where $P(\tau ; \theta)$ denotes the probability of trajectory $\tau$ happening when taking actions sampled from a parameterized policy $\pi_{\theta}$. More informally, how likely is this sequence of state-action pairs to happen as a result of an agent following a policy $\pi_{\theta}$. Going back to equation~\ref{equation:utility}, our optimization problem becomes:
 
 \begin{equation}\label{equation:utility-optimization}
-\underset{\theta}{\text{max}}\; U(\theta) = \underset{\theta}{\text{max}}\; \sum_{\tau}P(\tau ; \theta)R(\tau)
+\underset{\theta}{\text{max}}\; U(\theta) = \underset{\theta}{\text{max}}\; \sum_{\tau}P(\tau ; \theta)\mathcal{R}(\tau)
 \end{equation}
 
-%TODO: have a cohesive narrative voice.
+The policy gradient theorem \citep{Williams1992, Sutton1999} introduces the notion of updating the policy parameter vector $\theta$ using well-studied gradient based methods such as gradient descent \citep{Schulman2017,Mnih2013}, natural gradiant \citep{Wu2017} and other approacheswhich are discussed later on. The Appendix section shows the derivation from equation~\ref{equation:utility} to equation~\ref{equation:utility-gradient}
+
+\begin{equation}\label{equation:utility-gradient}
+\begin{aligned}
+\nabla_{\theta} U(\theta) & = \mathbb{E}_{\tau \sim \pi_{\theta}} [\nabla_{\theta} \log \pi_{\theta}(\tau) R(\tau)] \\
+\end{aligned}
+\end{equation}
 
 A key advantage of the policy gradient theorem, as inspected by~\cite{Sutton1999} (and formalized in the Appendix Section), is that equation (NAME EQUATION) does not contain any term of the form. This means that we don't need to model the effect of policy changes on the distribution of states. \citep{Sutton1999} goes farther and shows proof of local optima convergence for policy iteration methods with function approximators for both the policy and advantage functions.
 

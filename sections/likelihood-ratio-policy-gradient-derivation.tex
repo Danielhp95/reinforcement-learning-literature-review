@@ -6,10 +6,9 @@ Take equation~\ref{equation:utility} from Section~\ref{section:policy-gradient},
 U(\theta) = \sum_{\tau}P(\tau ; \theta) R(\tau)
 \end{equation}
 
-The goal is to find the expression $\nabla_{\theta} U(\theta)$ that will allow us to update our policy parameter vector $\theta$ in a direction that improves it's estimated utility. Taking the gradient w.r.t $\theta$ gives:
+The goal is to find the expression $\nabla_{\theta} U(\theta)$ that will allow us to update our policy parameter vector $\theta$ in a direction that improves the estimated value of the utility of the policy $\pi_{\theta}$. Taking the gradient w.r.t $\theta$ gives:
 
-%Let's multiply the RHS of the equation by the term $\frac{P(\tau; \theta)}{P(\tau ; \theta)}$, which equals $1$, and therefore the equality still holds.
-\begin{equation}\label{equation:approximate-gradient}
+\begin{equation}\label{equation:expectance-gradient}
 \begin{aligned}
 \nabla_{\theta} U(\theta) & = \nabla_{\theta} \sum_{\tau}P(\tau ; \theta) R(\tau) \\
 & =  \sum_{\tau} \nabla_{\theta} P(\tau ; \theta) R(\tau) \quad &\text{(Move gradient operator inside sum)} \\
@@ -23,23 +22,15 @@ The goal is to find the expression $\nabla_{\theta} U(\theta)$ that will allow u
 \begin{equation}
 \end{equation}
 
-This leaves us with an expectation for the term $\nabla_{\theta} \log P(\tau ; \theta) R(\tau)$. We can compute an empirical approximation of that expresion by taking $m$ sample trajectories (or paths) under the policy $\pi_{\theta}$. Note that as of now we have not discussed how to calculate $P(\tau ; \theta)$. Thus we use a Monte Carlo approach to approximate the gradient of the utility of $\pi_{\theta}$:
-
-\begin{equation}\label{equation:approximate-gradient-vanilla}
-\nabla_{\theta}U(\theta) \approx \hat{g} = \frac{1}{m} \sum_{i = 0}^{m} \nabla_{\theta} \log P(\tau^{(i)} ; \theta) R(\tau^{(i)})
-\end{equation}
-
-This works even if the reward function $R$ is unkown and/or discontinuous. This works in discrete state spaces. The likelihood ratio changes the probability of experienced paths. That is, the probability of sampling trajectories.
-
-Let's define the probability of a trajectory under a policy $\pi_{\theta}$ as: 
+This leaves us with an expectation for the term $\nabla_{\theta} \log P(\tau ; \theta) R(\tau)$. Note that as of now we have not discussed how to calculate $P(\tau ; \theta)$. Let's define the probability of a trajectory under a policy $\pi_{\theta}$ as: 
 
 \begin{equation}
 P (\tau; \theta) = \Pi_{t=0}^{H} \underbrace{P (s_{t+1} | s_t, u_t)}_\textrm{dynamics models} \underbrace{\pi_{\theta} (u_t | s_t)}_\textrm{policy}
 \end{equation}
 
-From here we can calculate the term $\nabla_{\theta} \log P(\tau ; \theta)$ present in equation~\ref{equation:approximate-gradient}
+From here we can calculate the term $\nabla_{\theta} \log P(\tau ; \theta)$ present in equation~\ref{equation:expectance-gradient}
 
-\begin{equation}
+\begin{equation}\label{equation:gradient-trajectory}
 \begin{aligned}
 \nabla_{\theta} \log P(\tau ; \theta) & = \nabla_{\theta} \log [\Pi_{t=0}^{H} P(s_{t+1} | s_t, u_t) \pi_{\theta}(u_t | s_t)] \\
  & = \nabla_{\theta} [(\sum_{t=0}^{H} \log P(s_{t+1} | s_t, u_t)) + (\sum_{t=0}^{H} \log \pi_{\theta}(u_t | s_t))] \\ 
@@ -47,7 +38,19 @@ From here we can calculate the term $\nabla_{\theta} \log P(\tau ; \theta)$ pres
 \end{aligned}
 \end{equation}
 
+Plugging the result of equation~\ref{equation:gradient-trajectory} into equation~\ref{equation:expectance-gradient} we obtain the following equation for the gradient of the utility function w.r.t to parameter vector $\theta$:
+
+\begin{equation}
+\begin{aligned}
+\nabla_{\theta} U(\theta) & = \mathbb{E}_{\tau \sim \pi_{\theta}} [\nabla_{\theta} \log \pi_{\theta}(\tau) R(\tau)] \\
+\end{aligned}
+\end{equation}
+
+We can compute an empirical approximation of that expresion by taking $m$ sample trajectories (or paths) under the policy $\pi_{\theta}$. This works even if the reward function $R$ is unkown and/or discontinuous. This works in discrete state spaces. The likelihood ratio changes the probability of experienced paths. That is, the probability of sampling trajectories. Thus we use a Monte Carlo approach to approximate the gradient of the utility of $\pi_{\theta}$: (REPHRASE)
 Which, if we plug into the original equation, we get:
+\begin{equation}\label{equation:expectance-gradient-vanilla}
+\nabla_{\theta}U(\theta) \approx \hat{g} = \frac{1}{m} \sum_{i = 0}^{m} \nabla_{\theta} \log P(\tau^{(i)} ; \theta) R(\tau^{(i)})
+\end{equation}
 
 \begin{equation}
 \nabla_{\theta}U(\theta) \approx \hat{g} = \frac{1}{m} \sum_{i = 0}^{m} \sum_{t=0}^{H-1} \nabla_{\theta} \log \pi_{\theta}(u_t^{(i)} | s_t^{(i)}) (\sum_{k=0}^{H}R(s_t^{(i)}, u_t^{(i)}))
