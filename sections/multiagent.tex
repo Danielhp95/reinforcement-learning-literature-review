@@ -1,4 +1,25 @@
 \documentclass{../main.tex}{subfiles}
 \begin{document}
+
+\begin{itemize}
+\item Stochastic games.
+\item Enumerate elements.
+\item Link to MDP and matrix games.
+\item Explain that actions are taken simultaneously, as opposed to sequentially
+\item Notion of strategy in stochastic games and joint strategies. The $ \pi = \langle \pi_i, \pi_{-1} \rangle $. And itroduce the $\pi_{-i}$ suffix notation.
+\item Best Responose definition
+\item Nash equilibria
+\item Playing against stationary policies simplifies SG to MDP.% a stochastic game is equivalent to a Markov decision process from the point of view of one agent when the other agents are playing stationary policies
+    \begin{itemize}
+    \item Show V and Q equations.
+    \item Briefly explain how this notation allows for any algorithm in sections (find sections) can be used.
+    \end{itemize}
+\end{itemize}
+
+useful link (where I got all of this info from): http://users.isr.ist.utl.pt/~mtjspaan/readingGroup/learningNeto05.pdf
+Opponent modeling (Uther and Veloso, 1997). The agent treats all opponents as a single agent that is able to take joint actions.
+
+Stochastic games are an extension of matrix games  (von Neumann and Morgenstern, 1947; Owen, 1995) Matrix game iff $\mid S \mid = 1$. So a SG is a succession of matrix games. They also superset Markov Decision Processes. Stochastic games can be thought of as MDPs where the number of agents $n = 1$. 
+Definition of Nash Equilibrium: A Nash equilibrium is a collection of strategies, one for each player, that are best response strategies, which means that none of the players can do better by changing strategy, if all others continue to follow the equilibrium
 Multiagent goodness
 \end{document}

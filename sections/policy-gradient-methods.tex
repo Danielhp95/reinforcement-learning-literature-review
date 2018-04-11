@@ -41,6 +41,15 @@ The policy gradient theorem \citep{Williams1992, Sutton1999} introduces the noti
 \end{aligned}
 \end{equation}
 
-A key advantage of the policy gradient theorem, as inspected by~\cite{Sutton1999} (and formalized in the Appendix Section), is that equation (NAME EQUATION) does not contain any term of the form. This means that we don't need to model the effect of policy changes on the distribution of states. \citep{Sutton1999} goes farther and shows proof of local optima convergence for policy iteration methods with function approximators for both the policy and advantage functions.
+A key advantage of the policy gradient theorem, as inspected by~\cite{Sutton1999} (and formalized in the Appendix Section), is that equation~\ref{equation:utility-gradient} does not contain any term of the form $\nabla_{\theta}\mathcal{P}(\tau ; \theta)$. This means that we don't need to model the effect of policy changes on the distribution of states. \citep{Sutton1999} goes farther and shows proof of local optima convergence for policy iteration methods with function approximators for both the policy and advantage functions.
 
+% TODO: Talk about baselines instead of using R(\ and notation 
+%       Talk about advantage function. Definition
+%       
+
+% After all baselines. Talk about DQN (perhaps mention that it is not the first DeepRL attempt, but mention that it's the best one at the time). Follow up with DDPG, saying that DQN cannot easily be applied to continuous action spaces.
+% About DQN: DQN is able to learn value functions using such function approximators in a stable and robust way due to two innovations: 1. the network is trained off-policy with samples from a replay buffer to minimize correlations between samples; 2. the network is trained with a target Q network to give consistent targets during temporal difference backups.
+
+% Notes:
+%(REPHRASE) One challenge when using neural networks for reinforcement learning is that most optimization al- gorithms assume that the samples are independently and identically distributed. Obviously, when the samples are generated from exploring sequentially in an environment this assumption no longer holds. Additionally, to make efficient use of hardware optimizations, it is essential to learn in mini- batches, rather than online
 \end{document}
