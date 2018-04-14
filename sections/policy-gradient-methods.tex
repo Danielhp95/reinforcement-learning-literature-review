@@ -33,7 +33,9 @@ Where $P(\tau ; \theta)$ denotes the probability of trajectory $\tau$ happening 
 \underset{\theta}{\text{max}}\; U(\theta) = \underset{\theta}{\text{max}}\; \sum_{\tau}P(\tau ; \theta)\mathcal{R}(\tau)
 \end{equation}
 
-The policy gradient theorem \citep{Williams1992, Sutton1999} introduces the notion of updating the policy parameter vector $\theta$ using well-studied gradient based methods such as gradient descent \citep{Schulman2017,Mnih2013}, natural gradiant \citep{Wu2017} and other approacheswhich are discussed later on. The Appendix section shows the derivation from equation~\ref{equation:utility} to equation~\ref{equation:utility-gradient}
+Policy gradient methods attempt to solve this maximization problem by iteratively updating the policy parameter vector $\theta$ in a direction of improvement w.r.t to the policy utility $U(\theta)$. This direction of improvement is dictated by the gradient of the utility $\nabla_{\theta}U(\theta)$. The update is usually done via the well known gradient descent algorithm. This idea of iteratively improving on a parameterized policy is was introduced by~\cite{Williams1992} under the name of \textit{policy gradient theorem}. In essence, the gradient of the utility function aims to increase the probability of sampling trajectories with higher reward, and reduce the probability of sampling trajectories with lower rewards.
+
+Equation~\ref{equation:utility-gradient} presents the gradient of the policy utility function. The Appendix section shows the derivation from equation~\ref{equation:utility} to equation~\ref{equation:utility-gradient}.
 
 \begin{equation}\label{equation:utility-gradient}
 \begin{aligned}
@@ -41,7 +43,62 @@ The policy gradient theorem \citep{Williams1992, Sutton1999} introduces the noti
 \end{aligned}
 \end{equation}
 
-A key advantage of the policy gradient theorem, as inspected by~\cite{Sutton1999} (and formalized in the Appendix Section), is that equation~\ref{equation:utility-gradient} does not contain any term of the form $\nabla_{\theta}\mathcal{P}(\tau ; \theta)$. This means that we don't need to model the effect of policy changes on the distribution of states. \citep{Sutton1999} goes farther and shows proof of local optima convergence for policy iteration methods with function approximators for both the policy and advantage functions.
+A key advantage of the policy gradient theorem, as inspected by~\cite{Sutton1999} (and formalized in the Appendix Section), is that equation~\ref{equation:utility-gradient} does not contain any term of the form $\nabla_{\theta}\mathcal{P}(\tau ; \theta)$. This means that we don't need to model the effect of policy changes on the distribution of states. Policy gradient methods therefore classify as model-free methods. 
+
+% (what to do with this phrase?) \citep{Sutton1999} goes farther and shows proof of local optima convergence for policy iteration methods with function approximators for both the policy and advantage functions.
+
+We can use Monte Carlo methods to generate an empirical estimation of the expectation in equation~\ref{equation:utility-gradient}. This is done by sampling $m$ trajectories under the policy $\pi_{\theta}$. This works even if the reward function $R$ is unkown and/or discontinuous, and on both discrete and continuous state spaces. The equation for the empirical approximation of the utility gradient is the following:
+
+\begin{equation}\label{equation:expectance-gradient-vanilla}
+\nabla_{\theta}U(\theta) \approx \hat{g} = \frac{1}{m} \sum_{i = 0}^{m} \nabla_{\theta} \log \pi_{\theta}(\tau^{(i)}) R(\tau^{(i)})
+\end{equation}
+
+The estimate $\hat{g}$ is unbiased estimate and it works in theory. However it requries an impractical amount of samples, otherwise the approximation is very noisy. In order to overcome this limitation we can do the following tricks:
+
+\begin{itemize}
+\item Add a baseline
+\item Add temporal structure (advantage function)
+\item Use trust region and natural gradient.
+\end{itemize}
+
+\subsection{Baselines}
+Intuitively, we want to reduce the probability of trajectories that are worse than average, and increase the probability of trajectories that are better than average.~\cite{Williams1992}, in the same paper that introduces the policy gradient theorem, explores the idea of introducing a baseline $b$ as a method of variance reduction, where $b \in \mathbb{R}$. These authors also prove that introducin a baseline keeps the estimate unbiased (have proof in appendix?). It is imporant to note that this estimate is not biased as long as the baseline at time $t$ does not depend on action $u_t$. Introducing a baseline in equation~\ref{equation:utility-gradient} yields the equation:
+
+\begin{equation}\label{equation:utility-gradient-baseline}
+\begin{aligned}
+\nabla_{\theta} U(\theta) & = \mathbb{E}_{\tau \sim \pi_{\theta}} [\nabla_{\theta} \log \pi_{\theta}(\tau) (R(\tau) - b)] \\
+\end{aligned}
+\end{equation}
+
+The most basic type of baseline is the global average reward, which keeps track of the average reward across all episodes.~\cite{Greensmith2004} derives the optimal constant value baseline. We can also add time dependency to the baseline. It is not optimal to scale the probability of taking an action by the whole sum of rewards. A better idea is, for a given episode, to weigh an action $u_t$ by the reward obatined from time $t$ onwards, otherwise we would be ignoring the Markov property underlying the environment's Markov Decission Process. This changes equation~\ref{equation:utility-gradient-baseline} to:
+
+\begin{equation}\label{equation:utility-gradient-baseline-temporal}
+\begin{aligned}
+\nabla_{\theta} U(\theta) & = \mathbb{E}_{s_t \sim E, u_t \sim \pi_{\theta}} [\nabla_{\theta} \log \pi_{\theta}(u_t \mid s_t) (\sum_{k=t}^{H-1}R(s_k, u_k) - b)] \\
+\end{aligned}
+\end{equation}
+
+A powerful idea is to make the baseline state-dependent, instead of keeping a single global baseline~\citep{Baxter2001}. For each state $s_t$ we want to know what is the expected reward we will obtain by following policy $\pi_{\theta}$. By comparing the empirically obtained reward with the estimated reward given by the baseline $b(s_t)$, we will know if we have obtained more or less reward than expected. Note how this baseline is the exact definition of the state value function $V_{\pi_{\theta}}$.
+
+\begin{equation}\label{equation:baseline-state-dependent}
+\begin{aligned}
+b(s_t) = \mathbb{E}[r_t + r_{t+1} + r_{t+2} + \cdots + r_{H-1}] = V_{\pi_{\theta}}(s_t)
+\end{aligned}
+\end{equation}
+
+This allows us to increase the log probability of taking an action proportionally to how much its returns are better than the expected return under the current policy. Because $\sum_{k=t}^{H-1}R(s_k, u_k)$ is an estimate of $Q_{\pi_{\theta}}(s_t, u_t)$ and $b(s_t)$ is an estimate of $V_{\pi_{\theta}}(s_t)$. This approach can be viewed as an actor-critic architecture where the policy $\pi_{\theta}$ is the actor and the baseline $b_t$ is the critic (Sutton and Barto, 1998; Degris et al., 2012) (read these 2 papes).
+
+\subsection{Advantage functions}
+
+Let the advantage function $A_{\pi}(s_t, a_t) \in \mathbb{R}$ be the numerical advantage of taking action $a_t$ in state $s_t$ under policy $\pi$. The advantage function is often depicted as:
+
+\begin{equation}
+A_{\pi}(t) = A_{\pi}(s_t, a_t) = Q_{\pi}(s_t, a_t) - V_{\pi}(s_t)
+\end{equation}
+
+
+
+\subsection{Trust region optimization}
 
 % TODO: Talk about baselines instead of using R(\ and notation 
 %       Talk about advantage function. Definition
@@ -52,5 +109,5 @@ A key advantage of the policy gradient theorem, as inspected by~\cite{Sutton1999
 
 % Notes:
 % good post on DDPG: http://pemami4911.github.io/blog/2016/08/21/ddpg-rl.html
-%(REPHRASE) One challenge when using neural networks for reinforcement learning is that most optimization al- gorithms assume that the samples are independently and identically distributed. Obviously, when the samples are generated from exploring sequentially in an environment this assumption no longer holds. Additionally, to make efficient use of hardware optimizations, it is essential to learn in mini- batches, rather than online
+%(REPHRASE) One challenge when using neural networks for reinforcement learning is that most optimization al- gorithms assume that the samples are independently and identically distributed. Obviously, when the samples are generated from exploring sequentially in an environment this assumption no longer holds.
 \end{document}
