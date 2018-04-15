@@ -1,10 +1,17 @@
 \documentclass{../main.tex}{subfiles}
 \begin{document}
 
-Most RL algorithms can be devided into the following categories:
-Policy based
-Value based
-actor critic
+\subsubsection{ Most RL algorithms can be devided into the following categories:}
+\subsubsection{ Policy based}
+\subsubsection{ Value based}
+\subsubsection{ actor critic}
+\subsubsection{ model free, model based}
+\subsubsection{ online / offline}
+In an off-policy setting, on the other hand, an agent learns about a policy or policies different from the one it is executing
+Unlike on- policy methods, off-policy methods are able to, for example, learn about an optimal policy while executing an exploratory policy. Or learn from demostration (Smart and Kaelbling, 2002).
+and learn multiple tasks in parallel from a single sensori- motor interaction with an environment (Sutton et al., 2011).
+The most famous off policy method is qlearning~\citep{Watkins1989}.
+\subsubsection{ on-policy, off-policy}
 
 A further categorization of algorithms is the notion of \textit{model free} and \textit{model based} algorithms. Consider a \textit{model} of an environment to be the transition function $\mathcal{P}$ and reward function $\mathcal{R}$. Model free algorithms aim to approximate an optimal policy without them. Model based algorithms are either given a prior model that they can use for planning \citep{browne2012survey, Soemers2014}, or they learn a representation via their own interaction with the environment \citep{Sutton1991, Guzdial2017}. Note that an advantage of learning your own model is that you can choose a representation of the environment that is relevant to the agent's actions, which can have the advantage of modelling uninteresting (but perhaps complicated) environment behaviour \citep{Pathak2017}.
 

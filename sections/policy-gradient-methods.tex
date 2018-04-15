@@ -9,7 +9,7 @@ Consider a stochastic control policy  $\pi_{\theta}(s)$ parameterized by a param
 There are strong motivations for using policy gradient approaches versus the already discussed RL methods:
 \begin{enumerate}
 \item A more direct way of approaching the problem. Instead of computing the value functions $V$ or $Q$ and from those deriving a policy function, we are calculating the policy function directly.
-\item Using stochastic policies smoothes the optimization problem. With a deterministic policy, changing which action to do in a given state can have a dramatic effect on potential future rewards\footnote{An example of this concept are \textit{greedy} or $\epsilon$-\textit{greedy} policies derived thus: $\pi(s) = \argmax_{a \in \mathcal{A}} Q(s,a)$.}. If we assume a stochastic policy, shifting a distribution over actions slightly will only slightly modify the potential future rewards. This is what is commonly reffered as smooth.
+\item Using stochastic policies smoothes the optimization problem. With a deterministic policy, changing which action to do in a given state can have a dramatic effect on potential future rewards\footnote{An example of this concept are \textit{greedy} or $\epsilon$-\textit{greedy} policies derived thus: $\pi(s) = \argmax_{a \in \mathcal{A}} Q(s,a)$.}. If we assume a stochastic policy, shifting a distribution over actions slightly will only slightly modify the potential future rewards. Furthermore, Many problems, such as partially observable environments or adversarial settings have stochastic optimal policies~\citep{Degris2012}.
 \item Often $\pi$ can be simpler than $V$ or $Q$.
 \item If we learn $Q$ in a large or continuous actions space, it can be tricky to compute $\underset{\text{u}}{argmax}\; Q(s,u)$.
 \end{enumerate}
@@ -78,7 +78,7 @@ The most basic type of baseline is the global average reward, which keeps track 
 \end{aligned}
 \end{equation}
 
-A powerful idea is to make the baseline state-dependent, instead of keeping a single global baseline~\citep{Baxter2001}. For each state $s_t$ we want to know what is the expected reward we will obtain by following policy $\pi_{\theta}$. By comparing the empirically obtained reward with the estimated reward given by the baseline $b(s_t)$, we will know if we have obtained more or less reward than expected. Note how this baseline is the exact definition of the state value function $V_{\pi_{\theta}}$.
+A powerful idea is to make the baseline state-dependent $b(s_t)$~\citep{Baxter2001}. For each state $s_t$, This baseline should indicate what is the expected reward we will obtain by following policy $\pi_{\theta}$. By comparing the empirically obtained reward with the estimated reward given by the baseline $b(s_t)$, we will know if we have obtained more or less reward than expected. Note how this baseline is the exact definition of the state value function $V_{\pi_{\theta}}$, as shown in equation~\ref{equation:baseline-state-dependent}. This type of baseline allows us to increase the log probability of taking an action proportionally to how much its returns are better than the expected return under the current policy.
 
 \begin{equation}\label{equation:baseline-state-dependent}
 \begin{aligned}
@@ -86,7 +86,17 @@ b(s_t) = \mathbb{E}[r_t + r_{t+1} + r_{t+2} + \cdots + r_{H-1}] = V_{\pi_{\theta
 \end{aligned}
 \end{equation}
 
-This allows us to increase the log probability of taking an action proportionally to how much its returns are better than the expected return under the current policy. Because $\sum_{k=t}^{H-1}R(s_k, u_k)$ is an estimate of $Q_{\pi_{\theta}}(s_t, u_t)$ and $b(s_t)$ is an estimate of $V_{\pi_{\theta}}(s_t)$. This approach can be viewed as an actor-critic architecture where the policy $\pi_{\theta}$ is the actor and the baseline $b_t$ is the critic (Sutton and Barto, 1998; Degris et al., 2012) (read these 2 papes).
+Consider a further improvement: the term $\sum_{k=t}^{H-1}R(s_k, u_k)$ can be regarded as an estimate of $Q_{\pi_{\theta}}(s_t, u_t)$ for a single roll out. This term has high variance because it is sample based, where the amount of variance depends on the stochasticity of the environment. A way to reduce variance is to include a discount factor $\gamma$, rendering the equation: $\sum_{k=t}^{H-1} \gamma^k  R(s_k, u_k)$. However, this still keeps the estimation sample based, which means that it is not generalizable to unseen state-action pairs. This issue can be solved by using function approximators to approximate the function $Q_{\pi_{\theta}}$. We can define another real valued parameter vector $\phi \in R^F$, where $F$ is the dimensionality of the parameter vector. From here, we can use $\phi$ to parameterize the function approximator $Q^{\phi}_{\pi_{\theta}}$. This function will be able to generalize for unseen state-action pairs. 
+
+\begin{equation}
+\begin{aligned}
+Q^{\phi}_{\pi_{\theta}}(s,u) & = \mathbb{E}[r_0 + r_1 + r_2 + \cdots + r_{H-1} \mid s_0 = s, u_0 = u] \quad & (\infty\text{-step look ahead}) \\
+                      & = \mathbb{E}[r_0 + V^{\phi}_{\pi_{\theta}}(s_1) \mid s_0 = s, u_0 = u] \quad & (1\text{-step look ahead}) \\
+                      & = \mathbb{E}[r_0 + + r_1 + V^{\phi}_{\pi_{\theta}}(s_2) \mid s_0 = s, u_0 = u] \quad & (2\text{-step look ahead}) \\
+\end{aligned}
+\end{equation}
+
+Notice how we use parameter vector $\phi$ to approximate the state value function $V_{\pi_{\theta}}$. This approach can be viewed as an actor-critic architecture where the policy $\pi_{\theta}$ is the actor and the baseline $b_t$ is the critic (Sutton and Barto, 1998; Degris et al., 2012) (read these 2 papes).~\cite{Konda2000} make the key observation that in actor critic methods, the actor parameterization $\theta$ and the critic parameterization $\phi$ should \textit{not} be independent. The choice of critic parameters should be directly prescribed by the choice of the actor parameters.
 
 \subsection{Advantage functions}
 
@@ -98,11 +108,14 @@ A_{\pi}(t) = A_{\pi}(s_t, a_t) = Q_{\pi}(s_t, a_t) - V_{\pi}(s_t)
 
 
 
-\subsection{Trust region optimization}
+\subsection{Trust region optimization, and natural gradient?}
 
 % TODO: Talk about baselines instead of using R(\ and notation 
 %       Talk about advantage function. Definition
 %       
+
+\subsection{Off-policy policy gradient methods}
+Off-PAC, The first off-policy policy gradient method introduced by~\cite{Degris2012} used importance sampling techniques to weigh the actor gradient update against the behavioural policy being used (look this up on paper). They also used eligibility traces for a critic with linear function approximator, similar to a TD($\lambda$). Reply buffer, introduced in~\cite{Lin1993}, has seen a lot of use recently~\citep{Mnih2013, Mnih2016}. 
 
 % After all baselines. Talk about DQN (perhaps mention that it is not the first DeepRL attempt, but mention that it's the best one at the time). Follow up with DDPG, saying that DQN cannot easily be applied to continuous action spaces. Mention Batch normalization (Ioffe 2015)
 % About DQN: DQN is able to learn value functions using such function approximators in a stable and robust way due to two innovations: 1. the network is trained off-policy with samples from a replay buffer to minimize correlations between samples; 2. the network is trained with a target Q network to give consistent targets during temporal difference backups.
