@@ -1,6 +1,7 @@
 \documentclass{../main.tex}{subfiles}
 
 \begin{document}
+% chktex 36
 
 In order to comply with notation used in the field of direct optimization, we shall use $u$ for actions.
 
@@ -115,7 +116,7 @@ A_{\pi}(t) = A_{\pi}(s_t, a_t) = Q_{\pi}(s_t, a_t) - V_{\pi}(s_t)
 %       
 
 \subsection{Off-policy policy gradient methods}
-Off-PAC, The first off-policy policy gradient method introduced by~\cite{Degris2012} used importance sampling techniques to weigh the actor gradient update against the behavioural policy being used (look this up on paper). They also used eligibility traces for a critic with linear function approximator, similar to a TD($\lambda$). Reply buffer, introduced in~\cite{Lin1993}, has seen a lot of use recently~\citep{Mnih2013, Mnih2016}. 
+Off-PAC, The first off-policy policy gradient method introduced by~\cite{Degris2012} used importance sampling techniques to weigh the actor gradient update against the behavioural policy being used (look this up on paper). They also used eligibility traces for a critic with linear function approximator, similar to a TD($\lambda$). Reply buffer, introduced in~\cite{Lin1993}, has seen a lot of use recently~\citep{Mnih2013, Mnih2016}. % chktex 36
 
 % After all baselines. Talk about DQN (perhaps mention that it is not the first DeepRL attempt, but mention that it's the best one at the time). Follow up with DDPG, saying that DQN cannot easily be applied to continuous action spaces. Mention Batch normalization (Ioffe 2015)
 % About DQN: DQN is able to learn value functions using such function approximators in a stable and robust way due to two innovations: 1. the network is trained off-policy with samples from a replay buffer to minimize correlations between samples; 2. the network is trained with a target Q network to give consistent targets during temporal difference backups.
