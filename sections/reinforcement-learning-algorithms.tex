@@ -12,23 +12,23 @@ These algorithms tend to represent a policy through a parameter vector $\theta
 $\theta_i \in \theta$ to improve the expected sum of rewards
 $\mathbb{E}[\sum_{T} r(t)]$. Policy based algorithms are the main focus on Section~\ref{section:policy-gradient-methods}.
 
-Famous policy based algorithms: vanialla policy gradient, REINFORCE family of algorithms\@.
+Famous policy based algorithms: vanilla policy gradient, REINFORCE\citep{Williams1992} and the REINFORCE family of algorithms\@.
 
 \subsubsection{Value based}
 Value based, or critic only methods, rely exclusively on value function approximation and aim at learning an approximate solution to the Bellman equation. The underlying assumption is that from the value function, a near optimal policy can be computed.
 
-Famous value based algorithms: Value iteration, Policy iteration, Sarsa, Q-learning
+Famous value based algorithms: Value iteration, Policy iteration and Sarsa~\cite{Sutton1998}, Q-learning~\citep{Watkins1989}
 
 \subsubsection{Actor critic}
 
 Actor critic methods combine the strong points of both policy based and value based algorithms, and overcome some of their individual weaknesses. The critic assumes the role of learning a value function, which is then used as part of the update for the actor's policy. The individual critic is analogous to value based algorithms, and the actor to policy based methods.
 
-Famous actor critic algorithms: A3C, A2C, PPO, TRPO, ACKTR\@.
+Famous actor critic algorithms: A3C~\citep{Mnih2016}, A2C (find paper or explain), PPO~\citep{Schulman2017}, TRPO (Schulman 2015, find paper), ACKTR~\citep{Wu2017}.
 
 \subsubsection{Model free, model based}
 Consider the \textit{model} or the dynamics of an environment to be the transition function $\mathcal{P}(s_{t+1} | s_t, a_t)$ and reward function $\mathcal{R}(s_t, a_t, s_{t+1})$. Model free algorithms aim to approximate an optimal policy $\pi^*$ without explicitly using either $\mathcal{P}$ or $\mathcal{R}$ in their calculations.
 
-Model based algorithms are either given a prior model that they can use for planning \citep{browne2012survey, Soemers2014}, or they learn a representation via their own interaction with the environment \citep{Sutton1991, Guzdial2017}. Note that an advantage of learning your own model is that you can choose a representation of the environment that is relevant to the agent's actions, which can have the advantage of modelling uninteresting (but perhaps overly complicated) environment behaviour \citep{Pathak2017}. Another advantage of having a model is that it allows for forward planning, which is the main method of learning for search-based artificial intelligence (throw mcts papers here).
+Model based algorithms are either given a prior model that they can use for planning \citep{browne2012survey, Soemers2014}, or they learn a representation via their own interaction with the environment \citep{Sutton1991, Guzdial2017, Deisenroth2011}. Note that an advantage of learning your own model is that you can choose a representation of the environment that is relevant to the agent's actions, which can have the advantage of modelling uninteresting (but perhaps overly complicated) environment behaviour \citep{Pathak2017}. Another advantage of having a model is that it allows for forward planning, which is the main method of learning for search-based artificial intelligence (throw mcts papers here).
 
 
 \subsubsection{on-policy, off-policy}
@@ -39,15 +39,15 @@ A method to alllow algorithms to perform off policy updates to their policies is
 (see what to include) In an off-policy setting, on the other hand, an agent learns about a policy or policies different from the one it is executing Unlike on-policy methods, off-policy methods are able to, for example, learn about an optimal policy while executing an exploratory policy. Or learn from demostration (Smart and Kaelbling, 2002).
 and learn multiple tasks in parallel from a single sensori- motor interaction with an environment (Sutton et al., 2011).
 
-Some notable on policy algorithms: Sarsa, Monte Carlo estimation for prediction, Monte Carlo Tree search methods,  Many vanilla policy gradient methods such as REINFORCE\citep{Williams1992} family of algorithms, asynchronous advantage actor critic method (A3C and A2C).
+Some notable on policy algorithms: Sarsa, Monte Carlo estimation for prediction, Monte Carlo Tree search methods,  Many vanilla policy gradient methods such as REINFORCE\citep{Williams1992} family of algorithms, asynchronous advantage actor critic method (A3C and A2C). $Q(\sigma)$~\citep{Deasis2017}.
 
-Some notable off policy algorithms are. Q-learning, deep Q-learning, deep deterministic policy gradient
+Some notable off policy algorithms are. Q-learning, deep Q-learning, deterministic policy gradient (Silver et al 2014). Deep deterministic policy gradient~\citep{Lillicrap2015}
+
 
 \subsection{Common problems in Reinforcement Learning}
 \subsubsection{Credit assignment problem}
 As we have previously discussed, one of the difficulties of reinforcement learning is that feedback for actions is often delayed. The credit assignment problem focuses on the question: if a sequence of actions led to a reward, how much credit should each action take for obtaining that reward? It is against common sense to assume that every action should be equally rewarded or punished. This is commonly known as the credit assignment problem.
 \subsubsection{Exploration vs exploitation}
-The exploration vs exploitation dilemma corresponds to finding a good middle point between exploting the best action available at any given time (exploitation), or performing a sub optimal action in the hopes that the agent will learn more about the environment that could lead to higher expected rewards in the long run. A common approach in stochastic environments, the trade off between exploration and exploitation is tackled by the following idea. For each state $s_t \in \mathcal{S}$ we want to maximize the expected sum of rewards $\mathbb{E}_{\pi}[V_{\pi}(s_t)]$ and reduce the variance $\sigma^2_{s_t}$. The Upper Bound Confidence Monte Carlo Tree Search algorithm UCT-MCTS has a remarkable example of this tradeoff as part of its selection policy:
-
+The exploration vs exploitation dilemma corresponds to finding a good middle point between exploting the best action available at any given time (exploitation), or performing a sub optimal action in the hopes that the agent will learn more about the environment that could lead to higher expected rewards in the long run. A common approach in stochastic environments, the trade off between exploration and exploitation is tackled by the following idea. For each state $s_t \in \mathcal{S}$ we want to maximize the expected sum of rewards $\mathbb{E}_{\pi}[V_{\pi}(s_t)]$ and reduce the variance $\sigma^2_{s_t}$. The Upper Bound Confidence Monte Carlo Tree Search algorithm UCT-MCTS has a remarkable example of this tradeoff as part of its selection policy (explain selection policy or just chuck equation?):
 
 \end{document}
