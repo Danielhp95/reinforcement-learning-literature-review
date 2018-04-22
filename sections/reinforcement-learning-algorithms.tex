@@ -1,18 +1,53 @@
 \documentclass{../main.tex}{subfiles}
 \begin{document}
+% Inspiration: https://raw.githubusercontent.com/zkid18/RL-Study-Roadmap/master/header_image.png
+% Looks like a decent read: https://towardsdatascience.com/introduction-to-various-reinforcement-learning-algorithms-i-q-learning-sarsa-dqn-ddpg-72a5e0cb6287
 
-\subsubsection{ Most RL algorithms can be devided into the following categories:}
-\subsubsection{ Policy based}
-\subsubsection{ Value based}
-\subsubsection{ actor critic}
-\subsubsection{ model free, model based}
-\subsubsection{ online / offline}
-In an off-policy setting, on the other hand, an agent learns about a policy or policies different from the one it is executing
-Unlike on- policy methods, off-policy methods are able to, for example, learn about an optimal policy while executing an exploratory policy. Or learn from demostration (Smart and Kaelbling, 2002).
+Explain control vs prediction.
+
+Most RL algorithms can be devided into the following categories:
+\subsubsection{Policy based}
+These algorithms tend to represent a policy through a parameter vector $\theta
+\in \mathbb{R}^D$. The goal then becomes to improve the choice of parameters
+$\theta_i \in \theta$ to improve the expected sum of rewards
+$\mathbb{E}[\sum_{T} r(t)]$. Policy based algorithms are the main focus on Section~\ref{section:policy-gradient-methods}.
+
+Famous policy based algorithms: vanialla policy gradient, REINFORCE family of algorithms\@.
+
+\subsubsection{Value based}
+Value based, or critic only methods, rely exclusively on value function approximation and aim at learning an approximate solution to the Bellman equation. The underlying assumption is that from the value function, a near optimal policy can be computed.
+
+Famous value based algorithms: Value iteration, Policy iteration, Sarsa, Q-learning
+
+\subsubsection{Actor critic}
+
+Actor critic methods combine the strong points of both policy based and value based algorithms, and overcome some of their individual weaknesses. The critic assumes the role of learning a value function, which is then used as part of the update for the actor's policy. The individual critic is analogous to value based algorithms, and the actor to policy based methods.
+
+Famous actor critic algorithms: A3C, A2C, PPO, TRPO, ACKTR\@.
+
+\subsubsection{Model free, model based}
+Consider the \textit{model} or the dynamics of an environment to be the transition function $\mathcal{P}(s_{t+1} | s_t, a_t)$ and reward function $\mathcal{R}(s_t, a_t, s_{t+1})$. Model free algorithms aim to approximate an optimal policy $\pi^*$ without explicitly using either $\mathcal{P}$ or $\mathcal{R}$ in their calculations.
+
+Model based algorithms are either given a prior model that they can use for planning \citep{browne2012survey, Soemers2014}, or they learn a representation via their own interaction with the environment \citep{Sutton1991, Guzdial2017}. Note that an advantage of learning your own model is that you can choose a representation of the environment that is relevant to the agent's actions, which can have the advantage of modelling uninteresting (but perhaps overly complicated) environment behaviour \citep{Pathak2017}. Another advantage of having a model is that it allows for forward planning, which is the main method of learning for search-based artificial intelligence (throw mcts papers here).
+
+
+\subsubsection{on-policy, off-policy}
+On policy methods use a policy $\pi$ to gather experience on an environment in order to improve that same policy $\pi$. Off policy methods a behavioural policy $\mu$ to carry out actions in an environment, and use this information to improve a target policy $\pi$. The learning that takes place in off policy methods can be regarded as learning from somebody else's experience, whilst on policy methods focus on learning from an agent's own experience.
+
+A method to alllow algorithms to perform off policy updates to their policies is to introduce the notion of an \textit{experience replay}~\citep{Lin1993}, which was made famous after the success of~\cite{Mnih2013}. An experience replay is a list of experiences, where each experience is a 5 element tuple $<s_t, a_t, r_t, s_{t+1}, a_{t+1}>$. As an agent acts in an environment, in the same fashion as in the reinfocement learning loop presented in (reference), the experience replay is filled. At the time of updating the policy, the agent does not choose to update its policy using the last action function that was taken, as it is the case with Q-learning. Instead, the agent samples an experience (or batch of experiences) from the experience replay. Because these sampled experiences may have been generated using a previous policy, experience replay allows for policy updates to happen in an off-policy fashion.
+
+(see what to include) In an off-policy setting, on the other hand, an agent learns about a policy or policies different from the one it is executing Unlike on-policy methods, off-policy methods are able to, for example, learn about an optimal policy while executing an exploratory policy. Or learn from demostration (Smart and Kaelbling, 2002).
 and learn multiple tasks in parallel from a single sensori- motor interaction with an environment (Sutton et al., 2011).
-The most famous off policy method is qlearning~\citep{Watkins1989}.
-\subsubsection{ on-policy, off-policy}
 
-A further categorization of algorithms is the notion of \textit{model free} and \textit{model based} algorithms. Consider a \textit{model} of an environment to be the transition function $\mathcal{P}$ and reward function $\mathcal{R}$. Model free algorithms aim to approximate an optimal policy without them. Model based algorithms are either given a prior model that they can use for planning \citep{browne2012survey, Soemers2014}, or they learn a representation via their own interaction with the environment \citep{Sutton1991, Guzdial2017}. Note that an advantage of learning your own model is that you can choose a representation of the environment that is relevant to the agent's actions, which can have the advantage of modelling uninteresting (but perhaps complicated) environment behaviour \citep{Pathak2017}.
+Some notable on policy algorithms: Sarsa, Monte Carlo estimation for prediction, Monte Carlo Tree search methods,  Many vanilla policy gradient methods such as REINFORCE\citep{Williams1992} family of algorithms, asynchronous advantage actor critic method (A3C and A2C).
+
+Some notable off policy algorithms are. Q-learning, deep Q-learning, deep deterministic policy gradient
+
+\subsection{Common problems in Reinforcement Learning}
+\subsubsection{Credit assignment problem}
+As we have previously discussed, one of the difficulties of reinforcement learning is that feedback for actions is often delayed. The credit assignment problem focuses on the question: if a sequence of actions led to a reward, how much credit should each action take for obtaining that reward? It is against common sense to assume that every action should be equally rewarded or punished. This is commonly known as the credit assignment problem.
+\subsubsection{Exploration vs exploitation}
+The exploration vs exploitation dilemma corresponds to finding a good middle point between exploting the best action available at any given time (exploitation), or performing a sub optimal action in the hopes that the agent will learn more about the environment that could lead to higher expected rewards in the long run. A common approach in stochastic environments, the trade off between exploration and exploitation is tackled by the following idea. For each state $s_t \in \mathcal{S}$ we want to maximize the expected sum of rewards $\mathbb{E}_{\pi}[V_{\pi}(s_t)]$ and reduce the variance $\sigma^2_{s_t}$. The Upper Bound Confidence Monte Carlo Tree Search algorithm UCT-MCTS has a remarkable example of this tradeoff as part of its selection policy:
+
 
 \end{document}
