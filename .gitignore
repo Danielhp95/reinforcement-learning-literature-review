@@ -1,4 +1,3 @@
-Session.vim
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
@@ -219,3 +218,8 @@ TSWLatexianTemp*
 
 # expex forward references with \gathertags
 *-tags.tex
+
+# VIM: Swap-files
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+Session.vim
