@@ -1,0 +1,124 @@
+Questions for Arthur Juliani:
+
+    1 - Regarding ML-agents in general: 
+        1.1 Should all the logic related to the environment be encapsulateu withing AcademyStep() and AgentStep()? (excluding elements such as nice visuals if the agent can't perceive them) 
+            - Preferably all should go within AgentStep().
+        1.2 Current speed 100x. Any plans of making that faster?  
+            - Yes. As on 2018.2 headless mode will run as fast as possible.
+        1.3 Why multiple instances of the object at the same time, to collect more info?
+            - Yes, hacky, add later!
+
+    2 - Regarding the change from v 0.2 to 0.3: 
+        2.1 - Why did you ditch the idea of using CoreBrain class as a middle man between the academy and the agent, and have instead opted for using C#'s 'event system' (pub/sub) 
+            - Same as below 
+        2.2 - The event system is definately more comfortable to work with. However, is it scalable?  (has Unity tested this claim)
+            - Apparently garbage collector was called fewer times, plus more understandable
+
+    3 - Regarding Decision points and the Decision class: 
+        3.1 Is this Unity's take on Semi markov decision processes? 
+            - Yes
+
+
+    WORKSHOP questions: Can you show us how a small example of both a global monitor and a non global monitor.
+    Comment to Arthur: Really elegant code Comment to Arthur: Looking through the code, the naming convention can sometimes be a bit critic. The academy event AgentAct() calls the function AgentStep, when one would assume that it calls the function AgentAction() (user defined function). AgentAction is called inside AgentStep()
+
+    Remark: RunMDP has been renamed to EnvironmentStep()
+
+Questions for Esh (Unity) (definately not his real name). 
+
+    1 - Docker
+        1.1 Planning on including docker GPU support anytime soon?
+        1.2 In the docs it is stated that "We currently offer a solution for Windows and Mac users who would like to do training or inference using Docker.", This seems misleading as it sounds as if you are not able to run it in linux.
+
+Questions for Mateo Hessel:
+
+    1. Small pitch on prioritized experience replay?
+        - Give each experience a priority.
+    2. For DQN with n-step -> because you sample from the replay buffer, If minibatch is of size X do you sample X/n sets of n sequential steps?
+        - You already know! Write it down
+
+Alex compared you with Siraj Raval... :P
+
+
+NOTES: Ubisoft and Deep RL
+Email: laforge@ubisoft.com
+
+- NOTES: They have cool initiative, but lacking benchmarking and complex systems.
+- Ubisoft La Forge Research lab. Research (They are hiring)
+- Sutton and Barto don't think evolutionary methods are good for RL problems.
+- Evolutionary look at the total reward, they don't try to solve the credit assignment problem
+- Evolutionary methods are always on policy
+- Reinforcement learning in For Honor:
+    - Heroes are the agents.
+    - Opponent is the environment
+    - state: feature vectors (distance to target, self hp, self, stance (top, down), stamina, animation id, target hp, ...) (~100 state size)
+    - Action: discrete, (like fightingice)
+        - Adding a NO_ACTION action didn't change behaviour nor performance significantly.
+    - reward: based on on damage delta, +1 on killing.
+    - Currently using Dueling Double DQN with prioritized experience replay. They want to change this to RAINBOW (almost there)
+    - They don't want to learn from pixels.
+    - - Experimental setup
+        - Python wrapper to train after data collection
+        - Map with no obstacles and up to 10 duels in paralell.
+            - Which means that they can learn different models
+        - Speed increaseof 2x
+        - Similar to Distributed Prioritized XP Replay
+        - They used 3 fat computers running 10 games each.
+    - They have looked into Impala, Reactor and other algorithms
+    - RLlib for distributed RL implementations, they have a lot 
+    - Distributed RL in Ubisoft:
+        - Keras-RL & Python multiprocessing.
+            - Ubisoft hacked it together so that Keras will scale.
+    - Game bot (boring AI). Deep bot (cool AI)
+        They use self-play!
+    - Human behaviour
+        - Delaying actions, or delay observation. Read paper "At Human Speed: Deep Reinforcement Learning with Action Delay".
+    - First results:
+        - It learned, although there was a lot  of variance. (Run around 10 experiments, different results on same parameters)
+            - Experiment 1: Exploits range.
+            - Experiment 2: Gets close up.
+        - They used reward shaping to give a reward to do "Guard break", which is a powerful mechanic. The agent refused to kill opponent in favour of just guard breaking.
+    - Fighting designer feedback:
+        - AI does not fight optimally and it is hard to use as a balancing tool
+    - Dev testers
+        - Not human like enough
+        - Failed to identify "guaranteed" hits
+    - AI designers:
+        - grateful that bot exploits were found.
+        - Learnt that berserker could not block a specially powerful attack after guard break.
+    - Work in progress
+        - Testing loop
+            - Train Deepbot vs gamebot
+            - analyze result
+            - if game bot issues
+                - tweak game bot
+            - else
+                - tweak deepbot
+    - Future work:
+        - Use distributional RL, estimate Q distribution instead of Expected Q value
+        - environmental awareness (fire, ledges, walls)
+        - Build deployment, job scheduling and monitoring, devteam-friendly
+        - scientific framework. Model testing and benchmarking, etc
+
+- Reinforcement learning in Watch Dogs 2.0 (Driving AI): (not shippped in real game)
+    - "PID" controller, custom aceleration curves. very time consuming and "OK" behaviour.
+    - Action: acceleration [0,1], break/accelerate[-1,1], steer[-1,1].
+    - Reward: get to the end
+    - They use DDPG. DQN for continuous actions.
+    - Game gives  trajectory to follow. Use reward shaping. + reward for staying in course, - reward for moving away.
+    - Obviously policies  didn't generalize if tried on other vehicles. Needed to retrain per vehicle, or cluster in vehicles according to their physical properties.
+    - If reward was given to increase forward speed, cars would not be able to turn.
+        - Modify eploration strategy to randomly force break
+    - Drifting didn't work because the car would need to go off the pre computed trajectory, which would yield lower reward.
+        - They want to try Hindsight Replay
+    - RL for vehicle control.
+        - Works for slow speeds (smooth control)
+        - Can earn vehicle-specific models pretty fast.
+        - Hard to define realistic trajectories, and proper rewards.
+        - Parameterized actions?
+-Practicall tips
+    - Simplify action space and disambiguate actions.
+    - Block actions. (This could be quite cool. take probabilities  of only valid actions, renormalize and sample)
+    - Exploration. Combine exploration strategies, think how exploration leads to reward.
+    - Neural network architectures optimization is seconday
+    - If you know what the agent needs to remember, give "fake" memory of it, don't use RNNs.
