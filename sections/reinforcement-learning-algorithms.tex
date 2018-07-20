@@ -23,10 +23,10 @@ Famous value based algorithms: Value iteration, Policy iteration and Sarsa~\cite
 
 Actor critic methods combine the strong points of both policy based and value based algorithms, and overcome some of their individual weaknesses. The critic assumes the role of learning a value function, which is then used as part of the update for the actor's policy. The individual critic is analogous to value based algorithms, and the actor to policy based methods.
 
-Famous actor critic algorithms: A3C~\citep{Mnih2016}, A2C (find paper or explain), PPO~\citep{Schulman2017}, TRPO (Schulman 2015, find paper), ACKTR~\citep{Wu2017}.
+Famous actor critic algorithms: A3C~\citep{Mnih2016}, A2C a variant of A3C where a single worker is used, PPO~\citep{Schulman2017}, TRPO (Schulman 2015, find paper), ACKTR~\citep{Wu2017}.
 
-\subsubsection{Model free, model based}
-Consider the \textit{model} or the dynamics of an environment to be the transition function $\mathcal{P}(s_{t+1} | s_t, a_t)$ and reward function $\mathcal{R}(s_t, a_t, s_{t+1})$. Model free algorithms aim to approximate an optimal policy $\pi^*$ without explicitly using either $\mathcal{P}$ or $\mathcal{R}$ in their calculations.
+\subsubsection{Model based and model free approaches}
+In the reinforcement learning literature the \textit{model} or the dynamics of an environment is considered to be the transition function $\mathcal{P}(s_{t+1} | s_t, a_t)$ and reward function $\mathcal{R}(s_t, a_t, s_{t+1})$. Model free algorithms aim to approximate an optimal policy $\pi^*$ without explicitly using either $\mathcal{P}$ or $\mathcal{R}$ in their calculations.
 
 Model based algorithms are either given a prior model that they can use for planning \citep{browne2012survey, Soemers2014}, or they learn a representation via their own interaction with the environment \citep{Sutton1991, Guzdial2017, Deisenroth2011}. Note that an advantage of learning your own model is that you can choose a representation of the environment that is relevant to the agent's actions, which can have the advantage of modelling uninteresting (but perhaps overly complicated) environment behaviour \citep{Pathak2017}. Another advantage of having a model is that it allows for forward planning, which is the main method of learning for search-based artificial intelligence (throw mcts papers here).
 

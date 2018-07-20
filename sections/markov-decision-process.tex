@@ -1,17 +1,37 @@
 \documentclass{../main.tex}{subfiles}
+
+\newcommand{\var}{\texttt}
+
 \begin{document}
 
-\cite{Bellman1957} introduced the concept of a Markov Decision Process (MDP) as an extension of the famous idea of Markov chains. Markov decision processes are a standard model for sequential decision making and control problems. An MDP is fully defined by the 5-tuple $(\mathcal{S}, \mathcal{A}, \mathcal{P(\cdot | \cdot, \cdot)}, \mathcal{R(\cdot, \cdot)}, \gamma)$. Whereby:
+The most famous environment representation in RL are Markov Decision Processes (MDP)~\citep{Bellman1957}. Bellman introduced the concept of a Markov Decision Process as an extension of the famous mathematical construct of Markov chains. Markov Decision Processes are a standard model for sequential decision making and control problems. An MDP is fully defined by the 5-tuple $(\mathcal{S}, \mathcal{A}, \mathcal{P(\cdot | \cdot, \cdot)}, \mathcal{R(\cdot, \cdot)}, \gamma)$. Whereby:
 
 \begin{itemize}
-\item $\mathcal{S}$ is the set of states $s \in \mathcal{S}$, where $s_t \in \mathcal{S}$ represents the state at time $t$.
-\item $\mathcal{A}$ is the set of actions $a \in \mathcal{A}$ and $A_t \subset \mathcal{A}$ is the subset of actions available in state $s_t$. If an state $s_t$ has no available actions, it is said to be a \textit{terminal} state.
-\item $\mathcal{P}(s' | s, a) = P{St_{t+1} = s | s_t = s a_t = a}$ where $s, s' \in \mathcal{S}$, $a \in \mathcal{A}$ is a transition kernel which states the probability of transitioning to state $s'$ from state $s$ after performig action $a$. $\mathcal{P}: \mathcal{S} \times \mathcal{A} \to \mathcal{S}$. If the environment is stochastic, as opposed to deterministic, the function $\mathcal{P}$ maps a state-action pair to a distribution over states in $\mathcal{S}$. %chktex 35
-\item $\mathcal{R}(s, a)$ where $s \in \mathcal{S}$, $a \in \mathcal{A}$; is the reward function, which returns the immediate reward (typically in the range $[-1,1]$) of performing action $a$ in state $s$. $\mathcal{R}: \mathcal{S} \times \mathcal{A} \to \mathbb{\mathcal{R}}$. The reward at time step $t$ can be interchangably written as $r_t$ or $r(s_t, a_t)$.
-\item $\gamma \in [0,1]$ is the discount factor, which represent the rate of importance between the current reward and future rewards. If $\gamma = 0$ the agent cares only about the immediate reward, if $\gamma = 1$ all rewards $r_t$ are taken into account, this is only allowed in episodic tasks, as otherwise $t \rightarrow \infty$ \citep{Sutton1999}. $\gamma$ is often used as a variance reduction method, and aids proofs in infinitely running environments.
+\item $\mathcal{S}$ is the set of states $s \in \mathcal{S}$ of the underlying Markov chain, where $s_t \in \mathcal{S}$ represents the state of the environment at time $t$.
+\item $\mathcal{A}$ is the set of actions $a \in \mathcal{A}$ which are the transition labels between states of the underlying Markov chain. $A_t \subset \mathcal{A}$ is the subset of actions available at state $s_t$ at time $t$. If an state $s_t$ has no available actions, it is said to be a \textit{terminal} state.
+\item $\mathcal{P}(s_{t+1} | s_t, a_t) \in [0, 1]$, where $s_t, s_{t+1} \in \mathcal{S}$, $a_t \in \mathcal{A}$. $\mathcal{P}$ is the transition probability function\footnote{The function $\mathcal{P}$ is also known in the literature as the transition probability kernel, or the transition kernel~\citep{Tamar2017}. The word kernel is a heavily overloaded mathematical term that refers to a function that maps a series of inputs to value in $\mathbb{R}$.}. It defines the probability of transitioning to state $s_{t+1}$ from state $s_t$ after performig action $a_t$. Thus, $\mathcal{P}: \mathcal{S} \times \mathcal{A} \to [0,1]$. If the environment is deterministic, which means that all state transitions are deterministic, all the probability mass will be concentrated in a single state $s \in \mathcal{S}$. Given a state $s_t$ and an action $a_t$ at time $t$, we can find the next state $s_{t+1}$ by sampling from the distribution $s_{t+1} \sim P(s_t, a_t)$.%chktex 35
+\item $\mathcal{R}(s_t, a_t) \in \mathbb{R}$, where $s_t \in \mathcal{S}$, $a_t \in \mathcal{A}$. $\mathcal{R}$ is the reward function, which returns the immediate reward of performing action $a_t$ in state $s_t$. The real-valued reward\footnote{The reward $r_t$ can be equivalently written as $r(s_t, a_t)$.} $r_t$ is typically in the range $[-1,-1]$. $\mathcal{R}: \mathcal{S} \times \mathcal{A} \to \mathbb{R}$.
+\item $\gamma \in [0,1]$ is the discount factor, which represent the rate of importance between immediate and future rewards. If $\gamma = 0$ the agent cares only about the immediate reward, if $\gamma = 1$ all rewards $r_t$ are taken into account. $\gamma$ is often used as a variance reduction method, and aids proofs in infinitely running environments~\citep{Sutton1999}.
 \end{itemize}
 
-% An agent’s behavior is defined by a policy, π, which maps states to a probability distribution over the actions π: S → P(A)
+The environment is sometimes represented by the Greek letter $\xi$. The tuple of elementes introduced above are the core components of any environment $\xi$, but a lot of work in RL literature also presents a distribution over initial states $\rho_0$ of the MDP, So that the initial state can be sampled from it: $s_0 \sim \rho_0$.
+
+An environment can be episodic if it presents terminal states, or if there are a fixed number of steps after which the environment will not accept any more actions. However environments can also run infinitely (TODO add examples).
+
+On the other hand there is the agent, which acts in the environment, and through its actions the transitions between the MDP states are triggered, advancing the environment and obtaining rewards. The agent's behaviour is fully defined by its policy $\pi$. A policy $\pi(a_t | s_t) \in [0,1]$, where $s_t \in \mathcal{S}$, $a_t \in \mathcal{A}$ is a mapping from states to a distribution over actions. Given a state $s_t$ it is possible to sample an action $a_t$ from the policy distribution $a_t \sim \pi(s_t)$. Thus, $\pi: \mathcal{S} \times \mathcal{A} \to [0,1]$.
+
+The reinforcement learning loop presented in figure \ref{fig:rl-loop} can be represented in algorithmic form as follows:
+\begin{algorithm}
+Sample initial state from the initial state distribution $s_0 \sim \rho_0$ \;
+$\var{t} \leftarrow 0$ \;
+\Repeat{Termination} {
+    Sample action $a_t \sim \pi(s_t)$\;
+    Sample successor state from the transition probability function $ s_{t+1} \sim P(s_t, a_t)$ \;
+    Sample reward from reward function $r_t \sim R(s_t, a_t, s_{t+1})$ \;
+    $\var{t} \leftarrow \var{t} + 1$ \;
+}
+\caption{Reinforcement Learning loop.}
+\end{algorithm}
 
 From here we can introduce the notion of an agent. (link to control theory?), An agent is an entity that on every state $s_t \in \mathcal{S}$ it can take an action $a_t \in \mathcal{A}$ in an environment transforming the environment from $s_t$ to $s_{t+1}$. The beheviour of an agent is fully defined by a policy $\pi$. A policy $\pi$ is a mapping from states to actions, $\pi: \mathcal{S} \to \mathcal{A}$. The agent chooses which action $a_t$ to take in every state $s_t$ by querying its policy such that $a_t = \pi(s_t)$. If the policy is stochastic, $\pi$ will map an action to a distribution over action $a_t \sim \pi(s_t)$. The objective for an agent is to find an \textit{optimal} policy, which tries to maximize the cumulative sum of possibly discounted rewards.
 
@@ -24,8 +44,6 @@ There are two functions of special relevance in reinforcement learning, the \tex
 The Bellman equations are the most straight forward, dynamic programming approach at solving MDPs \citep{Bertsekas2007, Bellman1957}.
 
 \subsection{Bellman equations and optimality principle}
-
-Note that in general it is not the case that all actions $a \in \mathcal{A}$ can be taken on every state $s_t \in \mathcal{S}$.
 
 The optimality principle, found in~\cite{Bellman1957}, states the following: An optimal policy has the property that whatever the initial state and initial decision are, the remaining decisions must constitute an optimal policy with regard to the state resulting from the first decision. The optimality principle, coupled with the proof of the existance of a deterministic optimal policy for any MDP as outlined in \citep{Borkar1988} give rise to the optimal state value function $V^{*}(s) = \operatorname*{argmax}_{\pi} V^{\pi}(s) = V^{\pi^{*}}(s)$ and the optimal action value function $Q^{*}(s,a) = \operatorname*{argmax}_{\pi} Q^{\pi}(s, a) = Q^{\pi^{*}}(s, a)$. The optimal value functions determine the best possible performance in a MDP\@. An MDP is considered \textit{solved} once the optimal value functions are found. 
 
