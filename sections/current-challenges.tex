@@ -2,11 +2,11 @@
 \begin{document}
 
 \begin{itemize}
-\item Sample efficiency
-\item Exploration vs exploitation
-\item Hyperparameter tuning
-\item Replicability of results
-\item Generalization (overffiting like crazy to current environment)
+    \item Sample efficiency. Hindsight Experience replay helps, Auxiliary tasks (Unreal, FTW) to use samples from the environment to carry out tasks that will help in the learning process of the agent's policy (like learning future reward and pixel control). In environments which require heavy exploration of the state space before a sparse reward can be found, (curiosity paper) encourages the agent to explore parts of the state space that it does not recognise. It can also be argued that RL algorithms fair poorly against the learning of humans because they learn from scratch. (Exploring human priors paper) explores various priors exhibited by humans such as (look them up again) and performs an ablation study to rank these by importance, where importance is meassured by how much they contribute to the final performance. These researchers claim that if  RL algorithms could quickly learn these priors in the correct order, training time for RL algorithms would be greatly reduced.
+    \item Exploration vs exploitation
+    \item Hyperparameter tuning. Big problem in machine learning in general. Sequentially through bayesian optimization, or on parallel with population baed training, (ntbea?). 
+    \item Generalization. (overffiting like crazy to current environment). Specially true for robotic applications where you can't model the real world perfectly. This can be solved by parameterizing the environment's behaviour. In the case of physics engines it would be to parameterize friction, gravity\ldots to ensure that when the agent is dropped in the real world, it can quickly adapt to it (find papers). Links to meta-rl papers and meta learning?
+    \item Replicability of results.
 \end{itemize}
 
 \end{document}

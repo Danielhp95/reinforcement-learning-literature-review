@@ -32,6 +32,10 @@ Model based algorithms are either given a prior model that they can use for plan
 
 
 \subsubsection{on-policy, off-policy}
+
+% An agent is learning on-policy if it learns about the policy that it is currently following. In the off-policy setting an agent learns from experience of another agent or another policy, e.g. a previous policy 
+
+
 On policy methods use a policy $\pi$ to gather experience on an environment in order to improve that same policy $\pi$. Off policy methods a behavioural policy $\mu$ to carry out actions in an environment, and use this information to improve a target policy $\pi$. The learning that takes place in off policy methods can be regarded as learning from somebody else's experience, whilst on policy methods focus on learning from an agent's own experience.
 
 A method to alllow algorithms to perform off policy updates to their policies is to introduce the notion of an \textit{experience replay}~\citep{Lin1993}, which was made famous after the success of~\cite{Mnih2013}. An experience replay is a list of experiences, where each experience is a 5 element tuple $<s_t, a_t, r_t, s_{t+1}, a_{t+1}>$. As an agent acts in an environment, in the same fashion as in the reinfocement learning loop presented in (reference), the experience replay is filled. At the time of updating the policy, the agent does not choose to update its policy using the last action function that was taken, as it is the case with Q-learning. Instead, the agent samples an experience (or batch of experiences) from the experience replay. Because these sampled experiences may have been generated using a previous policy, experience replay allows for policy updates to happen in an off-policy fashion.
