@@ -1,10 +1,29 @@
-@article{Hansen2004,
-author = {Hansen, Eric and Bernstein, Daniel and Zilberstein, Shlomo},
-file = {:home/sarios/papers/dynamic-programming-for-partially-observable-stochastic-games.pdf:pdf},
-journal = {Nineteenth Conference on Artificial Conference (AAAI)},
-pages = {709--715},
-title = {{Dynamic Programming for Partially Observable Stochastic Games}},
-year = {2004}
+@misc{Bellman1957a,
+abstract = {Bellman R. A markovian decision process. Journal of Mathematics and Mechanics, 6, 1957.},
+author = {Bellman, Richard},
+booktitle = {Journal Of Mathematics And Mechanics},
+doi = {10.1007/BF02935461},
+file = {:home/sarios/papers/a-markovian-decision-process.pdf:pdf},
+isbn = {0095-9057},
+issn = {01650114},
+pages = {679--684},
+title = {{A Markovian decision process}},
+volume = {6},
+year = {1957}
+}
+@article{Boutilier1996,
+abstract = {There has been a growing interest in AI in the design ofmultiagent systems, especially inmultiagent cooperative planning. In this paper, we investigate the extent towhichmethods fromsingle-agent planning and learning can be applied in multiagent settings. We survey a number of different techniques fromdecision-theoretic planning and reinforcement learning and describe a number of interesting issues that arise with regard to coordinating the policies of individual agents. To this end, we describe multiagent Markov decision processes as a general model in which to frame this discussion. These are special n-person cooperative games in which agents share the same utility function. We discuss coordination mechanisms based on imposed conventions (or social laws) as well as learning methods for coordination. Our focus is on the decomposition of sequential decision processes so that coordination can be learned (or imposed) locally, at the level of individual states. We also discuss the use of structured problem representations and their role in the generalization of learned conventions and in approximation.},
+author = {Boutilier, Craig},
+file = {:home/sarios/papers/planning-learning-and-coordination-in-multiagent-decision-processes.pdf:pdf},
+isbn = {1-55860-417-9},
+issn = {1-55860-417-9},
+journal = {Proceedings of the 6th conference on Theoretical aspects of rationality and knowledge},
+keywords = {Environments,conventions,coordination,emergent,mmdp,social law},
+mendeley-tags = {Environments},
+pages = {195--210},
+title = {{Planning, learning and coordination in multiagent decision processes}},
+url = {http://dl.acm.org/citation.cfm?id=1029710},
+year = {1996}
 }
 @article{Oliehoek2014,
 abstract = {Bayesian methods for reinforcement learning are promising because they allow model uncertainty to be considered ex-plicitly and offer a principled way of dealing with the explo-ration/exploitation tradeoff. However, for multiagent sys-tems there have been few such approaches, and none of them apply to problems with state uncertainty. In this paper we fill this gap by proposing two frameworks for Bayesian RL for multiagent systems with state uncertainty. This includes a multiagent POMDP model where a team of agents oper-ates in a centralized fashion, but has uncertainty about the model of the environment. We also consider a best response model in which each agent also has uncertainty over the policies of the other agents. In each case, we seek to learn the appropriate models while acting in an online fashion. We transform the resulting problem into a planning problem and prove bounds on the solution quality in different situations. We demonstrate our methods using sample-based planning in several domains with varying levels of uncertainty about the model and the other agents' policies. Experimental re-sults show that overall, the approach is able to significantly decrease uncertainty and increase value when compared to initial models and policies.},
@@ -114,45 +133,6 @@ title = {{Hindsight Experience Replay}},
 url = {http://arxiv.org/abs/1707.01495},
 year = {2017}
 }
-@article{Jaderberg2017,
-abstract = {Neural networks dominate the modern machine learning landscape, but their training and success still suffer from sensitivity to empirical choices of hyperparameters such as model architecture, loss function, and optimisation algorithm. In this work we present $\backslash$emph{\{}Population Based Training (PBT){\}}, a simple asynchronous optimisation algorithm which effectively utilises a fixed computational budget to jointly optimise a population of models and their hyperparameters to maximise performance. Importantly, PBT discovers a schedule of hyperparameter settings rather than following the generally sub-optimal strategy of trying to find a single fixed set to use for the whole course of training. With just a small modification to a typical distributed hyperparameter training framework, our method allows robust and reliable training of models. We demonstrate the effectiveness of PBT on deep reinforcement learning problems, showing faster wall-clock convergence and higher final performance of agents by optimising over a suite of hyperparameters. In addition, we show the same method can be applied to supervised learning for machine translation, where PBT is used to maximise the BLEU score directly, and also to training of Generative Adversarial Networks to maximise the Inception score of generated images. In all cases PBT results in the automatic discovery of hyperparameter schedules and model selection which results in stable training and better final performance.},
-annote = {The paper presents a method to find a good set of hyperparameters and trainable parameters for a model. The procedure not only learns hyper parameters, but also a hyperparameter schedule (different set of hyper parameters as the training progresses).
-
-It presents itself as an alternative to random / grid search and bayesian optimization. It's main advantage over the latter is that it can be used asynchronously in parallel. Bayesian optimization is (as far as I know), sequential.
-
-Population based training is based on the idea of evaluating the performance of a model's hyper parameters and parameters (network weights), for instance by average reward in the last 10 episodes. If a model is performing worse than average, the hyper parameters and / or parameters of a better model will be copied over and mutated (to further explore the space of (hyper)parameters). 
-
-Because of the greedy nature of the algorithm, they recommend a population of at least 20. Diminishing returns with bigger population sizes.},
-archivePrefix = {arXiv},
-arxivId = {1711.09846},
-author = {Jaderberg, Max and Dalibard, Valentin and Osindero, Simon and Czarnecki, Wojciech M. and Donahue, Jeff and Razavi, Ali and Vinyals, Oriol and Green, Tim and Dunning, Iain and Simonyan, Karen and Fernando, Chrisantha and Kavukcuoglu, Koray},
-eprint = {1711.09846},
-file = {:home/sarios/papers/population-based-training.pdf:pdf},
-title = {{Population Based Training of Neural Networks}},
-url = {http://arxiv.org/abs/1711.09846},
-year = {2017}
-}
-@article{Brown2018,
-abstract = {A fundamental challenge in imperfect-information games is that states do not have well-defined values. As a result, depth-limited search algorithms used in single-agent settings and perfect-information games do not apply. This paper introduces a principled way to conduct depth-limited solving in imperfect-information games by allowing the opponent to choose among a number of strategies for the remainder of the game at the depth limit. Each one of these strategies results in a different set of values for leaf nodes. This forces an agent to be robust to the different strategies an opponent may employ. We demonstrate the effectiveness of this approach by building a master-level heads-up no-limit Texas hold'em poker AI that defeats two prior top agents using only a 4-core CPU and 16 GB of memory. Developing such a powerful agent would have previously required a supercomputer.},
-archivePrefix = {arXiv},
-arxivId = {1805.08195},
-author = {Brown, Noam and Sandholm, Tuomas and Amos, Brandon},
-eprint = {1805.08195},
-file = {:home/sarios/papers/Depth-Limited-Solving-for-imperfect-information-games.pdf:pdf},
-title = {{Depth-Limited Solving for Imperfect-Information Games}},
-url = {http://arxiv.org/abs/1805.08195},
-year = {2018}
-}
-@article{Lipton2018,
-archivePrefix = {arXiv},
-arxivId = {1807.03341},
-author = {Lipton, Zachary C and Steinhardt, Jacob},
-eprint = {1807.03341},
-file = {:home/sarios/papers/troubling-trends-in-machine-learning-scholarship.pdf:pdf},
-pages = {1--15},
-title = {{Troubling Trends in Machine Learning Scholarship}},
-year = {2018}
-}
 @article{Littman1994,
 abstract = {In the Markov decision process (MDP) formalization of reinforcement learning, a single adaptive agent interacts with an environment defined by a probabilistic transition function. In this solipsistic view, secondary agents can only be part of the environment and are therefore fixed in their behavior. The framework of Markov games allows us to widen this view to include multiple adaptive agents with interacting or competing goals. This paper considers a step in this direction in which exactly...},
 author = {Littman, Michael L.},
@@ -168,17 +148,6 @@ pmid = {17034835},
 title = {{Markov games as a framework for multi-agent reinforcement learning}},
 url = {http://linkinghub.elsevier.com/retrieve/pii/B9781558603356500271},
 year = {1994}
-}
-@article{Lucas2018,
-abstract = {This paper describes the N-Tuple Bandit Evolutionary Algorithm (NTBEA), an optimisation algorithm developed for noisy and expensive discrete (combinatorial) optimisation problems. The algorithm is applied to two game-based hyper-parameter optimisation problems. The N-Tuple system directly models the statistics, approximating the fitness and number of evaluations of each modelled combination of parameters. The model is simple, efficient and informative. Results show that the NTBEA significantly outperforms grid search and an estimation of distribution algorithm.},
-archivePrefix = {arXiv},
-arxivId = {1802.05991},
-author = {Lucas, Simon M and Liu, Jialin and Perez-Liebana, Diego},
-eprint = {1802.05991},
-file = {:home/sarios/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Lucas, Liu, Perez-Liebana - 2018 - The N-Tuple Bandit Evolutionary Algorithm for Game Agent Optimisation.pdf:pdf},
-title = {{The N-Tuple Bandit Evolutionary Algorithm for Game Agent Optimisation}},
-url = {http://arxiv.org/abs/1802.05991},
-year = {2018}
 }
 @article{Hessel2017,
 abstract = {The deep reinforcement learning community has made several independent improvements to the DQN algorithm. However, it is unclear which of these extensions are complementary and can be fruitfully combined. This paper examines six extensions to the DQN algorithm and empirically studies their combination. Our experiments show that the combination provides state-of-the-art performance on the Atari 2600 benchmark, both in terms of data efficiency and final performance. We also provide results from a detailed ablation study that shows the contribution of each component to overall performance.},
@@ -226,53 +195,6 @@ pmid = {3347383},
 title = {{Learning to Fight}},
 url = {http://www.herbrich.me/papers/graehergol04.pdf},
 year = {2004}
-}
-@inproceedings{Bown2011,
-abstract = {One of the goals of artificial life in the arts is to develop systems that exhibit creativity. We argue that creativity per se is a confusing goal for artificial life systems because of the complexity of the relationship between the system, its designers and users, and the creative domain. We analyse this confusion in terms of factors affecting individual human motivation in the arts, and the methods used to measure the success of artificial creative systems. We argue that an attempt to understand creative agency as a common thread in nature, human culture, human individuals and computational systems is a necessary step towards a better understanding of computational creativity. We define creative agency with respect to existing theories of creativity and consider human creative agency in terms of human social behaviour. We then propose how creative agency can be used to analyse the creativity of computational systems in artistic domains.},
-address = {Berlin, Heidelberg},
-author = {Bown, Oliver and McCormack, Jon},
-booktitle = {Advances in Artificial Life. Darwin Meets von Neumann},
-editor = {Kampis, George and Karsai, Istv{\'{a}}n and Szathm{\'{a}}ry, E{\"{o}}rs},
-isbn = {978-3-642-21314-4},
-pages = {254--261},
-publisher = {Springer Berlin Heidelberg},
-title = {{Creative Agency: A Clearer Goal for Artificial Life in the Arts}},
-year = {2011}
-}
-@inproceedings{DInverno2015,
-annote = {General comments. There are many questions posed in this paper. Some of which are not answered.
-
-
-Summary. The paper explores, solely at a theoretical level, the role of AI system in the process of art creation from three different perspectives (as artists, AI researchers and as audience). (add a bit on some of the questions?)
-
-The paper introduces the concept of Heroic AI and Collaborative AI in the framework of art creation. The former encapsualtes any AI system that autonomously produces a piece of art, without intervention or collaboration with outside entities. The latter encompases more abstract systems that communicate with external systems (humans or other AI systems), recieving and communicating feedback on the process of art creation in order to collaboratively generate art.
-
-There are some insightful comments on the trajectory that AI research has been taking over the decades, focusing mainly on systems that could by themself compare or surpass human performance in various fields. Instead, the main body of the paper pays more attention to AI systems that have the potential to aid and support humans in their own work, in this case being the creation of art. From this, the authors propose to move aside from generating heroic AI systems in favour of researching systems of collaborative nature.
-
-Major points:
--Most of the phrased questions are never answered. It is mentioned that questions will be studied in further detail, but most questions are only presented, not discussed.
-- The last paragraph of section 2 talks about how the intended outcome of automation is to save time, and how increased automation has not yielded an increase in a human's average free time. The statement is well referenced and the view presented is well balanced. However, I failed to see the relevance of this statement in the broader context of the paper. This paper dwells into AI systems and their relevance in the process of creating art, not on the time efficiency that could come from automating more parts of the artistic process, or the unexpected increase of "time famine" that could come from it. 
-
-Minor points:
--Interesting small comentary on the relevancy of art created by other specices.
-- The comment "This tradition [bringing new form of creativity] into the world is renewed... with a greater ironic twist". You indicate that the irony lies in the fact that a heroic AI is restricted to its programmed behaviour, which is based on the author's already existing notion of art. The tone of this note in the paper is dismissal, however this is a systematical restriction that modern "heroic AI" systems suffer from.},
-author = {D'Inverno, Mark and McCormack, Jon},
-booktitle = {IJCAI International Joint Conference on Artificial Intelligence},
-file = {:home/sarios/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/D'Inverno, McCormack - 2015 - Heroic versus collaborative AI for the arts.pdf:pdf},
-isbn = {9781577357384},
-issn = {10450823},
-pages = {2438--2444},
-title = {{Heroic versus collaborative AI for the arts}},
-volume = {2015-Janua},
-year = {2015}
-}
-@article{Mccormack2016,
-author = {Mccormack, Jon and Inverno, Mark},
-file = {:home/sarios/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Mccormack, Inverno - 2016 - Designing Improvisational Interfaces.pdf:pdf},
-number = {June},
-pages = {103--110},
-title = {{Designing Improvisational Interfaces}},
-year = {2016}
 }
 @article{Silver2014,
 abstract = {In this paper we consider deterministic policy gradient algorithms for reinforcement learning with continuous actions. The deterministic pol- icy gradient has a particularly appealing form: it is the expected gradient of the action-value func- tion. This simple form means that the deter- ministic policy gradient can be estimated much more efficiently than the usual stochastic pol- icy gradient. To ensure adequate exploration, we introduce an off-policy actor-critic algorithm that learns a deterministic target policy from an exploratory behaviour policy. We demonstrate that deterministic policy gradient algorithms can significantly outperform their stochastic counter- parts in high-dimensional action spaces.},
@@ -457,23 +379,6 @@ title = {{StarCraft II: A New Challenge for Reinforcement Learning}},
 url = {http://arxiv.org/abs/1708.04782},
 year = {2017}
 }
-@inproceedings{Perot2017,
-abstract = {The recent advances in deep neural networks have led to effective vision-based reinforcement learning methods that have been employed to obtain human-level controllers in Atari 2600 games from pixel data. Atari 2600 games, however, do not resemble real-world tasks since they involve non-realistic 2D environments and the third-person perspective. Here, we propose a novel test-bed platform for reinforcement learning research from raw visual information which employs the first-person perspective in a semi-realistic 3D world. The software, called ViZDoom, is based on the classical first-person shooter video game, Doom. It allows developing bots that play the game using the screen buffer. ViZDoom is lightweight, fast, and highly customizable via a convenient mechanism of user scenarios. In the experimental part, we test the environment by trying to learn bots for two scenarios: a basic move-and-shoot task and a more complex maze-navigation problem. Using convolutional deep neural networks with Q-learning and experience replay, for both scenarios, we were able to train competent bots, which exhibit human-like behaviors. The results confirm the utility of ViZDoom as an AI research platform and imply that visual reinforcement learning in 3D realistic first-person perspective environments is feasible.},
-archivePrefix = {arXiv},
-arxivId = {1605.02097},
-author = {Perot, Etienne and Jaritz, Maximilian and Toromanoff, Marin and Charette, Raoul De},
-booktitle = {IEEE Computer Society Conference on Computer Vision and Pattern Recognition Workshops},
-doi = {10.1109/CVPRW.2017.64},
-eprint = {1605.02097},
-file = {:home/sarios/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Perot et al. - 2017 - End-to-End Driving in a Realistic Racing Game with Deep Reinforcement Learning.pdf:pdf},
-isbn = {9781538607336},
-issn = {21607516},
-keywords = {deep reinforcement learning,first-person perspective games,fps,neural networks,video games,visual learning,visual-based reinforcement learning},
-pages = {474--475},
-title = {{End-to-End Driving in a Realistic Racing Game with Deep Reinforcement Learning}},
-volume = {2017-July},
-year = {2017}
-}
 @inproceedings{Bellemare2015,
 abstract = {In this article we introduce the Arcade Learning Environment (ALE): both a challenge problem and a platform and methodology for evaluating the development of general, domain-independent AI technology. ALE provides an interface to hundreds of Atari 2600 game environments, each one different, interesting, and designed to be a challenge for human players. ALE presents significant research challenges for reinforcement learning, model learning, model-based planning, imitation learning, transfer learning, and intrinsic motivation. Most importantly, it provides a rigorous testbed for evaluating and comparing approaches to these problems. We illustrate the promise of ALE by developing and benchmarking domain-independent agents designed using well-established AI techniques for both reinforcement learning and planning. In doing so, we also propose an evaluation methodology made possible by ALE, reporting empirical results on over 55 different games. All of the software, including the benchmark agents, is publicly available.},
 archivePrefix = {arXiv},
@@ -524,18 +429,6 @@ title = {{PILCO: A Model-Based and Data-Efficient Approach to Policy Search}},
 url = {http://mlg.eng.cam.ac.uk/pub/pdf/DeiRas11.pdf},
 year = {2011}
 }
-@article{Pascanu2017,
-abstract = {Conventional wisdom holds that model-based planning is a powerful approach to sequential decision-making. It is often very challenging in practice, however, because while a model can be used to evaluate a plan, it does not prescribe how to construct a plan. Here we introduce the "Imagination-based Planner", the first model-based, sequential decision-making agent that can learn to construct, evaluate, and execute plans. Before any action, it can perform a variable number of imagination steps, which involve proposing an imagined action and evaluating it with its model-based imagination. All imagined actions and outcomes are aggregated, iteratively, into a "plan context" which conditions future real and imagined actions. The agent can even decide how to imagine: testing out alternative imagined actions, chaining sequences of actions together, or building a more complex "imagination tree" by navigating flexibly among the previously imagined states using a learned policy. And our agent can learn to plan economically, jointly optimizing for external rewards and computational costs associated with using its imagination. We show that our architecture can learn to solve a challenging continuous control problem, and also learn elaborate planning strategies in a discrete maze-solving task. Our work opens a new direction toward learning the components of a model-based planning system and how to use them.},
-archivePrefix = {arXiv},
-arxivId = {1707.06170},
-author = {Pascanu, Razvan and Li, Yujia and Vinyals, Oriol and Heess, Nicolas and Buesing, Lars and Racani{\`{e}}re, Sebastien and Reichert, David and Weber, Th{\'{e}}ophane and Wierstra, Daan and Battaglia, Peter},
-doi = {10.1287/mnsc.45.4.560},
-eprint = {1707.06170},
-number = {November},
-title = {{Learning model-based planning from scratch}},
-url = {http://arxiv.org/abs/1707.06170},
-year = {2017}
-}
 @article{Tapas1999,
 author = {Das, Tapas K. and Gosavi, Abhijit and Mahadevan, Sridhar and Marchalleck, Nicholas},
 doi = {10.1287/mnsc.45.4.560},
@@ -549,14 +442,6 @@ title = {{Solving Semi-Markov Decision Problems Using Average Reward Reinforceme
 url = {http://pubsonline.informs.org/doi/abs/10.1287/mnsc.45.4.560},
 volume = {45},
 year = {1999}
-}
-@article{Neto2005,
-abstract = {Interest in robotic and software agents has increased a lot in the last decades. They allow us to do tasks that we would hardly accomplish otherwise. Par-ticularly, multi-agent systems motivate distributed solutions that can be cheaper and more efficient than centralized single-agent ones. In this context, reinforcement learning provides a way for agents to com-pute optimal ways of performing the required tasks, with just a small in-struction indicating if the task was or was not accomplished. Learning in multi-agent systems, however, poses the problem of non-stationarity due to interactions with other agents. In fact, the RL methods for the single agent domain assume stationarity of the environment and cannot be applied directly. This work is divided in two main parts. In the first one, the reinforcement learning framework for single-agent domains is analyzed and some classical solutions presented, based on Markov decision processes. In the second part, the multi-agent domain is analyzed, borrowing tools from game theory, namely stochastic games, and the most significant work on learning optimal decisions for this type of systems is presented. ii Contents Abstract 1},
-author = {Neto, Gon{\c{c}}alo},
-file = {:home/sarios/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Neto - 2005 - From Single-Agent to Multi-Agent Reinforcement Learning Foundational Concepts and Methods Learning Theory Course.pdf:pdf},
-number = {May},
-title = {{From Single-Agent to Multi-Agent Reinforcement Learning: Foundational Concepts and Methods Learning Theory Course}},
-year = {2005}
 }
 @article{Wu2017,
 abstract = {In this work, we propose to apply trust region optimization to deep reinforcement learning using a recently proposed Kronecker-factored approximation to the curvature. We extend the framework of natural policy gradient and propose to optimize both the actor and the critic using Kronecker-factored approximate curvature (K-FAC) with trust region; hence we call our method Actor Critic using Kronecker-Factored Trust Region (ACKTR). To the best of our knowledge, this is the first scalable trust region natural gradient method for actor-critic methods. It is also a method that learns non-trivial tasks in continuous control as well as discrete control policies directly from raw pixel inputs. We tested our approach across discrete domains in Atari games as well as continuous domains in the MuJoCo environment. With the proposed methods, we are able to achieve higher rewards and a 2- to 3-fold improvement in sample efficiency on average, compared to previous state-of-the-art on-policy actor-critic methods. Code is available at https://github.com/openai/baselines},
@@ -738,42 +623,6 @@ pmid = {7888773},
 title = {{Reinforcement Learning: An Introduction}},
 year = {1998}
 }
-@article{Montague1999,
-abstract = {Reinforcement learning, one of the most active research areas in artificial intelligence, is a computational approach to learning whereby an agent tries to maximize the total amount of reward it receives when interacting with a complex, uncertain environment. In Reinforcement Learning, Richard Sutton and Andrew Barto provide a clear and simple account of the key ideas and algorithms of reinforcement learning. Their discussion ranges from the history of the field's intellectual foundations to the most recent developments and applications. The only necessary mathematical background is familiarity with elementary concepts of probability.The book is divided into three parts. Part I defines the reinforcement learning problem in terms of Markov decision processes. Part II provides basic solution methods: dynamic programming, Monte Carlo methods, and temporal-difference learning. Part III presents a unified view of the solution methods and incorporates artificial neural networks, eligibility traces, and planning; the two final chapters present case studies and consider the future of reinforcement learning.},
-archivePrefix = {arXiv},
-arxivId = {1603.02199},
-author = {Montague, P.Read},
-doi = {10.1016/S1364-6613(99)01331-5},
-eprint = {1603.02199},
-isbn = {0262193981},
-issn = {13646613},
-journal = {Trends in Cognitive Sciences},
-number = {9},
-pages = {360},
-pmid = {18255791},
-title = {{Reinforcement Learning: An Introduction, by Sutton, R.S. and Barto, A.G.}},
-url = {http://linkinghub.elsevier.com/retrieve/pii/S1364661399013315},
-volume = {3},
-year = {1999}
-}
-@article{Montague1999a,
-abstract = {Reinforcement learning, one of the most active research areas in artificial intelligence, is a computational approach to learning whereby an agent tries to maximize the total amount of reward it receives when interacting with a complex, uncertain environment. In Reinforcement Learning, Richard Sutton and Andrew Barto provide a clear and simple account of the key ideas and algorithms of reinforcement learning. Their discussion ranges from the history of the field's intellectual foundations to the most recent developments and applications. The only necessary mathematical background is familiarity with elementary concepts of probability.The book is divided into three parts. Part I defines the reinforcement learning problem in terms of Markov decision processes. Part II provides basic solution methods: dynamic programming, Monte Carlo methods, and temporal-difference learning. Part III presents a unified view of the solution methods and incorporates artificial neural networks, eligibility traces, and planning; the two final chapters present case studies and consider the future of reinforcement learning.},
-archivePrefix = {arXiv},
-arxivId = {1603.02199},
-author = {Montague, P.Read},
-doi = {10.1016/S1364-6613(99)01331-5},
-eprint = {1603.02199},
-isbn = {0262193981},
-issn = {13646613},
-journal = {Trends in Cognitive Sciences},
-number = {9},
-pages = {360},
-pmid = {18255791},
-title = {{Reinforcement Learning: An Introduction, by Sutton, R.S. and Barto, A.G.}},
-url = {http://linkinghub.elsevier.com/retrieve/pii/S1364661399013315},
-volume = {3},
-year = {1999}
-}
 @article{Borkar1988,
 abstract = {This paper develops a new framework for the study of Markov decision processes in which the control problem is viewed as an optimization problem on the set of canonically induced measures on the trajectory space of the joint state and control process. This set is shown to be compact convex. One then associates with each of the usual cost criteria (infinite horizon discounted cost, finite horizon, control up to an exit time) a naturally defined occupation measure such that the cost is an integral of some function with respect to this measure. These measures are shown to form a compact convex set whose extreme points are characterized. Classical results about existence of optimal strategies are recovered from this and several applications to multicriteria and constrained optimization problems are briefly indicated.},
 author = {Borkar, Vivek S.},
@@ -921,16 +770,6 @@ title = {{Deep Reinforcement Learning that Matters}},
 url = {http://arxiv.org/abs/1709.06560},
 year = {2017}
 }
-@article{Henderson2017a,
-abstract = {In recent years, significant progress has been made in solving challenging problems across various domains using deep reinforcement learning (RL). Reproducing existing work and accurately judging the improvements offered by novel methods is vital to sustaining this progress. Unfortunately, reproducing results for state-of-the-art deep RL methods is seldom straightforward. In particular, non-determinism in standard benchmark environments, combined with variance intrinsic to the methods, can make reported results tough to interpret. Without significance metrics and tighter standardization of experimental reporting, it is difficult to determine whether improvements over the prior state-of-the-art are meaningful. In this paper, we investigate challenges posed by reproducibility, proper experimental techniques, and reporting procedures. We illustrate the variability in reported metrics and results when comparing against common baselines and suggest guidelines to make future results in deep RL more reproducible. We aim to spur discussion about how to ensure continued progress in the field by minimizing wasted effort stemming from results that are non-reproducible and easily misinterpreted.},
-archivePrefix = {arXiv},
-arxivId = {1709.06560},
-author = {Henderson, Peter and Islam, Riashat and Bachman, Philip and Pineau, Joelle and Precup, Doina and Meger, David},
-eprint = {1709.06560},
-title = {{Deep Reinforcement Learning that Matters}},
-url = {http://arxiv.org/abs/1709.06560},
-year = {2017}
-}
 @article{Vodopivec2017,
 author = {Vodopivec, Tom},
 file = {:home/sarios/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Vodopivec - 2017 - On Monte Carlo Tree Search and Reinforcement Learning.pdf:pdf},
@@ -981,25 +820,6 @@ title = {{Playing Atari with Deep Reinforcement Learning}},
 url = {http://arxiv.org/abs/1312.5602},
 year = {2013}
 }
-@article{Vodopivec2017a,
-author = {Vodopivec, Tom},
-title = {{On Monte Carlo Tree Search and Reinforcement Learning}},
-volume = {60},
-year = {2017}
-}
-@article{Jaderberg2016a,
-abstract = {Training directed neural networks typically requires forward-propagating data through a computation graph, followed by backpropagating error signal, to produce weight updates. All layers, or more generally, modules, of the network are therefore locked, in the sense that they must wait for the remainder of the network to execute forwards and propagate error backwards before they can be updated. In this work we break this constraint by decoupling modules by introducing a model of the future computation of the network graph. These models predict what the result of the modelled subgraph will produce using only local infor- mation. In particular we focus on modelling error gradients: by using the modelled synthetic gradient in place of true backpropagated error gradients we decouple subgraphs, and can update them independently and asynchronously i.e. we realise decoupled neural interfaces. We show results for feed-forward models, where every layer is trained asynchronously, recurrent neural networks (RNNs) where predicting one's future gradient extends the time over which the RNN can effectively model, and also a hierarchical RNN system with ticking at different timescales. Finally, we demonstrate that in addition to predicting gradients, the same framework can be used to predict inputs, resulting in models which are decoupled in both the forward and backwards pass – amounting to independent networks which co-learn such that they can be composed into a single functioning corporation.},
-archivePrefix = {arXiv},
-arxivId = {1608.05343},
-author = {Jaderberg, Max and Czarnecki, Wojciech Marian and Osindero, Simon and Vinyals, Oriol and Graves, Alex and Kavukcuoglu, Koray},
-eprint = {1608.05343},
-issn = {1938-7228},
-journal = {arXiv},
-number = {Nips},
-pages = {1608.05343v1 [cs.LG]},
-title = {{Decoupled Neural Interfaces using Synthetic Gradients}},
-year = {2016}
-}
 @article{Pathak2017,
 abstract = {In many real-world scenarios, rewards extrinsic to the agent are extremely sparse, or absent altogether. In such cases, curiosity can serve as an intrinsic reward signal to enable the agent to explore its environment and learn skills that might be useful later in its life. We formulate curiosity as the error in an agent's ability to predict the consequence of its own actions in a visual feature space learned by a self-supervised inverse dynamics model. Our formulation scales to high-dimensional continuous state spaces like images, bypasses the difficulties of directly predicting pixels, and, critically, ignores the aspects of the environment that cannot affect the agent. The proposed approach is evaluated in two environments: VizDoom and Super Mario Bros. Three broad settings are investigated: 1) sparse extrinsic reward, where curiosity allows for far fewer interactions with the environment to reach the goal; 2) exploration with no extrinsic reward, where curiosity pushes the agent to explore more efficiently; and 3) generalization to unseen scenarios (e.g. new levels of the same game) where the knowledge gained from earlier experience helps the agent explore new places much faster than starting from scratch. Demo video and code available at https://pathak22.github.io/noreward-rl/},
 archivePrefix = {arXiv},
@@ -1014,18 +834,6 @@ journal = {IEEE Computer Society Conference on Computer Vision and Pattern Recog
 pages = {488--489},
 title = {{Curiosity-Driven Exploration by Self-Supervised Prediction}},
 volume = {2017-July},
-year = {2017}
-}
-@article{Czarnecki2017,
-abstract = {When training neural networks, the use of Synthetic Gradients (SG) allows layers or modules to be trained without update locking - without waiting for a true error gradient to be backpropagated - resulting in Decoupled Neural Interfaces (DNIs). This unlocked ability of being able to update parts of a neural network asynchronously and with only local information was demonstrated to work empirically in Jaderberg et al (2016). However, there has been very little demonstration of what changes DNIs and SGs impose from a functional, representational, and learning dynamics point of view. In this paper, we study DNIs through the use of synthetic gradients on feed-forward networks to better understand their behaviour and elucidate their effect on optimisation. We show that the incorporation of SGs does not affect the representational strength of the learning system for a neural network, and prove the convergence of the learning system for linear and deep linear models. On practical problems we investigate the mechanism by which synthetic gradient estimators approximate the true loss, and, surprisingly, how that leads to drastically different layer-wise representations. Finally, we also expose the relationship of using synthetic gradients to other error approximation techniques and find a unifying language for discussion and comparison.},
-archivePrefix = {arXiv},
-arxivId = {1703.00522},
-author = {Czarnecki, Wojciech Marian and {\'{S}}wirszcz, Grzegorz and Jaderberg, Max and Osindero, Simon and Vinyals, Oriol and Kavukcuoglu, Koray},
-eprint = {1703.00522},
-file = {:home/sarios/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Czarnecki et al. - 2017 - Understanding Synthetic Gradients and Decoupled Neural Interfaces.pdf:pdf},
-issn = {1938-7228},
-title = {{Understanding Synthetic Gradients and Decoupled Neural Interfaces}},
-url = {http://arxiv.org/abs/1703.00522},
 year = {2017}
 }
 @inproceedings{Pathak2017a,
@@ -1053,62 +861,6 @@ pages = {402--408},
 title = {{Applying Reinforcement Learning to Small Scale Combat in the Real-Time Strategy Game StarCraft : Broodwar}},
 year = {2012}
 }
-@article{Griffiths1999,
-abstract = {Technology his always played a role in the development of gambling practices and will continue to play a critical role in the development of increased gambling opportunities (e.g., internet gambling). Although technological advance his long been associated with improved gambling opportunities, there is little written in the literature explicitly pointing out this link and its implications for problem gamblers. This paper therefore reviews this situation and examines the technological implications of situational and structural characteristics paying particular attention to slot machine gambling as there has been more empirical work on this type of gambling than any other technological form. The impact of technology on the sociability of gambling is also examined followed by a more speculative evolution of internet gambling as an area of potential concern.},
-author = {Griffiths, Mark},
-doi = {http://dx.doi.org/10.1023/A:1023053630588},
-file = {:home/sarios/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Griffiths - 1999 - Gambling Technologies Prospects for Problem Gambling.pdf:pdf},
-isbn = {1050-5350 (Print)},
-issn = {1573-3602},
-journal = {Journal of gambling studies},
-number = {3},
-pages = {265--283},
-pmid = {12766464},
-title = {{Gambling Technologies: Prospects for Problem Gambling.}},
-url = {http://www.ncbi.nlm.nih.gov/pubmed/12766464},
-volume = {15},
-year = {1999}
-}
-@article{Commission2016,
-author = {Commission, Gambling},
-file = {:home/sarios/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Commission - 2016 - Virtual currencies , eSports and social gaming – discussion paper(2).pdf:pdf},
-keywords = {Virtual currencies eSports and social gaming  disc},
-number = {August},
-pages = {1--12},
-title = {{Virtual currencies , eSports and social gaming – discussion paper}},
-year = {2016}
-}
-@article{Griffiths2000,
-abstract = {It has been noted that adolescents may be more susceptible to pathological gambling. Not only is it usually illegal, but it appears to be related to high levels of problem gambling and other delinquent activities such as illicit drug taking and alcohol abuse. This paper examines risk factors not only in adolescent gambling but also in videogame playing (which shares many similarities with gambling). There appear to be three main forms of adolescent gambling that have been widely researched. Adolescent gambling activities and general risk factors in adolescent gambling are provided. As well, the influence of technology on adolescents in the form of both videogames and the Internet are examined. It is argued that technologically advanced forms of gambling may be highly appealing to adolescents.},
-author = {Griffiths, Mark D and Wood, R T},
-doi = {10.1023/A:1009433014881},
-file = {:home/sarios/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Griffiths, Wood - 2000 - Risk factors in adolescence the case of gambling, videogame playing, and the internet.pdf:pdf},
-isbn = {1050-5350},
-issn = {1050-5350},
-journal = {Journal of Gambling Studies},
-keywords = {addiction,adolescence,adolescent gambling is a,be related to high,but it appears to,gambling,internet,is it usually illegal,levels of prob-,major problem in society,not only,problem adolescent gambling,today,videogames},
-number = {2-3},
-pages = {199--225},
-pmid = {14634313},
-title = {{Risk factors in adolescence: the case of gambling, videogame playing, and the internet.}},
-volume = {16},
-year = {2000}
-}
-@article{Commission2016a,
-author = {Commission, Gambling},
-file = {:home/sarios/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Commission - 2016 - Virtual currencies , eSports and social gaming – discussion paper.pdf:pdf},
-keywords = {Virtual currencies eSports and social gaming  disc},
-number = {August},
-pages = {1--12},
-title = {{Virtual currencies , eSports and social gaming – discussion paper}},
-year = {2016}
-}
-@article{IabInternetAdvertisingBureauUK2011,
-author = {{(Iab) Internet Advertising Bureau UK}},
-file = {:home/sarios/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/(Iab) Internet Advertising Bureau UK - 2011 - Gaming Britain A Nation United by Digital Play.pdf:pdf},
-title = {{Gaming Britain: A Nation United by Digital Play}},
-year = {2011}
-}
 @article{Deasis2017,
 abstract = {Unifying seemingly disparate algorithmic ideas to produce better performing algorithms has been a longstanding goal in reinforcement learning. As a primary example, TD($\lambda$) elegantly unifies one-step TD prediction with Monte Carlo meth-ods through the use of eligibility traces and the trace-decay parameter $\lambda$. Currently, there are a multitude of algorithms that can be used to per-form TD control, including Sarsa, Q-learning, and Expected Sarsa. These methods are often studied in the one-step case, but they can be ex-tended across multiple time steps to achieve bet-ter performance. Each of these algorithms is seemingly distinct, and no one dominates the oth-ers for all problems. In this paper, we study a new multi-step action-value algorithm called Q($\sigma$) which unifies and generalizes these exist-ing algorithms, while subsuming them as special cases. A new parameter, $\sigma$, is introduced to al-low the degree of sampling performed by the al-gorithm at each step during its backup to be con-tinuously varied, with Sarsa existing at one ex-treme (full sampling), and Expected Sarsa exist-ing at the other (pure expectation). Q($\sigma$) is gen-erally applicable to both on-and off-policy learn-ing, but in this work we focus on experiments in the on-policy case. Our results show that an in-termediate value of $\sigma$, which results in a mixture of the existing algorithms, performs better than either extreme. The mixture can also be varied dynamically which can result in even greater per-formance.},
 author = {{De Asis}, Kristopher and Ca, Kldeasis@ualberta and Hernandez-Garcia, J Fernando and Ca, Jfhernan@ualberta and Holland, G Zacharias and Sutton, Richard S},
@@ -1118,159 +870,6 @@ mendeley-tags = {Unifying,multi-step},
 title = {{Multi-step Reinforcement Learning: A Unifying Algorithm}},
 url = {https://arxiv.org/pdf/1703.01327.pdf},
 year = {2017}
-}
-@article{Hewitt2013,
-abstract = {Other topics in this issue include coaching children with autism, teaching styles, serve correction and information on an exciting new tennis app. Since the launch of CSSR in English in 1992, the ITF has published over 560 articles from contributors of more than 35 different nationalities. Today the review is produced 3 times per year in the 3 official ITF languages of English, Spanish and French and made available free of charge on the ITF coaching web at http://www.itftennis.com/coaching/sportsscience. The 2012 launch of, 'Biomechanics for Advanced Tennis' as an e-book has proven to be very successful in the new electronic format. Interested readers can purchase their copy at: http://www.amazon.es/ITF-Biomechanics-Advanced-Tennis-ebook/dp/ B00A79U7MK The ITF Tennis iCoach website remains at the forefront of online coach education, with up to date and current research available to coaches across the world. For just {\$}30 per year you can keep up to date with then most current tennis specific coaching information. Please click on the following link for a tour of the site. www.tennisicoach.com In late 2013, the Tennis iCoach will be re-launched with mobile and tablet PC support on both Android and Apple devices. Version 3.0 of the site will also offer HD quality video, a new navigation and search system, as well as a range of new features that will enhance the user engagement and learning experience for users. The launch is set for autumn 2013 and will be officially released at the Worldwide conference in Mexico.},
-author = {Hewitt, Mitchell and Aus, Kenneth Edwards and Pluim, Babette and Smit, Claudia and Driessen, Dorian and Oskam, Sandy and Aus, Geoff Quinlan},
-file = {:home/sarios/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Hewitt et al. - 2013 - CONTENTS ISSUE 59 The Official Coaching and Sport Science Publication of the International Tennis Federation.pdf:pdf},
-issn = {2225-4757},
-journal = {ITF Coaching and Sport Science Review},
-number = {59},
-title = {{CONTENTS ISSUE 59 The Official Coaching and Sport Science Publication of the International Tennis Federation}},
-url = {www.itftennis.com/coaching/sportsscience},
-year = {2013}
-}
-@article{Klaassen2001,
-abstract = {This article tests whether points in tennis are independent and/or identically distributed (iid). We model the probability of winning a point on service and show that points are neither independent nor identically distributed: winning the previous point has a positive ef- fect on winning the current point, and at ‘important' points it is more difficult for the server to win the point than at less important points. Furthermore, the weaker a player, the stronger are these effects. De- viations from iid are, however, small and hence the iid hypothesis will still provide a good approximation in many cases. The results are based on a large panel of matches played atWimbledon 1992—1995, in total almost 90,000 points. Our panel data model takes account of the binary character of the dependent variable, uses random effects to cap- ture theunobservedpartofaplayer's quality, andincludesdynamic explanatory variables.},
-author = {Klaassen, Franc J. G. M. and Magnus, Jan R.},
-doi = {10.1198/016214501753168217},
-isbn = {0162-1459},
-issn = {0162-1459},
-journal = {Journal of the American Statistical Association},
-keywords = {binary choice,dependence,dynamic panel data,linear probability model,nonidentical distribution,random effects},
-number = {454},
-pages = {500--509},
-title = {{Are Points in Tennis Independent and Identically Distributed? Evidence From a Dynamic Binary Panel Data Model}},
-url = {http://www.tandfonline.com/doi/abs/10.1198/016214501753168217},
-volume = {96},
-year = {2001}
-}
-@article{Knottenbelt2012,
-abstract = {Tennis features among the most popular sports internationally, with professional matches played for 11 months of the year around the globe. The rise of the internet has stimulated a dramatic increase in tennis-related financial activity, much of which depends on quantitative models. This paper presents a hierarchical Markov model which yields a pre-play estimate of the probability of each player winning a professional singles tennis match. Crucially, the model provides a fair basis of comparison between players by analysing match statistics for opponents that both players have encountered in the past. Subsequently the model exploits elements of transitivity to compute the probability of each player winning a point on their serve, and hence the match. When evaluated using a data set of historical match statistics and bookmakers odds, the model yields a 3.8{\%} return on investment over 2173 ATP matches played on a variety of surfaces during 2011. ?? 2012 Elsevier Ltd. All rights reserved.},
-author = {Knottenbelt, William J. and Spanias, Demetris and Madurska, Agnieszka M.},
-doi = {10.1016/j.camwa.2012.03.005},
-issn = {08981221},
-journal = {Computers and Mathematics with Applications},
-keywords = {Sport,Stochastic modelling,Tennis},
-number = {12},
-pages = {3820--3827},
-title = {{A common-opponent stochastic model for predicting the outcome of professional tennis matches}},
-volume = {64},
-year = {2012}
-}
-@article{Barnett2005,
-abstract = {Tennis features among the most popular sports internationally, with professional matches played for 11 months of the year around the globe. The rise of the internet has stimulated a dramatic increase in tennis-related financial activity, much of which depends on quantitative models. This paper presents a hierarchical Markov model which yields a pre-play estimate of the probability of each player winning a professional singles tennis match. Crucially, the model provides a fair basis of comparison between players by analysing match statistics for opponents that both players have encountered in the past. Subsequently the model exploits elements of transitivity to compute the probability of each player winning a point on their serve, and hence the match. When evaluated using a data set of historical match statistics and bookmakers odds, the model yields a 3.8{\%} return on investment over 2173 ATP matches played on a variety of surfaces during 2011. ?? 2012 Elsevier Ltd. All rights reserved.},
-archivePrefix = {arXiv},
-arxivId = {1011.1761},
-author = {Barnett, Tristan and Brown, Alan and Clarke, Stephen R. and Caron, Francois and Doucet, Arnaud and Glickman, Mark E Me Mark and Knottenbelt, William J. and Spanias, Demetris and Madurska, Agnieszka M. and Krajowski-kukiel, Maciej and Madurska, Agnieszka M. and McHale, Ian and Morton, Alex and Ralph, B Y and Bradley, Allan and Terry, Milton E and Brent, R P and Dekker, T J and Rios, Luis Miguel and Sahinidis, Nikolaos V. and Herbrich, Ralf and Minka, Tom and Graepel, Thore and Cattelan, Manuela and Varin, Cristiano},
-doi = {10.1093/imaman/dpi001},
-eprint = {1011.1761},
-isbn = {1049-5258},
-issn = {08981221},
-journal = {Boston University},
-keywords = {Australian Open,Betting,Bradley-Terry model,Derivative-free algorithms,Direct search methods,Excel,Gambling,Logit,Ranking evaluation,Scoring systems,Sport,Stochastic modelling,Surrogate models,Tennis,approximate,average process,bayesian estimation,bayesian learning,bradley,cumulative logit model,dynamic difficulty adjustment,exponentially weighted moving,index betting,markov chain,match-making,paired comparisons,sport,sports tournaments,tennis,terry model},
-number = {3},
-pages = {1--6},
-pmid = {18268290},
-title = {{Developing a Model that Reflects Outcomes of Tennis Matches}},
-url = {http://research.microsoft.com/apps/pubs/default.aspx?id=67956{\%}5Cnhttp://dx.doi.org/10.1016/j.ijforecast.2010.04.004{\%}5Cnhttp://glicko.net/glicko/glicko2.pdf{\%}5Cnhttp://www.echecsonline.net/joueurs/doc/The{\_}Glicko{\_}system.pdf{\%}5Cnhttp://www.glicko.net/research/},
-volume = {48},
-year = {2005}
-}
-@article{Pfeiffer2010,
-abstract = {The evaluation of the structure of sports performance is one of the important functions of diagnostics in competitive sport. Especially in game sports, it is important to obtain diagnostic information on competition because of the interactive process between the two teams or players. This interaction cannot be simulated or replicated in training or test situations. When it comes to table tennis, performance diagnostics offers many different techniques and methods to analyze a game. In this context, problems mostly occur in ...},
-author = {Pfeiffer, Mark and Zhang, Hui and Hohmann, Andreas},
-doi = {10.1260/1747-9541.5.2.205},
-issn = {1747-9541},
-journal = {International Journal of Sports Science and Coaching},
-number = {2},
-pages = {205--222},
-title = {{A Markov chain model of elite table tennis competition}},
-volume = {5},
-year = {2010}
-}
-@article{Newtont2006,
-abstract = {JSTOR is a not-for-profit service that helps scholars, researchers, and students discover, use, and build upon a wide range of content in a trusted digital archive. We use information technology and tools to increase productivity and facilitate new forms of scholarship. For more information about JSTOR, please contact support@jstor.org. Abstract. The probability of winning a game, set, match, or single elimination tournament in tennis is computed using Monte Carlo simulations based on each player's probability of winning a point on serve, which can be held constant or varied from point to point, game to game, or match to match. The theory, described in Newton and Keller [Stud. Appl. Math., 114 (2005), pp. 241-269], is based on the assumption that points in tennis are independent, identically distributed (i.i.d.) random variables. This is used as a baseline to compare with the simulations, which under similar circumstances are shown to converge quickly to the analytical curves in accordance with the weak law of large numbers. The concept of the importance of a point, game, and set to winning a match is described based on conditional probabilities and is used as a starting point to model non-i.i.d. effects, allowing each player to vary, from point to point, his or her probability of winning on serve. Several non-i.i.d. models are investigated, including the "hot-hand-effect," in which we increase each player's probability of winning a point on serve on the next point after a point is won. The "back to-the-wall" effect is modeled by increasing each player's probability of winning a point on serve on the next point after a point is lost. In all cases, we find that the results provided by the theoretical curves based on the i.i.d. assumption are remarkably robust and accurate, even when relatively strong non-i.i.d. effects are introduced. We end by showing examples of tournament predictions from the 2002 men's and women's U.S. Open draws based on the Monte Carlo simulations. We also describe Arrow's impossibility theorem and discuss its relevance with regard to sports ranking systems, and we argue for the development of probability-based ranking systems as a way to soften its consequences.},
-author = {Newtont, Paul K and Aslamt, Kamran},
-doi = {10.1137/050640278},
-isbn = {00361445},
-issn = {0036-1445},
-journal = {SIAM Review SIAM REVIEW Society for Industrial and Applied Mathematics},
-keywords = {60J20,65Q05,91A60,91B12,Arrow's theorem AMS subject classifications 65C05,Monte Carlo Method,non-iid effects,probabilistic ranking systems,tennis},
-number = {4},
-pages = {722--742},
-pmid = {25468915},
-title = {{Monte Carlo Tennis*}},
-url = {http://www.jstor.org/stable/20453873{\%}5Cnhttp://about.jstor.org/terms},
-volume = {48},
-year = {2006}
-}
-@article{Lindley2008,
-abstract = {Schema theory provides a foundation for the analysis of game play patterns created by players during their interaction with a game. Schema models derived from the analysis of play provide a rich explanatory framework for the cognitive processes underlying game play, as well as detailed hypotheses for the hierarchical structure of pleasures and rewards motivating players. Game engagement is accounted for as a process of schema selection or development, while immersion is explained in terms of levels of attentional demand in schema execution. However, schemas may not only be used to describe play, but might be used actively as cognitive models within a game engine. Predesigned schema models are knowledge representations constituting anticipated or desired learned cognitive outcomes of play. Automated analysis of player schemas and comparison with predesigned target schemas can provide a foundation for a game engine adapting or tuning game mechanics to achieve specific effects of engagement, immersion, and cognitive skill acquisition by players. Hence, schema models may enhance the play experience as well as provide a foundation for achieving explicitly represented pedagogical or therapeutic functions of games.},
-author = {Lindley, Craig a. and Sennersten, Charlotte C.},
-doi = {10.1155/2008/216784},
-isbn = {86905-901-7},
-issn = {1687-7047},
-journal = {International Journal of Computer Games Technology},
-pages = {1--7},
-title = {{Game Play Schemas: From Player Analysis to Adaptive Game Mechanics}},
-url = {http://www.hindawi.com/journals/ijcgt/2008/216784/},
-volume = {2008},
-year = {2008}
-}
-@incollection{Nelson2007,
-abstract = {Game generation systems perform automated, intelligent design of games (i.e. videogames, boardgames), reasoning about both the abstract rule system of the game and the visual realization of these rules. Although, as an instance of the problem of creative design, game generation shares some common research themes with other creative AI systems such as story and art generators, game generation extends such work by having to reason about dynamic, playable artifacts. Like AI work on creativity in other domains, work on game generation sheds light on the human game design process, offering opportunities to make explicit the tacit knowledge involved in game design and test game design theories. Finally, game generation enables new game genres which are radically customized to specific players or situations; notable examples are cell phone games customized for particular users and newsgames providing commentary on current events. We describe an approach to formalizing game mechanics and generating games using those mechanics, using WordNet and ConceptNet to assist in performing common-sense reasoning about game verbs and nouns. Finally, we demonstrate and describe in detail a prototype that designs micro-games in the style of Nintendo's WarioWare series.},
-address = {Berlin, Heidelberg},
-author = {Nelson, Mark J. and Mateas, Michael},
-booktitle = {AI*IA 2007: Artificial Intelligence and Human-Oriented Computing},
-doi = {10.1007/978-3-540-74782-6_54},
-isbn = {978-3-540-74781-9},
-issn = {03029743},
-pages = {626--637},
-publisher = {Springer Berlin Heidelberg},
-title = {{Towards Automated Game Design}},
-url = {http://www.springerlink.com/content/64921n6401026242/ http://link.springer.com/10.1007/978-3-540-74782-6{\_}54},
-year = {2007}
-}
-@inproceedings{Zook2014,
-abstract = {Game designs often center on the game mechanics—rules governing the logical evolution of the game. We seek to de- velop an intelligent system that generates computer games and assists humans in designing games. As first steps to- wards this goal we present a composable and cross-domain representation for game mechanics that draws from AI plan- ning action representations. We use a constraint solver to generate mechanics subject to design requirements on the form of those mechanics—what they do in the game. A planner takes a set of generated mechanics and tests whether those mechanics meet playability requirements—controlling how mechanics function in a game to affect player behav- ior. We demonstrate our system by modeling and generat- ing mechanics in a role-playing game, platformer game, and combined role-playing-platformer game.},
-author = {Zook, Alexander and Riedl, Mo},
-booktitle = {Proceedings of the 2014 Foundations of Digital Games Workshop on Procedural Content Generation in Games},
-keywords = {game design,game mechanics,procedural content generation},
-title = {{Generating and Adapting Game Mechanics}},
-url = {http://www.cc.gatech.edu/{~}riedl/pubs/pcg14.pdf},
-year = {2014}
-}
-@article{Sicart2008,
-abstract = {This article defines game mechanics in relation to rules and challenges. Game mechanics are methods invoked by agents for interacting with the game world. I apply this definition to a comparative analysis of the games Rez, Every Extend Extra and Shadow of the Colossus that will show the relevance of a formal definition of game mechanics.},
-author = {Sicart, Miguel},
-doi = {1604-7982},
-isbn = {1604-7982},
-issn = {16047982},
-journal = {Game Studies},
-keywords = {Challenges,Game design,Game mechanics,Game research,Rules},
-number = {2},
-title = {{Defining game mechanics}},
-volume = {8},
-year = {2008}
-}
-@book{Bishop2006,
-abstract = {The dramatic growth in practical applications for machine learning over the last ten years has been accompanied by many important developments in the underlying algorithms and techniques. For example, Bayesian methods have grown from a specialist niche to become mainstream, while graphical models have emerged as a general framework for describing and applying probabilistic techniques. The practical applicability of Bayesian methods has been greatly enhanced by the development of a range of approximate inference algorithms such as variational Bayes and expectation propagation, while new models based on kernels have had a significant impact on both algorithms and applications. This completely new textbook reflects these recent developments while providing a comprehensive introduction to the fields of pattern recognition and machine learning. It is aimed at advanced undergraduates or first-year PhD students, as well as researchers and practitioners. No previous knowledge of pattern recognition or machine learning concepts is assumed. Familiarity with multivariate calculus and basic linear algebra is required, and some experience in the use of probabilities would be helpful though not essential as the book includes a self-contained introduction to basic probability theory. The book is suitable for courses on machine learning, statistics, computer science, signal processing, computer vision, data mining, and bioinformatics. Extensive support is provided for course instructors, including more than 400 exercises, graded according to difficulty. Example solutions for a subset of the exercises are available from the book web site, while solutions for the remainder can be obtained by instructors from the publisher. The book is supported by a great deal of additional material, and the reader is encouraged to visit the book web site for the latest information. A forthcoming companion volume will deal with practical aspects of pattern recognition and machine learning, and will include free software implementations of the key algorithms along with example data sets and demonstration programs. Christopher Bishop is Assistant Director at Microsoft Research Cambridge, and also holds a Chair in Computer Science at the University of Edinburgh. He is a Fellow of Darwin College Cambridge, and was recently elected Fellow of the Royal Academy of Engineering. The author's previous textbook "Neural Networks for Pattern Recognition" has been widely adopted.},
-archivePrefix = {arXiv},
-arxivId = {0-387-31073-8},
-author = {Bishop, Christopher M},
-booktitle = {Pattern Recognition},
-doi = {10.1117/1.2819119},
-eprint = {0-387-31073-8},
-isbn = {9780387310732},
-issn = {10179909},
-number = {4},
-pages = {738},
-pmid = {8943268},
-title = {{Pattern Recognition and Machine Learning}},
-url = {http://www.library.wisc.edu/selectedtocs/bg0137.pdf},
-volume = {4},
-year = {2006}
 }
 @article{Owen1982,
 abstract = {This advanced text introduces the principles of noncooperative game theory in a direct and uncomplicated style that will acquaint students with the broad spectrum of the field while highlighting and explaining what they need to know at any given point.},

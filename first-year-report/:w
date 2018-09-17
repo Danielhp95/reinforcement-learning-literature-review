@@ -1,0 +1,88 @@
+\documentclass{article}
+
+\usepackage[a4paper,margin=1in,footskip=0.25in]{geometry} % sets margins
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{amssymb} % For maths symbols like real number R.
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage[ruled, linesnumbered]{algorithm2e}
+
+\DeclareMathOperator*{\argmax}{argmax}
+\usepackage[round]{natbib}
+
+% \usepackage{blindtext}
+
+\title{\textbf{First Year Report}}
+\author{Daniel Hernandez}
+\date{ }
+
+\begin{document}
+
+\maketitle
+
+%\tableofcontents
+
+\newpage
+
+\section{Introduction}
+Classical approaches of training an AI to perform well on a environment with multiple agents suffers from the problem of overfitting. Where learning agents become good operating with or against themselves, but considerably drop performance when matched against other agents that act differently to those they have previously encountered. This issue is specially disastrous when one knows not of any existing good opponent strategies to test against. In the absence of a dataset of already existing agent strategies, Multi Agent Reinforcement learning offers the posibility of safely learning a good behaviour in these kind of environments by trial an error through simulation. Making it possible to learn how to solve these problems by training from the experiences encountered in the simulated environments.
+
+The focus of my PhD research is to adress an open question in Multi Agent Reinforcement Learning that helps to mitigate the overfitting problem. How can we, in a qualitatively and quantitative manner, analyze the way that different agent strategies in an environemnt influence the eventual strategy of a learning agent. The goal is that by presenting an agent with a sufficiently varied set of strategies the strategy learnt by this agent will be robust to changes in the opponent strategies.
+
+\section{Context}
+
+Literature review can be found on a separate document. An additional part of my literature review can be found in a workshop paper submission\footnote{Our paper “Social Behaviour Learning with Realistic Reward Shaping” was rejected, not on the quality, as the reviewiers deemed it of good quality, but found that it did not fit with the overall theme of the workshop.} for the IROS 2018 conference which I co-authored. This paper submission can be found in a separate document.
+
+\section{Conclusion}
+
+\subsection{Areas requiring further studies}
+After having heavily researched single agent scenarios under the framework of reinforcement learning, I am broadening my research to multi agent environments. Multi agent environments have been heavily studied in reinforcement learning, but there are other fields which also focus on multiagent scenarios and the relationship of multiple agents behaviours. These are game theory and evolutionary computation.
+
+I will attend Daniel Kudenko's (module name) to receive a formal education on game theory in order to be able to carry game theoretical research with a strong theoretical basis. My short term aim is to study the concept of mixed strategies in imperfect imformation games together with methods for learning these strategies. This course features not only lectures on these topics, but also a set of lectures linking together game theory with reinforcement learning, which will allow me to transfer some of my RL knowledge into game theory.
+
+There are many concepts that I want to cover in my upcoming RL research that have already been explored in the field of evolutionary algorithms. To be more precise, the notion of a population archive, also known as an elite or a hall of fame, is closely related to some of the ideas that I want to explore in my self-play research. It has been pointed out by many researchers that there is a lack of papers bringing together notions of evolutionary computation and reinforcement learning. There are many professors and lecturers within IGGI researching evolutionary algorithms, including my new supervisor, from whom I will be able to learn and discuss these topics for the benefit of my own research. 
+
+(multi agent RL)
+
+with regards to self-play and more multi agent RL, the field moves so fast that I need to keep up with upcoming research is already hard enough.
+
+
+\section{Plan}
+My plan for my second year is devided into 3 parts: self-play research, social robotics paper and mandatory modules.
+
+\subsection{Self-Play research}
+As introduced in the Conclusion Section, and as presented throughout the IGGI conference, I have been spending my research efforts studying the notion of Self-play in reinforcement learning.
+\begin{itemize}
+    \item Propose self-play framework
+       
+    \item Replicate other self-play systems from literature under my proposed framework
+    \item Look for an algorithmic gap in the literature that can be filled with my framework
+    \item IJCAI 2019
+        The prestigious IJCAI 2019 conference will be held in August in Macao, China.
+    \item CIG 2019 and CIG 2019, Fighting Game Competition
+\end{itemize}
+
+\subsection{Social Robotics paper}
+As mentioned in the Context section, I co-authored a paper on social robotics with a research group from Upsala University, Sweeden. (talk with Alex and write down required work)
+
+\begin{itemize}
+    \item 
+\end{itemize}
+
+\subsection{Mandatory modules}
+As part of the second year of my PhD, I need to take taught modules which add up to 30 credits. These two modules are () and the taught module.
+\begin{itemize}
+    \item (20 credits) \textbf{Multi-agent Interactions \& Games} \\
+        This module is taught during two terms, beginning in October and having one exam in the summer term. This means that during these terms I will need to dedicate a portion of my time to studying the course content. 
+    \item (10 credits) \textbf{Demo module} \\
+        (talk with James)
+\end{itemize}
+
+There are no explicit ethical issues to be concerned about regarding the next step of my research. My experiments will only involve simulated environments, thus eliminating the potential ethical issues of experimenting with humans, animals or other physical objects. The synthetic simulation data, and datasets generated via simulations will not be of unethical nature. Furthermore, most of these datasets will be destroyed when a simulation ends, as it is only useful to the simulated agents when the simulation is running.
+
+
+%\bibliographystyle{apalike}
+%\bibliography{main}
+\end{document}

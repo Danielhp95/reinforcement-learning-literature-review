@@ -1,0 +1,33 @@
+Introduction: describes the direction your research is taking and the research questions it adresses.
+# Partially use the stuff for EPSRC
+
+Context: to demonstrate sufficient acquaintance with the relevant field to place your research into context.
+1 - Summary of the area, in-depth review of key papers
+# Lit review itself?
+DONE # Link to lit review of paper!!! Alex I love you!
+
+Conclusion:
+1 - Summary of contextual background/literature areas require further studying.
+# Game theoretic background (mixed strategies, best responses(, More insight into evolutionary computation (idea of archive, hallf of fame, elite) with regards to self-play and more multi agent RL, focused a lot on single agent.
+2 - State relevant research methods, technique and theoretical approaches to move research to next step.
+# Research method:
+# Techniques: 
+# Theoretical approaches:
+2 - PROGRESS ON relevant research methods, technique and theoretical approaches to move research to next step.
+# Research method: Training via simulation 
+# Techniques: Reinforcement learning, deep learning and bayesian optimization
+# Theoretical approaches: Self play
+
+DONE # Run experiments on self play:
+    - Propose framework
+    - Replicate other systems using proposed framework
+    - Come up with algorithmic idea to fill in a gap
+    - Submit this to IJCAI
+    - If results are somewhat successful, try them out in CIG competition.
+# Continue working on social robotics paper:
+    - Continue working on infrastructure
+    - Continue working as a paper reader
+DONE 1 - Indicate any risks and how to mitigate them
+    - Because I am putting a lot of notions together, I am open to criticism by many fields. This can be mitigated with a more thorough studying of the field, RL I know already enough. Evolutionary algorithms I count with Supervisor's knowledge. Game theoretical background I am taking courses to form myself on.
+    - Paper rejections can be mitigated with Unity relationships.
+DONE 2 - Say that I have plans for considering ethical issues and data management.
