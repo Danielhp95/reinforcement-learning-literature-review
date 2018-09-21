@@ -223,3 +223,6 @@ TSWLatexianTemp*
 [._]*.s[a-w][a-z]
 [._]s[a-w][a-z]
 Session.vim
+
+# TODO file
+TODO

@@ -1,4 +1,4 @@
-\documentclass{../main.tex}{subfiles}
+\documentclass{../main.tex}{}
 
 \begin{document}
 % chktex 36
@@ -20,13 +20,13 @@ There are strong motivations for using policy gradient approaches versus the alr
 
 Let's assume an stochastic environment $E$ from which to sample states and rewards, and an stochastic policy $\pi_{\theta}$ parameterized by a vector $\theta$ from which to sample actions. The agent acting under policy $\pi_{\theta}$ is to maximize the (possibly discounted)\footnote{\cite{Williams1992, Sutton1999} present proofs of this same derivation using a discount factor, which makes policy gradient methods work for environments with infinite time horizons.} sum of rewards on environment $E$, over a time horizon $H$ (possibly infinitely long). We reach the following optimization problem:
 \begin{equation}\label{equation:expected-reward-theta}
-\underset{\theta}{\text{max}} = \mathbb{E}_{s_{t} \sim E, u_t \sim \pi_{\theta}}[\sum^{H}_{t=0} r(s_t, u_t) | \pi_{\theta}]
+\underset{\theta}{\text{max}} = \mathbb{E}_{s_{t} \sim \xi, u_t \sim \pi_{\theta}}[\sum^{H}_{t=0} r(s_t, u_t) | \pi_{\theta}]
 \end{equation}
 
 For an episode of length $H$ let $\tau$ be the trajectory followed by an agent in an episode. This trajectory $\tau$ is a sequence of state-action tuples $\tau = (s_0, a_0, \dots, s_H, a_H)$. We overload the notation of the reward function $\mathcal{R}$ thus: $\mathcal{R}(\tau) = \sum_{t=0}^{H}r(s_t, u_t)$, indicating the total accumulated reward in the trajectory $\tau$. We will also use $r(s_t) \in \mathbb{R}$ to refer to the scalar reward obtained at timestep $t$ in the trajectory. From here, the utility of a policy parameterized by $\theta$ is defined as:
 
 \begin{equation}\label{equation:utility}
-U(\theta) = \mathbb{E}_{s_t \sim E, u_t \sim \pi_{\theta}}[\sum_{t=0}^{H}r(s_t, u_t) | \pi_{\theta}] = \sum_{\tau}P(\tau ; \theta)\mathcal{R}(\tau)
+U(\theta) = \mathbb{E}_{s_t \sim \xi, u_t \sim \pi_{\theta}}[\sum_{t=0}^{H}r(s_t, u_t) | \pi_{\theta}] = \sum_{\tau}P(\tau ; \theta)\mathcal{R}(\tau)
 \end{equation}
 
 Where $P(\tau ; \theta)$ denotes the probability of trajectory $\tau$ happening when taking actions sampled from a parameterized policy $\pi_{\theta}$. More informally, how likely is this sequence of state-action pairs to happen as a result of an agent following a policy $\pi_{\theta}$. Linking equations~\ref{equation:expected-reward-theta} and~\ref{equation:utility}, our optimization problem becomes:
@@ -118,6 +118,11 @@ A_{\pi}(t) = A_{\pi}(s_t, a_t) = Q_{\pi}(s_t, a_t) - V_{\pi}(s_t)
 
 \subsection{Off-policy policy gradient methods}
 Off-PAC, The first off-policy policy gradient method introduced by~\cite{Degris2012} used importance sampling techniques to weigh the actor gradient update against the behavioural policy being used (look this up on paper). They also used eligibility traces for a critic with linear function approximator, similar to a TD($\lambda$). Reply buffer, introduced in~\cite{Lin1993}, has seen a lot of use recently~\citep{Mnih2013, Mnih2016}. % chktex 36
+
+
+The UNREAL agent as described in \citep{Jaderberg2016}:
+
+UNREAL algorithm optimizes a loss function with respect to the joint parameters $\theta$, that combines the A3C loss $\mathcal{L}_{A3C}$ together with an auxiliary pixel control loss $\mathcal{L}_{PC}$, auxiliary reward prediction loss $\mathcal{L}_{RP}$ and replayed value loss $\mathcal{L}_{VR}$, with loss weightings $\lambda_{PC}$, $\lambda_{RP}$, $\lambda_{VR}$.
 
 % After all baselines. Talk about DQN (perhaps mention that it is not the first DeepRL attempt, but mention that it's the best one at the time). Follow up with DDPG, saying that DQN cannot easily be applied to continuous action spaces. Mention Batch normalization (Ioffe 2015)
 % About DQN: DQN is able to learn value functions using such function approximators in a stable and robust way due to two innovations: 1. the network is trained off-policy with samples from a replay buffer to minimize correlations between samples; 2. the network is trained with a target Q network to give consistent targets during temporal difference backups.

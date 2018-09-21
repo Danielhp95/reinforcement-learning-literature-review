@@ -1,31 +1,34 @@
-\documentclass{../main.tex}{subfiles}
+\documentclass{../main.tex}{}
 \newcommand{\var}{\texttt}
 \begin{document}
 
-The Q-learning algorithm was first introduced by~\cite{Watkins1989}, and is arguably one of the most famous and widely implemented methods in the entire field. Given an MDP, Q-learning aims to calculate the corresponding optimal action value function $Q^*$, following the principle of optimality and proof of the existence of an optimal deterministic policy in an MDP as described in Section~\ref{section:markov-decision-processes}. It is model free, learning via interaction with the environment, and it is an off-policy algorithm. The latter is because, even though we are learning the optimal action value function $Q^*$, we can choose any \textit{behavioural} policy to gather experience from the environment. Researchers like~\cite{Tijsma2017} benchmarked the efficiency of using various exploratory policies in grid world stochastic maze environments.
+The Q-learning algorithm was first introduced by~\cite{Watkins1989}, and is arguably one of the most famous, most studied and most widely implemented methods in the entire field. Given an MDP, Q-learning aims to calculate the corresponding optimal action value function $Q^*$, following the principle of optimality and the proof of existence of an optimal deterministic policy in an MDP as described in Section~\ref{section:markov-decision-processes}. It is model free, learning via interaction with the environment, and it is an off-policy algorithm. The latter is because, even though we are learning the optimal action value function $Q^*$, we can choose any \textit{behavioural} policy to gather experience from the environment. Researchers like~\cite{Tijsma2017} benchmarked the efficiency of using various exploratory policies in grid world stochastic maze environments.
 
 Q-learning has been proven to converge to the optimal solution for an MDP under the following assumptions:
 \begin{enumerate}
-    \item The $Q^{\pi^*}$ function is represented in tabular form, with each state-action pare represented discretely~\cite{Watkins1992}. 
+    \item The $Q^{\pi^*}$ function is represented in tabular form, with each state-action pair represented discretely~\cite{Watkins1992}. 
     \item Each state-action pair is visited an infinite number of times.~\citep{Watkins1989}
     \item The sequence of updates of Q-values has to be monotonically increasing  $Q(s_i, a_i) \leq Q(s_{i+1}, a_{i+1})$.~\citep{Thrun1993}.
     \item The learning rate $\alpha$  must decay over time, and such decay must be slow enough so that the agent can learn the optimal Q values. Expressed formally: $\sum_{t} \alpha_t = \infty$ and $\sum_{t} {(\alpha_{t})}^{2} < \infty$.~\citep{Watkins1989}
 \end{enumerate}
   
 \begin{algorithm}
+    \KwIn{ \textit{Environment}: $\xi = (\mathcal{S}, \mathcal{A}, \mathcal{P(\cdot | \cdot, \cdot)}, \mathcal{R}(\cdot, \cdot, \cdot), \gamma, \rho_0(\cdot), T)$}
     Initialize $Q$ table $\forall s \in \mathcal{S} \wedge \forall a \in \mathcal{A}$, $Q(s,a) = 0$ \;
     Sample $s_0 \sim \rho_0$ \; 
     $s = s_0$ \;
-\Repeat{termination} {
-    Select action $\var{a} = \pi(s)$, where $\pi(s) = \epsilon-greedy(Q(s, \cdot))$ \;
-    Observe successor state $\var{s'}$ and reward $\var{r}$ after taking action $\var{a}$ \;
+\Repeat{$t \ge T$} {
+    Select action $a = \pi(s)$, where $\pi(s) = \epsilon-greedy(Q(s, \cdot))$ \;
+    Observe successor state $s'$ and reward $r$ after taking action $a$ \;
     Update $Q(s,a) \leftarrow Q(s,a) + \alpha[r + \argmax_{a'} Q(s', a') - Q(s,a)]$ \;
 }
 \caption{Q-learning}
 \end{algorithm}
 
 % Technical note: http://www.gatsby.ucl.ac.uk/~dayan/papers/cjch.pdf
-Q-learning features its own share of imperfections. If there is a function approximator\footnote{With neural networks being the most famous function approximators in reinforcement learning at the time of writing.} in place,~\cite{Thrun1993} shows that if the approximation error is greater than a threshold which depends on the discount factor $\gamma$ and episode length, then a systematic overestimation effect occurs, negating convergance. This is mainly due to the joint effort of function approximation methods and the $argmax$ operator used in step 7 of the algorithm. On top of this,~\cite{Kaisers2010} introduces the concept of \textit{Policy bias}, which states that state-action pairs that are favoured by the policy are chosen more often, biasing the updates. Ideally all state-action pairs are updated on every step. However, because agent's actions modify the environment, this is generally not possible in absence of an environment model. Frequency Adjusted Q-learning (FAQL) proposes scaling the update rule of Q-learning inversely proportional to the likelihood of choosing the action taken at that step \citep{Kaisers2010}.~\cite{Abdallah2016} introduces Repeated Update Q-learning (RUQL), a more promising Q-learning spin off that proposes running the update equation \textit{multiple times}, where the number of times is inversely proportional to the probability of the action selected given the policy being followed.
+Q-learning features its own share of imperfections. If there is a function approximator\footnote{With neural networks being the most famous function approximators in reinforcement learning at the time of writing.} in place,~\cite{Thrun1993} shows that if the approximation error is greater than a threshold which depends on the discount factor $\gamma$ and episode length, then a systematic overestimation effect occurs, negating convergance. This is mainly due to the joint effort of function approximation methods and the $argmax$ operator used in step 7 of the algorithm. On top of this,~\cite{Kaisers2010} introduces the concept of \textit{Policy bias}, which states that state-action pairs that are favoured by the policy are chosen more often, biasing the updates. Ideally all state-action pairs are updated on every step. However, because agent's actions modify the environment, this is generally not possible in absence of an environment model.
+
+Frequency Adjusted Q-learning (FAQL) proposes scaling the update rule of Q-learning inversely proportional to the likelihood of choosing the action taken at that step \citep{Kaisers2010}.~\cite{Abdallah2016} introduces Repeated Update Q-learning (RUQL), a more promising Q-learning spin off that proposes running the update equation \textit{multiple times}, where the number of times is inversely proportional to the probability of the action selected given the policy being followed.
 
 %References for overestimation of q-learning updates read page 19 onwards: https://project-archive.inf.ed.ac.uk/msc/20162091/msc_proj.pdf (paper Thrun and Schwartz (1993) an analysis was presented that uncovered issues in the way Q-Learning estimates the action-value) Overestimation happens mainly due to the joint effort of function approximation methods and the max operator, which always picks the highest value and makes it succeptible to overestimation. Repeated Update Q-Learning (RUQL) (Abdallah and Kaisers, 2013, 2016) is an algorithm based on Q-Learning and designed with the intention of addressing its overestimation issues. RUQL proposes that an action value must be updated inversely proportional to the probability of the action selected given the policy that is being followed
 \end{document}

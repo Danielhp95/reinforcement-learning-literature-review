@@ -1,10 +1,57 @@
-\begin{itemize}
-\item OpenAI Gym \citep{Brockman2016}
-\item Real time strategy games have always been a famous testbed for many reinforcement learning algorithms. The most popular game used in RTS AI research is Starcraft: Broodwar. There are several frameworks that either simulate the game \citep{Broodwar, Wender2012} or inject code into the game to allow external processes to communicate with the real game~\citep{Synnaeve2016} such as TorchCraft.~\cite{Vinyals2017} uses the same concept for Starcraft II\@. Followed by microRTS \citep{Ontanon2013}, finishing by saying that \citep{Andersen2017} Creates a unifying and highly customizable RTS environment that allows for POMDP with variyng degrees of partial observability. Compare simulation speed.
-    \begin{itemize}
-    \item Real time strategy games are really appealing for reinforcement scenarios because a good agent should be able to perform effective search and meaningful planning, over environments with enormous branching factors \citep{Soemers2014}\citep{Wender2012}. 
-    \end{itemize}
-\item Arcade Learning Environment (ALE) \citep{Bellemare2015}
-\item VizDoom \citep{Kempka2017}
-\item Unity ML-agents \citep{UnityMLAgents}. Currently only performance boost of 100x.
-\end{itemize}
+An unknown but potentially large fraction of animal and human intelligence is a direct consequence of the perceptual and physical richness of our environment, and this intelligence is unlikely to arise without it. The information that agents require to learn does not exist in their psycology. It exists in the affordances of the environment outside their psycology. For many RL applications, the ideal scenario would best be realized in the real world as it is a rich visual and sensorial environment. However, it presents a lot of downsides. The passage of time is too slow, reseting the environment is time consuming and physical degradation due accidents or use is inevitable. (TODO not perfect)
+
+In the last decade there has been a rise of virtual environments which have been specifically designed to be used for RL research. They run much faster than real time, allow for customization and some even present inbuilt metric comparisons to check how well an algorithm fares against other existing implementations. This sections presents a non exhaustive list of the most famous learning environments. 
+
+%\begin{table}[h!]
+%    \begin{tabular}{|c||c|c|c|c|}
+%        \hline
+%        \textbf{Environment} & Customizable & Realistic physics & Multi-agent & Rich visuals \\
+%        \hline \hline
+%        ALE & $\times$ & $\times$ & $\times$ & $\times$ \\
+%        \hline
+%        SMDP & $\times$ & $\times$ & $\times$ & $\checkmark$ \\
+%        \hline
+%        POMDP & \checkmark & $\times$ & $\times$ & $\times$ \\
+%        \hline
+%        MMDP & $\times$ & $\checkmark$ & $\times$ & $\times$ \\
+%        \hline
+%        dec-POMDP & $\checkmark$ & $\checkmark$ & $\times$ & $\times$  \\
+%        \hline
+%        Markov Game & $\times$ & $\checkmark$ & $\checkmark$ & $\times$ \\
+%        \hline
+%    \end{tabular}
+%    \label{table:learning-environments}
+%    \caption{Properties of various environment models with respect to classical Markov Decission Processes.}
+%\end{table}
+
+\subsection{Arcade Learning Environment}
+
+The arcade learning environment (ALE) \citep{Bellemare2015} is an Atari 2600 emulator, where games are written in C++ and they are presented through a Python interface for launching and controlling simulations of over 70 Atari games. The ALE provides visual input through pixel-based rendering and a small discrete action space which is game-dependant. Its simulation speed is orders of magnitude faster than the original console. Its popularity skyrocketted when the Deep Q-Network algorithm \citep{Mnih2013} was released, which was the first deep RL algorithm that played at superhuman performance on various Atari games where learning happened only on pixel input. Even though most research performed on ALE focuses on learning from pixel input, some researches use the small RAM of the simulated Atari 2600 as a state representation \citep{Sygnowski2016}. It is important to note that, due to the original Atari 2600 not showcasing a random number generator, all environments present in ALE are deterministic. Visuals are pixelated and relatively simple compare against other available environments. The environments can only be configured by changing their respective source code. They present only single-agent scenarios and lack realistic physics.
+
+\subsection{ViZDoom}
+ViZDoom is a Doom-based AI research platform for reinforcement learning from raw visual information. It allows developing AI bots that play Doom using only the game's screen buffer \citep{Kempka2017}. ViZDoom is primarily intended for research in machine visual learning, and deep reinforcement learning, ViZDoom provides researchers with the ability to create tasks which involve first-person navigation and control \citep{Ha2018}. Constrained by its underlying game engine, the visual and physical complexity possible in the environments created using ViZDoom are relatively limited. It also is restricted to simulating artificial agents with only a first-person perspective, which is the point of view of the original game.
+
+\subsection{DeepMind Lab}
+DeepMind Lab (Lab) was released in 2016 as the external version of the research platform used by DeepMind \citep{Beattie2016}. It is built from an open source version of the famous Quake III game engine, thus presenting basic physics and multi-agent interaction. Same as ViZDoom, the state observation presented to the agent are pixel values rendered in first person, with the adition of a velocity vector and an optional depth parameter for each pixel of the pixel values. The action space includes movement in three dimensions and look direction around two axes.
+
+The Lab integrates complex level creation tools to aide environment design and bot scripting. Featuring procedurally generation of maps, it solves the deterministic problem present in all ALE environment. Furthermore, by using a 3D game-engine, complex navigation tasks similar to those studied in robotics and animal psychology could be studied within Lab \citep{Leibo2018}.
+
+Similarly to ViZDoom, DeepMind lab is tied to a game engine which is over a decade old. As such, the gap in quality between the physical world, or other physics simulators such as MuJoCo, and the simulation provided via Lab is relatively large. Furthermore, the first person perspective limits the availability.
+ 
+\subsection{Project Malmo}
+Malmo \citep{Johnson2016} is a multi-agent oriented RL framework based on the popular videogame Minecraft by Microsoft. Minecraft features super flexible map creation tools that allow for extensive environment customizability. Malmo uses this to allow for the creation of not only very varied map layouts, but also very different tasks. (TODO add paper tasks). The platform is limited by the Minecraft engine. Due to the low-polygon pixelated visuals, as well as the rudimentary physics system, Minecraft lacks both the visual as well as the physical complexity that would be desirable from a modern platform.
+ 
+\subsection{MuJoCo}
+Multi-Joint dynamics with Contact (MuJoCo) is a famous physics engine developed by OpenAI, which excels in (TODO LookIt Up). It has become a popular simulation environment for benchmarking model-free continuous control tasks. The two major factors contributing to the popularity of MuJoCo are its high quality physics simulations and the large number of benchmarks with have become standardized for continuous-control algorithms. Even though MuJoCo features a nice state and action representation for RL agents, it lacks in visual quality. This can be seen in the lack of more complex lighting techniques, texture qualities and available materials for the objects in the environment. Furthermore, the MuJoCo engine was not designed to dynamically change the objects of the environment in real-time. More dynamic environments are often necessary to pose tasks which require greater planning or coordination to solve.
+
+
+\subsection{Unity ML-agents}
+% \citep{Juliani}. Currently only performance boost of 100x.
+
+\subsection{Real Time Strategy Games}
+
+Real time strategy (RTS) games have been a famous testbed for many reinforcement learning algorithms for a long time. RTS games are interesting to RL research fo a variety of reasons. They present some of the biggest action spaces in the whole RL literature, yielding game trees with enormous branching factors. Many of the actions that can be carried out inside of the game feature rewards which are very temporally delayed, this being one of the biggest obstacles to overcome in the field. On one hand, RTS games allow for micro unit control, where individual units act on their own action and observation spaces corresponding to their own limited vision and actions. But they also allow for macro control \citep{Wender2012}, which mean resource management, unit creation and base expansion that have. (TODO make perfect)
+
+The most popular RTS game used in AI research is \textit{Starcraft: Broodwar}, around which many frameworks have been built to facilitate RL research. Some frameworks inject code into the game to allow external processses to communicate and expose information from the game at runtime. One such example is TorchCraft~\citep{Synnaeve2016}. Broodwar API \citep{Broodwar} is the most widely spread of all \textit{Starcraft: Broodwar} frameworks.~\citep{Vinyals2017} introduces the Starcraft II Learning environment (sc2le) which opens up \textit{Starcraft II} for Rl research. It tries to mimic the interface that humans interact with in \textit{Starcraft II}, with a single rendered screen instead of a unit centered design. On top of the pixel rendered screen, The framework also provides a series of ``feature layers'' which facilitate learning. These layers present the same information as the RGB pixels except that the information is decomposed and structured. Sc2le is good for benchmarking AIs against human play, but makes multi-agent interactions virtually impossible, as a single screen view must be shared across agents.
+
+There are other frameworks that also tackle RTS games. Some of these bet on simplicity and customizability at the expense of more interesting features such as fog of war, microRTS being one such example~\citep{Ontanon2013}.~\cite{Andersen2017} released Deep RTS, a unifying RTS framework with an emphasize on simplicity, customizability, and simulation speed. 

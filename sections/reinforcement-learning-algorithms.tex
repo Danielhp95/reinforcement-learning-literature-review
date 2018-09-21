@@ -1,29 +1,49 @@
-\documentclass{../main.tex}{subfiles}
+\documentclass{../main.tex}{}
 \begin{document}
 % Inspiration: https://raw.githubusercontent.com/zkid18/RL-Study-Roadmap/master/header_image.png
 % Looks like a decent read: https://towardsdatascience.com/introduction-to-various-reinforcement-learning-algorithms-i-q-learning-sarsa-dqn-ddpg-72a5e0cb6287
 
-Explain control vs prediction.
 
-Most RL algorithms can be devided into the following categories:
+Every RL algorithm attempts to learn an optimal policy $\pi^*$ for a given environment $\xi$. So far, there is not a single algorithm which is used in every single environment to find an optimal policy. The choice of algorithm depends on many factors, such as the nature of the environment, the availability of the underlaying mechanics of the environment, access to already existing policies and more practical constraints such as the amount of computational power available. Most RL algorithms can be divided into the following categories, note that not all of them are mutually exclusive:
+
+\subsection{On-policy and off-policy}
+
+On-policy algorithms directly use the policy that is being estimated to sample trajectories during training. On policy methods use a policy $\pi$ to sample experiences on an environment in order to improve that same policy $\pi$. Off policy methods use a behavioural policy $\mu$ to carry out actions in an environment, and use this information to improve a target policy $\pi$. The learning that takes place in off policy methods can be regarded as learning from somebody else's experience, whilst on policy methods focus on learning from an agent's own experience.
+
+(End of explanation)
+Off-policy learning can be used to learn multiple tasks in parallel.~\cite{Sutton2010} use sensorimotor interaction with an environment to learn a multitude of pseudoreward funcitons (READ paper).~\cite{Jaderberg2016} (UNREAL) takes this idea further by using an off-policy methods to learn auxiliary extra tasks. Most notably, these tasks include predicting immediate rewards\footnote{This is different from value function estimation because the value that the off-policy algorithm is trying to predict is expected immediate reward, instead of expected future cummulative reward.}, pixel control\footnote{Given a matrix of pixels as input, the authors define pixel control as a separate policy that tries to maximally change the pixels in the following state. The reasoning behind this approach is that big changes in pixel values may correspond to important events inside of the environment.}.
+
+(TODO rephrase)
+A method to allow algorithms to perform off policy updates to their policies is to introduce the notion of an \textit{experience replay}~\citep{Lin1993}, which was made famous after the success of~\cite{Mnih2013}. An experience replay is a list of experiences, where each experience is a 5 element tuple $<s_t, a_t, r_t, s_{t+1}, a_{t+1}>$. As an agent acts in an environment, in the same fashion as in the reinfocement learning loop presented in (reference), the experience replay is filled. At the time of updating the policy, the agent does not choose to update its policy using the last action function that was taken, as it is the case with Q-learning. Instead, the agent samples an experience (or batch of experiences) from the experience replay. Because these sampled experiences may have been generated using a previous policy, experience replay allows for policy updates to happen in an off-policy fashion. The experience replay buffer has been the focus on future research such as \citep{Schaul2015, Hessel2017} where the authors use a \textit{prioritized} experience replay. The difference is that experiences are not sampled uniformly from the replay buffer. Instead, experiences are weighted according to (READ paper).~\cite{Andrychowicz2017} expands on the idea by introducing the Hindsight Experience Replay (HER) where an experience replay is used to learn a task from failures by treating certain state transitions as goals.
+
+
+\textbf{Famous on policy algorithms:} Sarsa~\citep{Sutton1998}, $Q(\sigma)$~\citep{Deasis2017}, Monte Carlo Tree search (MCTS), REINFORCE~\citep{Williams1992}, Asynchronous Advantage estimation Actor Critic (A3C).
+
+\textbf{Famous off policy algorithms:} Q-learning, Deep Q-Network (DQN)~\citep{Mnih2013}, Deterministic Policy Gradient (DPG)~\citep{Silver2014}. Deep Deterministic Policy Gradient (DDPG)~\citep{Lillicrap2015}, Importance Weighted Actor-Learner Architecture (IMPALA)~\citep{Espeholt2018}.
+
+
+% Reinforcement Learning algorithms which are characterized as off-policy generally employ a separate behavior policy that is independent of the policy being improved upon; the behavior policy is used to simulate trajectories. A key benefit of this separation is that the behavior policy can operate by sampling all actions, whereas the estimation policy can be deterministic (e.g., greedy) [1]. Q-learning is an off-policy algorithm, since it updates the Q values without making any assumptions about the actual policy being followed. Rather, the Q-learning algorithm simply states that the Q-value corresponding to state s(t) and action a(t) is updated using the Q-value of the next state s(t+1) and the action a(t+1) that maximizes the Q-value at state s(t+1).
+% 
+% On-policy algorithms directly use the policy that is being estimated to sample trajectories during training.
+
+\subsection{Value based}
+Value based, or critic only methods, rely exclusively on value function approximation and aim at learning an approximate solution to the Bellman equation. The underlying assumption is that from the value function, an optimal policy can be computed or approximated.
+
+\textbf{Famous value based algorithms:} Value iteration, Policy iteration and Sarsa~\cite{Sutton1998}, Q-learning, DQN and it's many variants: Dueling DQN, Distributional DQN, Prioritized DQN and Double DQN\@. These can be found in~\citep{Hessel2017}
+
 \subsection{Policy based}
 These algorithms tend to represent a policy through a parameter vector $\theta
 \in \mathbb{R}^D$. The goal then becomes to improve the choice of parameters
 $\theta_i \in \theta$ to improve the expected sum of rewards
 $\mathbb{E}[\sum_{T} r(t)]$. Policy based algorithms are the main focus on Section~\ref{section:policy-gradient-methods}.
 
-Famous policy based algorithms: vanilla policy gradient, REINFORCE\citep{Williams1992} and the REINFORCE family of algorithms\@.
+\textbf{Famous policy based algorithms:} vanilla policy gradient, REINFORCE\citep{Williams1992} and the REINFORCE family of algorithms\@.
 
-\subsection{Value based}
-Value based, or critic only methods, rely exclusively on value function approximation and aim at learning an approximate solution to the Bellman equation. The underlying assumption is that from the value function, a near optimal policy can be computed.
+\subsection{Actor-critic}
 
-Famous value based algorithms: Value iteration, Policy iteration and Sarsa~\cite{Sutton1998}, Q-learning~\citep{Watkins1989}
+Actor-critic methods combine the strong points of both policy based and value based algorithms, and overcome some of their individual weaknesses. The critic assumes the role of learning a value function, which is then used as part of the update for the actor's policy. The individual critic is analogous to value based algorithms, and the actor to policy based methods.
 
-\subsection{Actor critic}
-
-Actor critic methods combine the strong points of both policy based and value based algorithms, and overcome some of their individual weaknesses. The critic assumes the role of learning a value function, which is then used as part of the update for the actor's policy. The individual critic is analogous to value based algorithms, and the actor to policy based methods.
-
-Famous actor critic algorithms: A3C~\citep{Mnih2016}, A2C a variant of A3C where a single worker is used, PPO~\citep{Schulman2017}, TRPO (Schulman 2015, find paper), ACKTR~\citep{Wu2017}.
+\textbf{Famous actor critic algorithms:} A3C~\citep{Mnih2016}, PPO~\citep{Schulman2017}, TRPO (Schulman 2015, find paper), ACKTR~\citep{Wu2017}.
 
 \subsection{Model based and model free approaches}
 In the reinforcement learning literature the \textit{model} or the dynamics of an environment is considered to be the transition function $\mathcal{P}(s_{t+1} | s_t, a_t)$ and reward function $\mathcal{R}(s_t, a_t, s_{t+1})$. Model free algorithms aim to approximate an optimal policy $\pi^*$ without explicitly using either $\mathcal{P}$ or $\mathcal{R}$ in their calculations.
@@ -32,32 +52,6 @@ A further categorization of algorithms is the notion of \textit{model free} and 
 
 Model based algorithms are either given a prior model that they can use for planning \citep{browne2012survey, Soemers2014}, or they learn a representation via their own interaction with the environment \citep{Sutton1991, Guzdial2017, Deisenroth2011}. Note that an advantage of learning your own model is that you can choose a representation of the environment that is relevant to the agent's actions, which can have the advantage of modelling uninteresting (but perhaps overly complicated) environment behaviour \citep{Pathak2017}. Another advantage of having a model is that it allows for forward planning, which is the main method of learning for search-based artificial intelligence (throw mcts papers here).
 
-\subsection{on-policy, off-policy}
 
-% An agent is learning on-policy if it learns about the policy that it is currently following. In the off-policy setting an agent learns from experience of another agent or another policy, e.g. a previous policy 
-
-On policy methods use a policy $\pi$ to sample experiences on an environment in order to improve that same policy $\pi$. Off policy methods use a behavioural policy $\mu$ to carry out actions in an environment, and use this information to improve a target policy $\pi$. The learning that takes place in off policy methods can be regarded as learning from somebody else's experience, whilst on policy methods focus on learning from an agent's own experience.
-
-Historically On-policy and off-policy methods have been used separatelly. \cite{Sutton1998} describes SARSA, Monte Carlo for value function estimation, Monte Carlo for prediction and Monte Carlo Tree Search (MCTS) methods as on policy methods. In the field of deep reinforcement learning, \cite{Williams1992} introduces de REINFORCE algorithm family of policy gradient methods as on-policy methods. 
-
-A limitation of on-policy learning is that it forces the agent to commit its resources to learning \textit{only} a policy. Off-policy learning can be used to learn multiple tasks in parallel.~\cite{Sutton2010} use sensorimotor interaction with an environment to learn a multitude of pseudoreward funcitons (READx paper). \cite{Jaderberg2016} takes this idea further by using an off-policy methods to learn auxiliary extra tasks. Most notably, these tasks include predicting immediate rewards\footnote{This is different from value function estimation because the value that the off-policy algorithm is trying to predict is expected immediate reward, instead of expected future cummulative reward.}, pixel control\footnote{Given a matrix of pixels as input, the authors define pixel control as a separate policy that tries to maximally change the pixels in the following state. The reasoning behind this approach is that big changes in pixel values may correspond to important events inside of the environment.}.
-
-A method to alllow algorithms to perform off policy updates to their policies is to introduce the notion of an \textit{experience replay}~\citep{Lin1993}, which was made famous after the success of~\cite{Mnih2013}. An experience replay is a list of experiences, where each experience is a 5 element tuple $<s_t, a_t, r_t, s_{t+1}, a_{t+1}>$. As an agent acts in an environment, in the same fashion as in the reinfocement learning loop presented in (reference), the experience replay is filled. At the time of updating the policy, the agent does not choose to update its policy using the last action function that was taken, as it is the case with Q-learning. Instead, the agent samples an experience (or batch of experiences) from the experience replay. Because these sampled experiences may have been generated using a previous policy, experience replay allows for policy updates to happen in an off-policy fashion. The experience replay buffer has been the focus on future research such as \citep{Schaul2015, Hessel2017} where the authors use a \textit{prioritized} experience replay. The difference is that experiences are not sampled uniformly from the replay buffer. Instead, experiences are weighted according to (READ paper). \cite{Andrychowicz2017} expands on the idea by introducing the Hindsight Experience Replay (HER) where an experience replay is used to learn a task from failures by treating certain state transitions as goals.
-
-
-Some notable on policy algorithms: Sarsa, Monte Carlo estimation for prediction, Monte Carlo Tree search methods,  Many vanilla policy gradient methods such as REINFORCE\citep{Williams1992} family of algorithms, asynchronous advantage actor critic method (A3C and A2C). $Q(\sigma)$~\citep{Deasis2017}.
-
-Some notable off policy algorithms are. Q-learning, deep Q-learning, deterministic policy gradient~\citep{Silver2014}. Deep deterministic policy gradient~\citep{Lillicrap2015}
-
-
-% Reinforcement Learning algorithms which are characterized as off-policy generally employ a separate behavior policy that is independent of the policy being improved upon; the behavior policy is used to simulate trajectories. A key benefit of this separation is that the behavior policy can operate by sampling all actions, whereas the estimation policy can be deterministic (e.g., greedy) [1]. Q-learning is an off-policy algorithm, since it updates the Q values without making any assumptions about the actual policy being followed. Rather, the Q-learning algorithm simply states that the Q-value corresponding to state s(t) and action a(t) is updated using the Q-value of the next state s(t+1) and the action a(t+1) that maximizes the Q-value at state s(t+1).
-% 
-% On-policy algorithms directly use the policy that is being estimated to sample trajectories during training.
-
-\subsection{Common problems in Reinforcement Learning}
-\subsection{Credit assignment problem}
-As we have previously discussed, one of the difficulties of reinforcement learning is that feedback for actions is often delayed. The credit assignment problem focuses on the question: if a sequence of actions led to a reward, how much credit should each action take for obtaining that reward? It is against common sense to assume that every action should be equally rewarded or punished. This is commonly known as the credit assignment problem.
-\subsection{Exploration vs exploitation}
-The exploration vs exploitation dilemma corresponds to finding a good middle point between exploting the best action available at any given time (exploitation), or performing a sub optimal action in the hopes that the agent will learn more about the environment that could lead to higher expected rewards in the long run. A common approach in stochastic environments, the trade off between exploration and exploitation is tackled by the following idea. For each state $s_t \in \mathcal{S}$ we want to maximize the expected sum of rewards $\mathbb{E}_{\pi}[V_{\pi}(s_t)]$ and reduce the variance $\sigma^2_{s_t}$. The Upper Bound Confidence Monte Carlo Tree Search algorithm UCT-MCTS has a remarkable example of this tradeoff as part of its selection policy (explain selection policy or just chuck equation?):
 
 \end{document}

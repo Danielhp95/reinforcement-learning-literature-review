@@ -1,0 +1,24 @@
+\documentclass{article}
+
+\usepackage[a4paper,margin=1in,footskip=0.25in]{geometry} % sets margins
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{amssymb} % For maths symbols like real number R.
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage[ruled, linesnumbered]{algorithm2e}
+
+\begin{document}
+
+\subsection{Common problems in Reinforcement Learning}
+\begin{itemize}
+    \item \textbf{Sample efficiency}: \\
+        Hindsight Experience Replay, Unreal with Auxiliary tasks.
+    \item \textbf{Credit assignment problem}: \\
+        One of the main difficulties of reinforcement learning is that feedback for actions is often delayed. The credit assignment problem focuses on the question: if a sequence of actions led to a reward, how much credit should each action take for obtaining that reward? It is against common sense to assume that every action should be equally rewarded or punished. This is commonly known as the credit assignment problem.
+    \item \textbf{Exploration vs exploitation}: \\
+The exploration vs exploitation dilemma corresponds to finding a good middle point between exploting the best action available at any given time (exploitation), or performing a sub optimal action in the hopes that the agent will learn more about the environment that could lead to higher expected rewards in the long run. A common approach in stochastic environments, the trade off between exploration and exploitation is tackled by the following idea. For each state $s_t \in \mathcal{S}$ we want to maximize the expected sum of rewards $\mathbb{E}_{\pi}[V_{\pi}(s_t)]$ and reduce the variance $\sigma^2_{s_t}$. The Upper Bound Confidence Monte Carlo Tree Search algorithm UCT-MCTS has a remarkable example of this tradeoff as part of its selection policy (explain selection policy or just chuck equation?):
+\end{itemize}
+
+\end{document}

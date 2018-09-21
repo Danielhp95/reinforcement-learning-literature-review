@@ -1,4 +1,4 @@
-\documentclass{../main.tex}{subfiles}
+\documentclass{../main.tex}{}
 
 \newcommand{\var}{\texttt}
 
@@ -8,40 +8,48 @@ The most famous mathematical structure used to represent reinforcement learning 
 
 \begin{itemize}
 \item $\mathcal{S}$ is the set of states $s \in \mathcal{S}$ of the underlying Markov chain, where $s_t \in \mathcal{S}$ represents the state of the environment at time $t$.
-\item $\mathcal{A}$ is the set of actions $a \in \mathcal{A}$ which are the transition labels between states of the underlying Markov chain. $A_t \subset \mathcal{A}$ is the subset of available actions in state $s_t$ at time $t$. If an state $s_t$ has no available actions, it is said to be a \textit{terminal} state.
-\item $\mathcal{P}(s_{t+1} | s_t, a_t) \in [0, 1]$, where $s_t, s_{t+1} \in \mathcal{S}$, $a_t \in \mathcal{A}$. $\mathcal{P}$ is the transition probability function\footnote{The function $\mathcal{P}$ is also known in the literature as the transition probability kernel, the transition kernel~\citep{Tamar2017} or the dynamics of the environment in model-based contexts. The word kernel is a heavily overloaded mathematical term that refers to a function that maps a series of inputs to value in $\mathbb{R}$.}. It defines the probability of transitioning to state $s_{t+1}$ from state $s_t$ after performig action $a_t$. Thus, $\mathcal{P}: \mathcal{S} \times \mathcal{A} \to [0,1]$. Given a state $s_t$ and an action $a_t$ at time $t$, we can find the next state $s_{t+1}$ by sampling from the distribution $s_{t+1} \sim P(s_t, a_t)$.%chktex 35
-\item $\mathcal{R}(s_t, a_t, s_{t+1}) \in \mathbb{R}$, where $s_t, s_{t+1} \in \mathcal{S}$, $a_t \in \mathcal{A}$. $\mathcal{R}$ is the reward function, which returns the immediate reward of performing action $a_t$ in state $s_t$ and ending in state $s_{t+1}$. The real-valued reward\footnote{The reward $r_t$ can be equivalently written as $r(s_t, a_t)$.} $r_t$ is typically in the range $[-1,-1]$. $\mathcal{R}: \mathcal{S} \times \mathcal{A} \times \mathcal{S} \to \mathbb{R}$. If the environment is deterministic, the reward function can be rewritten as $\mathcal{R}(s_t, a_t)$ because the state transition defined by $\mathcal{P}(s_t, a_t)$ is deterministic.
+\item $\mathcal{A}$ is the set of actions $a \in \mathcal{A}$ which are the transition labels between states of the underlying Markov chain. $A_t \subset \mathcal{A}$ is the subset of available actions in state $s_t$ at time $t$. If an state $s_t$ has no available actions, it is said to be a \textit{terminal} state. Terminal states are equivalent to absorbing states in the Markov Chain literature.
+\item $\mathcal{P}(s_{t+1} | s_t, a_t) \in [0, 1]$, where $s_t, s_{t+1} \in \mathcal{S}$, $a_t \in \mathcal{A}$. $\mathcal{P}$ is the transition probability function\footnote{The function $\mathcal{P}$ is also known in the literature as the transition probability kernel, the transition kernel~\citep{Tamar2017} or the dynamics of the environment in model-based contexts. The word kernel is a heavily overloaded mathematical term that refers to a function that maps a series of inputs to value in $\mathbb{R}$.}. It expresses a distribution over states. It defines the probability of transitioning to state $s_{t+1}$ from state $s_t$ after performig action $a_t$. Thus, $\mathcal{P}: \mathcal{S} \times \mathcal{A} \times \mathcal{S} \to [0,1]$. Given a state $s_t$ and an action $a_t$ at time $t$, we can find the next state $s_{t+1}$ by sampling from the distribution $s_{t+1} \sim P(s_t, a_t)$. The environment is said to be deterministic if $\mathcal{P}(s_t, a_t)$ is deterministic.%chktex 35
+\item $\mathcal{R}(s_t, a_t, s_{t+1}) \in \mathbb{R}$, where $s_t, s_{t+1} \in \mathcal{S}$, $a_t \in \mathcal{A}$. $\mathcal{R}$ is the reward function, which represents the immediate reward the agent will obtain after performing action $a_t$ in state $s_t$ and ending in state $s_{t+1}$. The real-valued reward\footnote{The reward $r_t$ can be equivalently written as $r(s_t, a_t)$.} $r_t$ is typically in the range $[-1,1]$. $\mathcal{R}: \mathcal{S} \times \mathcal{A} \times \mathcal{S} \to \mathbb{R}$. If the environment is deterministic, the reward function can be rewritten as $\mathcal{R}(s_t, a_t)$.
 \item $\gamma \in [0,1]$ is the discount factor, which represent the rate of importance between immediate and future rewards. If $\gamma = 0$ the agent cares only about the immediate reward, if $\gamma = 1$ all rewards $r_t$ are taken into account. $\gamma$ is often used as a variance reduction method, and aids proofs in infinitely running environments~\citep{Sutton1999}.
 \end{itemize}
 
-The environment is sometimes represented by the Greek letter $\xi$. The tuple of elementes introduced above are the core components of any environment $\xi$, but a lot of work in RL literature also presents a distribution over initial states $\rho_0$ of the MDP, So that the initial state can be sampled from it: $s_0 \sim \rho_0$.
+There are also two optional parameters to an MDP which are sometimes ommited in the literature. These are the initial state distribution $\rho_0$ and the time horizon $T$:
 
-An environment can be episodic if it presents terminal states, or if there are a fixed number of steps after which the environment will not accept any more actions. However environments can also run infinitely (TODO add examples).
+\begin{itemize}
+    \item $\rho_0(s) \in [0, 1]$, where $s \in \mathcal{S}$, is the initial state distribution, representing the probability of starting an episode on a given state. It is from this distribution that the initial state is sampled from $s_0 \sim \rho_0$.
+    \item $T \in \mathbb{N}$, represents the finite time horizon, the number of steps over which the agent will try to maximize its cummulative reward. It serves a similar purporse to the more common discount factor $\gamma$ in that they are both used as a variance-bias trade off and are needed for proofs of convergence over infinitely long running tasks.
+\end{itemize}
+
+The Greek letter $\xi$ is sometimes used to represent the environment $(\mathcal{S}, \mathcal{A}, \mathcal{P(\cdot | \cdot, \cdot)}, \mathcal{R}(\cdot, \cdot, \cdot), \gamma, \rho_0(\cdot), T)$. 
 
 Acting inside of the environment, there is the agent, and through its actions the transitions between the MDP states are triggered, advancing the environment state and obtaining rewards. The agent's behaviour is fully defined by its policy $\pi$. A policy $\pi(a_t | s_t) \in [0,1]$, where $s_t \in \mathcal{S}$, $a_t \in \mathcal{A}$ is a mapping from states to a distribution over actions. Given a state $s_t$ it is possible to sample an action $a_t$ from the policy distribution $a_t \sim \pi(s_t)$. Thus, $\pi: \mathcal{S} \times \mathcal{A} \to [0,1]$.
 
-The reinforcement learning loop presented in figure \ref{fig:rl-loop} can be represented in algorithmic form as follows:
+The reinforcement learning loop presented in figure~\ref{fig:rl-loop} can be represented in algorithmic form as follows:
 \begin{algorithm}
-Sample initial state from the initial state distribution $s_0 \sim \rho_0$ \;
-$\var{t} \leftarrow 0$ \;
-\Repeat{Termination} {
-    Sample action $a_t \sim \pi(s_t)$\;
-    Sample successor state from the transition probability function $ s_{t+1} \sim P(s_t, a_t)$ \;
-    Sample reward from reward function $r_t \sim R(s_t, a_t, s_{t+1})$ \;
-    $\var{t} \leftarrow \var{t} + 1$ \;
-}
-\caption{Reinforcement Learning loop.}
-\label{algorithm:rl-loop}
+    \KwIn{ \textit{Environment}: $\xi = (\mathcal{S}, \mathcal{A}, \mathcal{P(\cdot | \cdot, \cdot)}, \mathcal{R}(\cdot, \cdot, \cdot), \gamma, \rho_0(\cdot), T)$}
+    \KwIn{ \textit{Agent Policy}: $\pi(\cdot)$}
+    Sample initial state from the initial state distribution $s_0 \sim \rho_0$ \;
+    $\var{t} \leftarrow 0$ \;
+    \Repeat{$t \ge T$} {
+        Sample action $a_t \sim \pi(s_t)$\;
+        Sample successor state from the transition probability function $ s_{t+1} \sim P(s_t, a_t)$ \;
+        Sample reward from reward function $r_t \sim R(s_t, a_t, s_{t+1})$ \;
+        $\var{t} \leftarrow \var{t} + 1$ \;
+    }
+\caption{Reinforcement Learning loop.}\label{algorithm:rl-loop}
 \end{algorithm}
 
-For an episode of length $T$, The objective for the agent is to find an \textit{optimal} policy $\pi^*$, which maximizes the cumulative sum of (possibly discounted) rewards.
+Given an environment $\xi$, the objective for the agent is to find an \textit{optimal} policy $\pi^*$, which maximizes the cumulative sum of (possibly discounted) rewards.
 
 \begin{equation}
     \pi^{*} = \underset{\pi}{\text{max}}\;  \mathbb{E}_{s_0 \sim \rho_0, s \sim \xi, a \sim \pi}[\sum_{t=0}^{T} \gamma r_t]
     \label{equation:expected-cumulative-reward}
 \end{equation}
 
-The equation \ref{equation:expected-cumulative-reward} above, algorithm \ref{algorithm:rl-loop} and figure \ref{fig:rl-loop} represent the same concept. All of the reinforcement learning research focuses on solving this problem.
+All of the reinforcement learning research focuses on solving this optimization problem, where the exact elements of the right hand side of the equation depend on the model of the environment being used. Section~\ref{section:environment-models} focuses on presenting a variety of other possible environment models.
+
+\subsection{Bellman equations and optimality principle}
 
 There are two functions of special relevance in reinforcement learning, the \textit{state value} function $V^{\pi}(s)$ and the \textit{action value} function $Q^{\pi}(s, a)$:
 \begin{itemize}
@@ -51,14 +59,13 @@ There are two functions of special relevance in reinforcement learning, the \tex
 
 The Bellman equations are the most straight forward, dynamic programming approach at solving MDPs \citep{Bertsekas2007, Bellman1957}.
 
-\subsection{Bellman equations and optimality principle}
 
 The optimality principle, found in~\cite{Bellman1957}, states the following: An optimal policy has the property that whatever the initial state and initial decision are, the remaining decisions must constitute an optimal policy with regard to the state resulting from the first decision. The optimality principle, coupled with the proof of the existance of a deterministic optimal policy for any MDP as outlined in \citep{Borkar1988} give rise to the optimal state value function $V^{*}(s) = \operatorname*{argmax}_{\pi} V^{\pi}(s) = V^{\pi^{*}}(s)$ and the optimal action value function $Q^{*}(s,a) = \operatorname*{argmax}_{\pi} Q^{\pi}(s, a) = Q^{\pi^{*}}(s, a)$. The optimal value functions determine the best possible performance in a MDP\@. An MDP is considered \textit{solved} once the optimal value functions are found. 
 
 Most of the field of reinforcement learning research focuses on approximating these two equations \citep{Tamar2017} \citep{Watkins1992} \citep{Mnih2013}. (cite many more)
 
 % Bellman equations
-\cite{Bellman1957} outlined two analytical equations for the state value and action value function:
+~\cite{Bellman1957} outlined two analytical equations for the state value and action value function:
 \begin{equation}\label{equation:bellman:state-value-function}
 V^{\pi}(s) = \sum_{a \in \mathcal{A}} \pi(a | s) * (r(s, a) + \sum_{s' \in \mathcal{S}} \mathcal{P}(s' | s, a) * V^{\pi}(s'))
 \end{equation}
