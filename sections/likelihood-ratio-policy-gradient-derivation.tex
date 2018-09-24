@@ -1,9 +1,9 @@
 \documentclass{../main.tex}{}
 \begin{document}
 
-Take equation~\ref{equation:utility} from Section~\ref{section:policy-gradient-methods}, representing the utility of a policy $\pi_{\theta}$ parameterized by a D-dimensional real valued parameter vector $\theta \in \mathbb{R}^D$
-\begin{equation}\label{equation:utility}
-U(\theta) = \mathbb{E}_{s_t \sim \xi, u_t \sim \pi_{\theta}}[\sum_{t=0}^{H}r(s_t, u_t) | \pi_{\theta}] = \sum_{\tau}P(\tau ; \theta)\mathcal{R}(\tau)
+Take equation~\ref{equation:utility} from Section~\ref{section:policy-gradient-methods}, representing the utility of a policy $\pi_{\theta}$ parameterized by a D-dimensional real valued parameter vector $\theta \in \mathbb{R}^D$:
+\begin{equation}
+U(\theta) = \mathbb{E}_{s_t \sim \xi, a_t \sim \pi_{\theta}}[\sum_{t=0}^{H}r(s_t, a_t) | \pi_{\theta}] = \sum_{\tau}P(\tau ; \theta)\mathcal{R}(\tau)
 \end{equation}
 
 The goal is to find the expression $\nabla_{\theta} U(\theta)$ that will allow us to update our policy parameter vector $\theta$ in a direction that improves the estimated value of the utility of the policy $\pi_{\theta}$. Taking the gradient w.r.t $\theta$ gives:
@@ -19,22 +19,19 @@ The goal is to find the expression $\nabla_{\theta} U(\theta)$ that will allow u
 \end{aligned}
 \end{equation}
 
-\begin{equation}
-\end{equation}
-
 This leaves us with an expectation for the term $\nabla_{\theta} \log P(\tau ; \theta) R(\tau)$. Note that as of now we have not discussed how to calculate $P(\tau ; \theta)$. Let's define the probability of a trajectory under a policy $\pi_{\theta}$ as: 
 
 \begin{equation}
-P (\tau; \theta) = \Pi_{t=0}^{H} \underbrace{P (s_{t+1} | s_t, u_t)}_\textrm{dynamics models} \underbrace{\pi_{\theta} (u_t | s_t)}_\textrm{policy}
+P (\tau; \theta) = \Pi_{t=0}^{H} \underbrace{P (s_{t+1} | s_t, a_t)}_\textrm{dynamics models} \underbrace{\pi_{\theta} (a_t | s_t)}_\textrm{policy}
 \end{equation}
 
-From here we can calculate the term $\nabla_{\theta} \log P(\tau ; \theta)$ present in equation~\ref{equation:expectance-gradient}
+From here we can calculate the term $\nabla_{\theta} \log P(\tau ; \theta)$ present in equation~\ref{equation:expectance-gradient}:
 
 \begin{equation}\label{equation:gradient-trajectory}
 \begin{aligned}
-\nabla_{\theta} \log P(\tau ; \theta) & = \nabla_{\theta} \log [\Pi_{t=0}^{H} P(s_{t+1} | s_t, u_t) \pi_{\theta}(u_t | s_t)] \\
- & = \nabla_{\theta} [(\sum_{t=0}^{H} \log P(s_{t+1} | s_t, u_t)) + (\sum_{t=0}^{H} \log \pi_{\theta}(u_t | s_t))] \\ 
- \nabla_{\theta} \log P(\tau ; \theta)& = \sum_{t=0}^{H} \underbrace{\nabla_{\theta} \log \pi_{\theta}(u_t | s_t)}_\textrm{no dynamics required!}
+\nabla_{\theta} \log P(\tau ; \theta) & = \nabla_{\theta} \log [\Pi_{t=0}^{H} P(s_{t+1} | s_t, a_t) \pi_{\theta}(a_t | s_t)] \\
+ & = \nabla_{\theta} [(\sum_{t=0}^{H} \log P(s_{t+1} | s_t, a_t)) + (\sum_{t=0}^{H} \log \pi_{\theta}(a_t | s_t))] \\ 
+ \nabla_{\theta} \log P(\tau ; \theta)& = \sum_{t=0}^{H} \underbrace{\nabla_{\theta} \log \pi_{\theta}(a_t | s_t)}_\textrm{no dynamics required!}
 \end{aligned}
 \end{equation}
 
@@ -46,17 +43,6 @@ Plugging the result of equation~\ref{equation:gradient-trajectory} into equation
 \end{aligned}
 \end{equation}
 
-We can compute an empirical approximation of that expresion by taking $m$ sample trajectories (or paths) under the policy $\pi_{\theta}$. This works even if the reward function $R$ is unkown and/or discontinuous. This works in discrete state spaces. The likelihood ratio changes the probability of experienced paths. That is, the probability of sampling trajectories. Thus we use a Monte Carlo approach to approximate the gradient of the utility of $\pi_{\theta}$: (REPHRASE)
-Which, if we plug into the original equation, we get:
-\begin{equation}\label{equation:expectance-gradient-vanilla}
-\nabla_{\theta}U(\theta) \approx \hat{g} = \frac{1}{m} \sum_{i = 0}^{m} \nabla_{\theta} \log P(\tau^{(i)} ; \theta) R(\tau^{(i)})
-\end{equation}
-
-\begin{equation}
-\nabla_{\theta}U(\theta) \approx \hat{g} = \frac{1}{m} \sum_{i = 0}^{m} \sum_{t=0}^{H-1} \nabla_{\theta} \log \pi_{\theta}(u_t^{(i)} | s_t^{(i)}) (\sum_{k=0}^{H}R(s_t^{(i)}, u_t^{(i)}))
-\end{equation}
-
 \cite{Sutton1999} offers a different approach to this derivation by calculating the gradient for the state value function on an initial state $s_0$, calculating $\nabla_{\theta} V_{\pi_{\theta}}(s_0)$.
-
 
 \end{document}

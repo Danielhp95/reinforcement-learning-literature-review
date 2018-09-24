@@ -4,38 +4,32 @@
 % chktex 36
 \subsection{Policy gradient theorem}
 
-In order to comply with notation used in the field of direct optimization, we shall use $u$ for actions.
+Let's assume an stochastic environment $\xi$ from which to sample states and rewards. Consider a stochastic control policy  $\pi_{\theta}(a | s)$\footnote{Some researchers prefer the notation $\pi(\cdot, \theta)$, $\pi(\cdot \mid \theta)$ or $\pi(\cdot; \theta)$. These notations are equivalent.} parameterized by a parameter vector $\theta$, that is, a distribution over the action set $\mathcal{A}$ conditioned on a state $s \in \mathcal{S}$. $\theta$ is a D-dimensional real valued vector,  $\theta \in \mathbb{R}^{D}$, where $D$ is the number of parameters (dimensions) and $D << |\mathcal{S}|$. The agent acting under policy $\pi_{\theta}$ is to maximize the (possibly discounted)\footnote{\cite{Williams1992, Sutton1999} present proofs of this same derivation using a discount factor, which makes policy gradient methods work for environments with infinite time horizons.} sum of rewards obtained inside environment $\xi$, over a time horizon $H$ (possibly infinitely long). Under this formulation, the optimization problem presented in Section~\ref{section:markov-decision-processes} equation~\ref{equation:expected-cumulative-reward} becomes an optimization problem over the policy's paramter space:
+\begin{equation}\label{equation:expected-reward-theta}
+    \underset{\theta}{\text{max}} = \mathbb{E}_{s_{t} \sim \xi, a_t \sim \pi_{\theta}}[\sum^{H}_{t=0} r(s_t, a_t) | \pi_{\theta}]
+\end{equation}
 
-Consider a stochastic control policy  $\pi_{\theta}(s)$ parameterized by a parameter vector $\theta$, that is, a distribution over the action set $\mathcal{A}$ given a state $s \in \mathcal{S}$. $\theta$ is a D-dimensional real valued vector,  $\theta \in \mathbb{R}^{D}$, where $D$ is the number of parameters / dimensions and $D << |\mathcal{S}|$. This prameterized policy function will be denoted by $\pi_{\theta}$.\footnote{Some researchers prefer the notation $\pi(\cdot, \theta)$, $\pi(\cdot \mid \theta)$ or $\pi(\cdot; \theta)$. These notations are equivalent.}. 
-
-There are strong motivations for using policy gradient approaches versus the already discussed RL methods:
+There are strong motivations for describing the optimization problem on the parameter space of a policy instead of the already discussed approaches:
 \begin{enumerate}
-\item A more direct way of approaching the problem. Instead of computing the value functions $V$ or $Q$ and from those deriving a policy function, we are calculating the policy function directly.
-\item Using stochastic policies smoothes the optimization problem. With a deterministic policy, changing which action to do in a given state can have a dramatic effect on potential future rewards\footnote{An example of this concept are \textit{greedy} or $\epsilon$-\textit{greedy} policies derived thus: $\pi(s) = \argmax_{a \in \mathcal{A}} Q(s,a)$.}. If we assume a stochastic policy, shifting a distribution over actions slightly will only slightly modify the potential future rewards. Furthermore, Many problems, such as partially observable environments or adversarial settings have stochastic optimal policies~\citep{Degris2012}.
+\item It offers a more direct way of approaching the reinforcement learning problem. Instead of computing the value functions $V$ or $Q$ and from those deriving a policy function, we are calculating the policy function directly.
+\item Using stochastic policies smoothes the optimization problem. With a deterministic policy, changing which action to execute in a given state can have a dramatic effect on potential future rewards\footnote{An example of this concept are \textit{greedy} or $\epsilon$-\textit{greedy} policies derived thus: $\pi(s) = \argmax_{a \in \mathcal{A}} Q(s,a)$.}. If we assume a stochastic policy, shifting a distribution over actions slightly will only slightly modify the potential future rewards. Furthermore, Many problems, such as partially observable environments or adversarial settings have stochastic optimal policies~\citep{Degris2012, Lanctot2017}.
 \item Often $\pi$ can be simpler than $V$ or $Q$.
-\item If we learn $Q$ in a large or continuous actions space, it can be tricky to compute $\underset{\text{u}}{argmax}\; Q(s,u)$.
+\item If we learn $Q$ in a large or continuous actions space, it can be tricky to compute $\underset{\text{a}}{argmax}\; Q(s,a)$.
 \end{enumerate}
  
-(they are not, though. REINFORCE is, but dqn, ddpg arent!) Policy gradient methods are on-policy. In them, the agent acts with using a policy which is improved gradually over time. This contrasts with off-policy algorithms, such as the Q-learning algorithm introduced in Section~\ref{section:q-learning}, which allows the agent to interact with the environment with a policy while it is simultaneously learning another policy. There is ongoing research looking at off-policy variants of policy gradient methods~\citep{Mnih2013, Mnih2016}. 
-
-Let's assume an stochastic environment $E$ from which to sample states and rewards, and an stochastic policy $\pi_{\theta}$ parameterized by a vector $\theta$ from which to sample actions. The agent acting under policy $\pi_{\theta}$ is to maximize the (possibly discounted)\footnote{\cite{Williams1992, Sutton1999} present proofs of this same derivation using a discount factor, which makes policy gradient methods work for environments with infinite time horizons.} sum of rewards on environment $E$, over a time horizon $H$ (possibly infinitely long). We reach the following optimization problem:
-\begin{equation}\label{equation:expected-reward-theta}
-\underset{\theta}{\text{max}} = \mathbb{E}_{s_{t} \sim \xi, u_t \sim \pi_{\theta}}[\sum^{H}_{t=0} r(s_t, u_t) | \pi_{\theta}]
-\end{equation}
-
-For an episode of length $H$ let $\tau$ be the trajectory followed by an agent in an episode. This trajectory $\tau$ is a sequence of state-action tuples $\tau = (s_0, a_0, \dots, s_H, a_H)$. We overload the notation of the reward function $\mathcal{R}$ thus: $\mathcal{R}(\tau) = \sum_{t=0}^{H}r(s_t, u_t)$, indicating the total accumulated reward in the trajectory $\tau$. We will also use $r(s_t) \in \mathbb{R}$ to refer to the scalar reward obtained at timestep $t$ in the trajectory. From here, the utility of a policy parameterized by $\theta$ is defined as:
+For an episode of length $H$ let $\tau$ be the trajectory followed by an agent in an episode. This trajectory $\tau$ is a sequence of state-action tuples $\tau = (s_0, a_0, \dots, s_H, a_H)$. We overload the notation of the reward function $\mathcal{R}$ thus: $\mathcal{R}(\tau) = \sum_{t=0}^{H}r(s_t, a_t)$, indicating the total reward obtained by following trajectory $\tau$. From here, the utility of a policy parameterized by $\theta$ is defined as:
 
 \begin{equation}\label{equation:utility}
-U(\theta) = \mathbb{E}_{s_t \sim \xi, u_t \sim \pi_{\theta}}[\sum_{t=0}^{H}r(s_t, u_t) | \pi_{\theta}] = \sum_{\tau}P(\tau ; \theta)\mathcal{R}(\tau)
+U(\theta) = \mathbb{E}_{s_t \sim \xi, a_t \sim \pi_{\theta}}[\sum_{t=0}^{H}r(s_t, a_t) | \pi_{\theta}] = \sum_{\tau}P(\tau ; \theta){R}(\tau)
 \end{equation}
 
-Where $P(\tau ; \theta)$ denotes the probability of trajectory $\tau$ happening when taking actions sampled from a parameterized policy $\pi_{\theta}$. More informally, how likely is this sequence of state-action pairs to happen as a result of an agent following a policy $\pi_{\theta}$. Linking equations~\ref{equation:expected-reward-theta} and~\ref{equation:utility}, our optimization problem becomes:
+Where $P(\tau ; \theta)$ denotes the probability of trajectory $\tau$ happening when taking actions sampled from a parameterized policy $\pi_{\theta}$. More informally, how likely is this sequence of state-action pairs to happen as a result of an agent following a policy $\pi_{\theta}$. Linking equations~\ref{equation:expected-reward-theta} and~\ref{equation:utility}, the optimization problem becomes:
 
 \begin{equation}\label{equation:utility-optimization}
 \underset{\theta}{\text{max}}\; U(\theta) = \underset{\theta}{\text{max}}\; \sum_{\tau}P(\tau ; \theta)\mathcal{R}(\tau)
 \end{equation}
 
-Policy gradient methods attempt to solve this maximization problem by iteratively updating the policy parameter vector $\theta$ in a direction of improvement w.r.t to the policy utility $U(\theta)$. This direction of improvement is dictated by the gradient of the utility $\nabla_{\theta}U(\theta)$. The update is usually done via the well known gradient descent algorithm. This idea of iteratively improving on a parameterized policy is was introduced by~\cite{Williams1992} under the name of \textit{policy gradient theorem}. In essence, the gradient of the utility function aims to increase the probability of sampling trajectories with higher reward, and reduce the probability of sampling trajectories with lower rewards.
+Policy gradient methods attempt to solve this maximization problem by iteratively updating the policy parameter vector $\theta$ in a direction of improvement w.r.t to the policy utility $U(\theta)$. This direction of improvement is dictated by the gradient of the utility $\nabla_{\theta}U(\theta)$. The update is usually done via the well known gradient descent algorithm. This idea of iteratively improving on a parameterized policy was introduced by~\cite{Williams1992} under the name of \textit{policy gradient theorem}. In essence, the gradient of the utility function aims to increase the probability of sampling trajectories with higher reward, and reduce the probability of sampling trajectories with lower rewards.
 
 Equation~\ref{equation:utility-gradient} presents the gradient of the policy utility function. The Appendix section shows the derivation from equation~\ref{equation:utility} to equation~\ref{equation:utility-gradient}.
 
@@ -45,26 +39,22 @@ Equation~\ref{equation:utility-gradient} presents the gradient of the policy uti
 \end{aligned}
 \end{equation}
 
-A key advantage of the policy gradient theorem, as inspected by~\cite{Sutton1999} (and formalized in the Appendix Section), is that equation~\ref{equation:utility-gradient} does not contain any term of the form $\nabla_{\theta}\mathcal{P}(\tau ; \theta)$. This means that we don't need to model the effect of policy changes on the distribution of states. Policy gradient methods therefore classify as model-free methods. 
-
-% (what to do with this phrase?) \citep{Sutton1999} goes farther and shows proof of local optima convergence for policy iteration methods with function approximators for both the policy and advantage functions.
+A key advantage of the policy gradient theorem, as inspected by~\cite{Sutton1999} (and formalized in the Appendix Section), is that equation~\ref{equation:utility-gradient} does not contain any term of the form $\nabla_{\theta}P(\tau ; \theta)$. This means that we don't need to model the effect of policy changes on the transition probability function. Policy gradient methods therefore classify as model-free methods. 
 
 We can use Monte Carlo methods to generate an empirical estimation of the expectation in equation~\ref{equation:utility-gradient}. This is done by sampling $m$ trajectories under the policy $\pi_{\theta}$. This works even if the reward function $R$ is unkown and/or discontinuous, and on both discrete and continuous state spaces. The equation for the empirical approximation of the utility gradient is the following:
 
 \begin{equation}\label{equation:expectance-gradient-vanilla}
-\nabla_{\theta}U(\theta) \approx \hat{g} = \frac{1}{m} \sum_{i = 0}^{m} \nabla_{\theta} \log \pi_{\theta}(\tau^{(i)}) R(\tau^{(i)})
+\begin{aligned}
+\nabla_{\theta}U(\theta) \approx \hat{g} &= \frac{1}{m} \sum_{i = 0}^{m} \nabla_{\theta} \log \pi_{\theta}(\tau^{(i)}) R(\tau^{(i)}) \\
+\nabla_{\theta}U(\theta) \approx \hat{g} &= \frac{1}{m} \sum_{i = 0}^{m} \sum_{t=0}^{H-1} \nabla_{\theta} \log \pi_{\theta}(a_t^{(i)} | s_t^{(i)}) (\sum_{k=0}^{H}R(s_t^{(i)}, a_t^{(i)}))
+\end{aligned}
 \end{equation}
 
-The estimate $\hat{g}$ is unbiased estimate and it works in theory. However it requries an impractical amount of samples, otherwise the approximation is very noisy. In order to overcome this limitation we can do the following tricks:
-
-\begin{itemize}
-\item Add a baseline
-\item Add temporal structure (advantage function)
-\item Use trust region and natural gradient.
-\end{itemize}
+The estimate $\hat{g}$ is an unbiased estimate and it works in theory. However it requries an impractical amount of samples, otherwise the approximation is very noisy (has high variance). There are various techniques that can be introduced to reduce variance.
 
 \subsection{Baselines}
-Intuitively, we want to reduce the probability of trajectories that are worse than average, and increase the probability of trajectories that are better than average.~\cite{Williams1992}, in the same paper that introduces the policy gradient theorem, explores the idea of introducing a baseline $b$ as a method of variance reduction, where $b \in \mathbb{R}$. These authors also prove that introducin a baseline keeps the estimate unbiased (have proof in appendix?). It is imporant to note that this estimate is not biased as long as the baseline at time $t$ does not depend on action $u_t$. Introducing a baseline in equation~\ref{equation:utility-gradient} yields the equation:
+
+Intuitively, we want to reduce the probability of sampling trajectories that are worse than average, and increase the probability of trajectories that are better than average.~\cite{Williams1992}, in the same paper that introduces the policy gradient theorem, explores the idea of introducing a baseline $b \in \mathbb{R}$ as a method of variance reduction. These authors also prove that introducing a baseline keeps the estimate unbiased. This proof can be found in the Appendix. It is imporant to note that this estimate is not biased as long as the baseline at time $t$ does not depend on action $a_t$. Introducing a baseline in equation~\ref{equation:utility-gradient} yields the equation:
 
 \begin{equation}\label{equation:utility-gradient-baseline}
 \begin{aligned}
@@ -72,23 +62,25 @@ Intuitively, we want to reduce the probability of trajectories that are worse th
 \end{aligned}
 \end{equation}
 
-The most basic type of baseline is the global average reward, which keeps track of the average reward across all episodes.~\cite{Greensmith2004} derives the optimal constant value baseline. We can also add time dependency to the baseline. It is not optimal to scale the probability of taking an action by the whole sum of rewards. A better idea is, for a given episode, to weigh an action $u_t$ by the reward obatined from time $t$ onwards, otherwise we would be ignoring the Markov property underlying the environment's Markov Decission Process. This changes equation~\ref{equation:utility-gradient-baseline} to:
+The most basic type of baseline is the global average reward, which keeps track of the average reward across all episodes. We can also add time dependency to the baseline, such as keeping a running average reward.~\cite{Greensmith2004} derive the optimal constant value baseline. 
+
+Furthermore, it is not optimal to scale the probability of taking an action by the whole sum of rewards. A better alternative is, for a given episode, to weigh an action $a_t$ by the reward obatined from time $t$ onwards, otherwise we would be ignoring the Markov property underlying the environment's Markov Decission Process by adding history dependency. Removing the terms which don't depend on the current action $a_t$ reduces variance without introducing bias. This changes equation~\ref{equation:utility-gradient-baseline} to:
 
 \begin{equation}\label{equation:utility-gradient-baseline-temporal}
 \begin{aligned}
-\nabla_{\theta} U(\theta) & = \mathbb{E}_{s_t \sim E, u_t \sim \pi_{\theta}} [\nabla_{\theta} \log \pi_{\theta}(u_t \mid s_t) (\sum_{k=t}^{H-1}R(s_k, u_k) - b)] \\
+    \nabla_{\theta} U(\theta) & = \mathbb{E}_{s_t \sim E, u_t \sim \pi_{\theta}} [\nabla_{\theta} \sum_{t=0}^{H-1}\log \pi_{\theta}(a_t \mid s_t) (\sum_{k=t}^{H-1}R(s_k, a_k) - b)] \\
 \end{aligned}
 \end{equation}
 
-A powerful idea is to make the baseline state-dependent $b(s_t)$~\citep{Baxter2001}. For each state $s_t$, This baseline should indicate what is the expected reward we will obtain by following policy $\pi_{\theta}$. By comparing the empirically obtained reward with the estimated reward given by the baseline $b(s_t)$, we will know if we have obtained more or less reward than expected. Note how this baseline is the exact definition of the state value function $V_{\pi_{\theta}}$, as shown in equation~\ref{equation:baseline-state-dependent}. This type of baseline allows us to increase the log probability of taking an action proportionally to how much its returns are better than the expected return under the current policy.
+A powerful idea is to make the baseline state-dependent $b(s_t)$~\citep{Baxter2001}. For each state $s_t$, this baseline should indicate what is the expected reward we will obtain by following policy $\pi_{\theta}$ starting on state $s_t$. By comparing the empirically obtained reward with the estimated reward given by the baseline $b(s_t)$, we will know if we have obtained more or less reward than expected. Note how this baseline is the exact definition of the state value function $V_{\pi_{\theta}}$, as shown in equation~\ref{equation:baseline-state-dependent}. This type of baseline allows us to increase the log probability of taking an action proportionally to how much its returns are better than the expected return under the current policy.
 
 \begin{equation}\label{equation:baseline-state-dependent}
 \begin{aligned}
-b(s_t) = \mathbb{E}[r_t + r_{t+1} + r_{t+2} + \cdots + r_{H-1}] = V_{\pi_{\theta}}(s_t)
+    b(s_t) = \mathbb{E}[r_t + r_{t+1} + r_{t+2} + \cdots + r_{H-1} \mid \pi_{\theta}] = V_{\pi_{\theta}}(s_t)
 \end{aligned}
 \end{equation}
 
-Consider a further improvement: the term $\sum_{k=t}^{H-1}R(s_k, u_k)$ can be regarded as an estimate of $Q_{\pi_{\theta}}(s_t, u_t)$ for a single roll out. This term has high variance because it is sample based, where the amount of variance depends on the stochasticity of the environment. A way to reduce variance is to include a discount factor $\gamma$, rendering the equation: $\sum_{k=t}^{H-1} \gamma^k  R(s_k, u_k)$. However, this still keeps the estimation sample based, which means that it is not generalizable to unseen state-action pairs. This issue can be solved by using function approximators to approximate the function $Q_{\pi_{\theta}}$. We can define another real valued parameter vector $\phi \in R^F$, where $F$ is the dimensionality of the parameter vector. From here, we can use $\phi$ to parameterize the function approximator $Q^{\phi}_{\pi_{\theta}}$. This function will be able to generalize for unseen state-action pairs. 
+The term $\sum_{k=t}^{H-1}R(s_k, a_k)$ can be regarded as an estimate of $Q_{\pi_{\theta}}(s_t, a_t)$ for a single roll out. This term has high variance because it is sample based, where the amount of variance depends on the stochasticity of the environment. A way to reduce variance is to include a discount factor $\gamma$, rendering the equation: $\sum_{k=t}^{H-1} \gamma^k  R(s_k, a_k)$. However, this introduces a slight bias. Even with this addition, the estimation remains sample based, which means that it is not generalizable to unseen state-action pairs. This issue can be solved by using function approximators to approximate the function $Q_{\pi_{\theta}}$. We can define another real valued parameter vector $\phi \in R^F$, where $F$ is the dimensionality of the parameter vector. From here, we can use $\phi$ to parameterize the function approximator $Q^{\phi}_{\pi_{\theta}}$. This function will be able to generalize for unseen state-action pairs. 
 
 \begin{equation}
 \begin{aligned}
@@ -98,36 +90,27 @@ Q^{\phi}_{\pi_{\theta}}(s,u) & = \mathbb{E}[r_0 + r_1 + r_2 + \cdots + r_{H-1} \
 \end{aligned}
 \end{equation}
 
-Notice how we use parameter vector $\phi$ to approximate the state value function $V_{\pi_{\theta}}$. This approach can be viewed as an actor-critic architecture where the policy $\pi_{\theta}$ is the actor and the baseline $b_t$ is the critic (Sutton and Barto, 1998; Degris et al., 2012) (read these 2 papes).~\cite{Konda2000} make the key observation that in actor critic methods, the actor parameterization $\theta$ and the critic parameterization $\phi$ should \textit{not} be independent. The choice of critic parameters should be directly prescribed by the choice of the actor parameters.
+Notice how we use parameter vector $\phi$ to approximate the state value function $V_{\pi_{\theta}}$. This approach can be viewed as an actor-critic architecture where the policy $\pi_{\theta}$ is the actor and the baseline $b_t$ is the critic (Sutton and Barto, 1998; Degris et al., 2012).~\cite{Konda2000} make the key observation that in actor critic methods, the actor parameterization $\theta$ and the critic parameterization $\phi$ should \textit{not} be independent. The choice of critic parameters should be directly prescribed by the choice of the actor parameters. That is why all real world applications that implement a policy gradient algorithm using an estimated baseline use a unique parameterized model (e.g. a neural network) to represent both the policy and the baseline, to share parameters between actor and critic.
 
 \subsection{Advantage functions}
-
+(use Gae paper ~\citep{Schulman2015a}, and A3C)
 Let the advantage function $A_{\pi}(s_t, a_t) \in \mathbb{R}$ be the numerical advantage of taking action $a_t$ in state $s_t$ under policy $\pi$. The advantage function is often depicted as:
 
 \begin{equation}
 A_{\pi}(t) = A_{\pi}(s_t, a_t) = Q_{\pi}(s_t, a_t) - V_{\pi}(s_t)
 \end{equation}
 
-
-
-\subsection{Trust region optimization, and natural gradient?}
-
-% TODO: Talk about baselines instead of using R(\ and notation 
-%       Talk about advantage function. Definition
-%       
-
 \subsection{Off-policy policy gradient methods}
+(Destroy section and move Off-PAC to categorization of algorithms?)
+
 Off-PAC, The first off-policy policy gradient method introduced by~\cite{Degris2012} used importance sampling techniques to weigh the actor gradient update against the behavioural policy being used (look this up on paper). They also used eligibility traces for a critic with linear function approximator, similar to a TD($\lambda$). Reply buffer, introduced in~\cite{Lin1993}, has seen a lot of use recently~\citep{Mnih2013, Mnih2016}. % chktex 36
 
 
-The UNREAL agent as described in \citep{Jaderberg2016}:
+UNREAL~\citep{Jaderberg2016} algorithm optimizes a loss function with respect to the joint parameters $\theta$, that combines the A3C loss $\mathcal{L}_{A3C}$ together with an auxiliary pixel control loss $\mathcal{L}_{PC}$, auxiliary reward prediction loss $\mathcal{L}_{RP}$ and replayed value loss $\mathcal{L}_{VR}$, with loss weightings $\lambda_{PC}$, $\lambda_{RP}$, $\lambda_{VR}$.
 
-UNREAL algorithm optimizes a loss function with respect to the joint parameters $\theta$, that combines the A3C loss $\mathcal{L}_{A3C}$ together with an auxiliary pixel control loss $\mathcal{L}_{PC}$, auxiliary reward prediction loss $\mathcal{L}_{RP}$ and replayed value loss $\mathcal{L}_{VR}$, with loss weightings $\lambda_{PC}$, $\lambda_{RP}$, $\lambda_{VR}$.
-
-% After all baselines. Talk about DQN (perhaps mention that it is not the first DeepRL attempt, but mention that it's the best one at the time). Follow up with DDPG, saying that DQN cannot easily be applied to continuous action spaces. Mention Batch normalization (Ioffe 2015)
 % About DQN: DQN is able to learn value functions using such function approximators in a stable and robust way due to two innovations: 1. the network is trained off-policy with samples from a replay buffer to minimize correlations between samples; 2. the network is trained with a target Q network to give consistent targets during temporal difference backups.
 
 % Notes:
 % good post on DDPG: http://pemami4911.github.io/blog/2016/08/21/ddpg-rl.html
-%(REPHRASE) One challenge when using neural networks for reinforcement learning is that most optimization al- gorithms assume that the samples are independently and identically distributed. Obviously, when the samples are generated from exploring sequentially in an environment this assumption no longer holds.
+%(REPHRASE) One challenge when using neural networks for reinforcement learning is that most optimization al- gorithms assume that the samples are independently and identically distributed. Obviously, when the samples are generated from exploring sequentially in an environment this assumption no longer holds. This can be solved by using a mechanism that breaks down the dependency of samples, such as an experience replay.
 \end{document}

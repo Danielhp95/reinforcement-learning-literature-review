@@ -4,12 +4,12 @@
 
 \begin{document}
 
-The most famous mathematical structure used to represent reinforcement learning environments are Markov Decision Processes (MDP)~\citep{Bellman1957}. Bellman introduced the concept of a Markov Decision Process as an extension of the famous mathematical construct of Markov chains. Markov Decision Processes are a standard model for sequential decision making and control problems. An MDP is fully defined by the 5-tuple $(\mathcal{S}, \mathcal{A}, \mathcal{P(\cdot | \cdot, \cdot)}, \mathcal{R}(\cdot, \cdot), \gamma)$. Whereby:
+The most famous mathematical structure used to represent reinforcement learning environments are Markov Decision Processes (MDP)~\citep{Bellman1957}. Bellman introduced the concept of a Markov Decision Process as an extension of the famous mathematical construct of Markov chains. Markov Decision Processes are a standard model for sequential decision making and control problems. An MDP is fully defined by the 5-tuple $(\mathcal{S}, \mathcal{A}, \mathcal{P(\cdot | \cdot, \cdot)}, \mathcal{R}(\cdot, \cdot, \cdot), \gamma)$. Whereby:
 
 \begin{itemize}
 \item $\mathcal{S}$ is the set of states $s \in \mathcal{S}$ of the underlying Markov chain, where $s_t \in \mathcal{S}$ represents the state of the environment at time $t$.
 \item $\mathcal{A}$ is the set of actions $a \in \mathcal{A}$ which are the transition labels between states of the underlying Markov chain. $A_t \subset \mathcal{A}$ is the subset of available actions in state $s_t$ at time $t$. If an state $s_t$ has no available actions, it is said to be a \textit{terminal} state. Terminal states are equivalent to absorbing states in the Markov Chain literature.
-\item $\mathcal{P}(s_{t+1} | s_t, a_t) \in [0, 1]$, where $s_t, s_{t+1} \in \mathcal{S}$, $a_t \in \mathcal{A}$. $\mathcal{P}$ is the transition probability function\footnote{The function $\mathcal{P}$ is also known in the literature as the transition probability kernel, the transition kernel~\citep{Tamar2017} or the dynamics of the environment in model-based contexts. The word kernel is a heavily overloaded mathematical term that refers to a function that maps a series of inputs to value in $\mathbb{R}$.}. It expresses a distribution over states. It defines the probability of transitioning to state $s_{t+1}$ from state $s_t$ after performig action $a_t$. Thus, $\mathcal{P}: \mathcal{S} \times \mathcal{A} \times \mathcal{S} \to [0,1]$. Given a state $s_t$ and an action $a_t$ at time $t$, we can find the next state $s_{t+1}$ by sampling from the distribution $s_{t+1} \sim P(s_t, a_t)$. The environment is said to be deterministic if $\mathcal{P}(s_t, a_t)$ is deterministic.%chktex 35
+\item $\mathcal{P}(s_{t+1} | s_t, a_t) \in [0, 1]$, where $s_t, s_{t+1} \in \mathcal{S}$, $a_t \in \mathcal{A}$. $\mathcal{P}$ is the transition probability function\footnote{The function $\mathcal{P}$ is also known in the literature as the transition probability kernel, the transition kernel or the dynamics of the environment in model-based contexts. The word kernel is a heavily overloaded mathematical term that refers to a function that maps a series of inputs to value in $\mathbb{R}$.}. It expresses a distribution over states. It defines the probability of transitioning to state $s_{t+1}$ from state $s_t$ after performig action $a_t$. Thus, $\mathcal{P}: \mathcal{S} \times \mathcal{A} \times \mathcal{S} \to [0,1]$. Given a state $s_t$ and an action $a_t$ at time $t$, we can find the next state $s_{t+1}$ by sampling from the distribution $s_{t+1} \sim P(s_t, a_t)$. The environment is said to be deterministic if $\mathcal{P}(s_t, a_t)$ is deterministic.%chktex 35
 \item $\mathcal{R}(s_t, a_t, s_{t+1}) \in \mathbb{R}$, where $s_t, s_{t+1} \in \mathcal{S}$, $a_t \in \mathcal{A}$. $\mathcal{R}$ is the reward function, which represents the immediate reward the agent will obtain after performing action $a_t$ in state $s_t$ and ending in state $s_{t+1}$. The real-valued reward\footnote{The reward $r_t$ can be equivalently written as $r(s_t, a_t)$.} $r_t$ is typically in the range $[-1,1]$. $\mathcal{R}: \mathcal{S} \times \mathcal{A} \times \mathcal{S} \to \mathbb{R}$. If the environment is deterministic, the reward function can be rewritten as $\mathcal{R}(s_t, a_t)$.
 \item $\gamma \in [0,1]$ is the discount factor, which represent the rate of importance between immediate and future rewards. If $\gamma = 0$ the agent cares only about the immediate reward, if $\gamma = 1$ all rewards $r_t$ are taken into account. $\gamma$ is often used as a variance reduction method, and aids proofs in infinitely running environments~\citep{Sutton1999}.
 \end{itemize}
@@ -17,7 +17,7 @@ The most famous mathematical structure used to represent reinforcement learning 
 There are also two optional parameters to an MDP which are sometimes ommited in the literature. These are the initial state distribution $\rho_0$ and the time horizon $T$:
 
 \begin{itemize}
-    \item $\rho_0(s) \in [0, 1]$, where $s \in \mathcal{S}$, is the initial state distribution, representing the probability of starting an episode on a given state. It is from this distribution that the initial state is sampled from $s_0 \sim \rho_0$.
+    \item $\rho_0(s_0) \in [0, 1]$, where $s_0 \in \mathcal{S}$, is the initial state distribution, representing the probability of starting an episode on a given state $s_0$. It is from this distribution that the initial state is sampled from $s_0 \sim \rho_0$.
     \item $T \in \mathbb{N}$, represents the finite time horizon, the number of steps over which the agent will try to maximize its cummulative reward. It serves a similar purporse to the more common discount factor $\gamma$ in that they are both used as a variance-bias trade off and are needed for proofs of convergence over infinitely long running tasks.
 \end{itemize}
 
@@ -51,21 +51,13 @@ All of the reinforcement learning research focuses on solving this optimization 
 
 \subsection{Bellman equations and optimality principle}
 
-There are two functions of special relevance in reinforcement learning, the \textit{state value} function $V^{\pi}(s)$ and the \textit{action value} function $Q^{\pi}(s, a)$:
+There are two functions of special relevance in reinforcement learning, the state value function $V^{\pi}(s)$ and the action value function $Q^{\pi}(s, a)$:
 \begin{itemize}
-\item The state value function $V^{\pi}(s)$ under a policy $\pi$, where $s \in \mathcal{S}$, represents the expected sum of rewards obtained by starting in state $s$ and following the policy $\pi$ until termination. Formally defined as $V^{\pi}(s) = \mathbb{E}^{\pi}[\sum^{\infty}_{t=0} r(s_t, a_t) | s_0 = s] $
-\item The state-action value function $Q^{\pi}(s, a)$ under a policy $\pi$, where $s \in \mathcal{S}$, $a \in \mathcal{A}$, represents the expected sum of rewards obtained by performing action $a$ in state $s$ and then following policy $\pi$. Formally defined as: $Q^{\pi}(s, a) = \mathbb{E}^{\pi}[r(s_0, a_0) + \sum^{\infty}_{t=1} r(s_t, a_t) | s_0 = s, a_0 = a]$
+    \item The \textbf{state value function} $V^{\pi}(s)$ under a policy $\pi$, where $s \in \mathcal{S}$, represents the expected sum of rewards obtained by starting in state $s$ and following the policy $\pi$ until termination. Formally defined as $V^{\pi}(s) = \mathbb{E}^{\pi}[\sum^{\infty}_{t=0} r(s_t, a_t) | s_0 = s] $
+    \item The \textbf{state-action value function} $Q^{\pi}(s, a)$ under a policy $\pi$, where $s \in \mathcal{S}$, $a \in \mathcal{A}$, represents the expected sum of rewards obtained by performing action $a$ in state $s$ and then following policy $\pi$. Formally defined as: $Q^{\pi}(s, a) = \mathbb{E}^{\pi}[r(s_0, a_0) + \sum^{\infty}_{t=1} r(s_t, a_t) | s_0 = s, a_0 = a]$
 \end{itemize}
 
-The Bellman equations are the most straight forward, dynamic programming approach at solving MDPs \citep{Bertsekas2007, Bellman1957}.
-
-
-The optimality principle, found in~\cite{Bellman1957}, states the following: An optimal policy has the property that whatever the initial state and initial decision are, the remaining decisions must constitute an optimal policy with regard to the state resulting from the first decision. The optimality principle, coupled with the proof of the existance of a deterministic optimal policy for any MDP as outlined in \citep{Borkar1988} give rise to the optimal state value function $V^{*}(s) = \operatorname*{argmax}_{\pi} V^{\pi}(s) = V^{\pi^{*}}(s)$ and the optimal action value function $Q^{*}(s,a) = \operatorname*{argmax}_{\pi} Q^{\pi}(s, a) = Q^{\pi^{*}}(s, a)$. The optimal value functions determine the best possible performance in a MDP\@. An MDP is considered \textit{solved} once the optimal value functions are found. 
-
-Most of the field of reinforcement learning research focuses on approximating these two equations \citep{Tamar2017} \citep{Watkins1992} \citep{Mnih2013}. (cite many more)
-
-% Bellman equations
-~\cite{Bellman1957} outlined two analytical equations for the state value and action value function:
+~\cite{Bellman1957} outlined two analytical recursive equations for the state value and action value function:
 \begin{equation}\label{equation:bellman:state-value-function}
 V^{\pi}(s) = \sum_{a \in \mathcal{A}} \pi(a | s) * (r(s, a) + \sum_{s' \in \mathcal{S}} \mathcal{P}(s' | s, a) * V^{\pi}(s'))
 \end{equation}
@@ -74,9 +66,8 @@ V^{\pi}(s) = \sum_{a \in \mathcal{A}} \pi(a | s) * (r(s, a) + \sum_{s' \in \math
 Q^{\pi}(s, a) = r(s, a) + \sum_{s' \in \mathcal{S}} \mathcal{P}(s' | s, a) * (\sum_{a' \in \mathcal{A}} \pi(a' | s') Q^{\pi}(s', a'))
 \end{equation}
 
-% TODO:
-% Add value iteration / policy iteration?
-% Add discount factor
-% Explain notion of environment
+Many algorithms in reinforcement learning research focus on approximating these two equations \citep{Tamar2017, Watkins1992, Mnih2013, Bertsekas2007}.
+
+The optimality principle, found in~\cite{Bellman1957}, states the following: An optimal policy $\pi^*$ has the property that given any initial state $s_0$ and initial action $a_0$, the remaining actions $a_{t>0}$ must constitute an optimal policy $\pi^*$ with regard to the state $s_1$ resulting from the initial action $a_0$. The optimality principle, coupled with the proof of the existance of a deterministic optimal policy for any MDP as outlined in \citep{Borkar1988} give rise to the optimal state value function $V^{*}(s) = V^{\pi^{*}}(s) = \operatorname*{argmax}_{\pi} V^{\pi}(s)$ and the optimal action value function $Q^{*}(s,a) = Q^{\pi^{*}}(s, a) = \operatorname*{argmax}_{\pi} Q^{\pi}(s, a)$. The optimal value functions determine the best possible performance in a MDP\@. An MDP is considered \textit{solved} once the optimal value functions are found. 
 
 \end{document}

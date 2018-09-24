@@ -1,0 +1,30 @@
+\documentclass{../main.tex}{}
+\begin{document}
+
+(Not quite)
+Take an equation~\ref{equation:utility-gradient-baseline} from Section~\ref{section:policy-gradient-methods}, representing the gradient of the utility of a parameterized policy $\pi_{\theta}$ using a real valued baseline $b \in \mathbb{R}$:
+
+\begin{equation}
+\begin{aligned}
+    \nabla_{\theta} U(\theta) &= \mathbb{E}_{\tau \sim \pi_{\theta}} [\nabla_{\theta} \log P(\tau ; \theta)(R(\tau) - b)] \\
+&= \mathbb{E}_{\tau \sim \pi_{\theta}} [\nabla_{\theta} \log P(\tau ; \theta)R(\tau)] - \mathbb{E}_{\tau \sim \pi_{\theta}} [\nabla_{\theta} \log P(\tau ; \theta)b] \quad &\text{(Linearity of expectation)}
+\end{aligned}
+\end{equation}
+
+In order to prove that substracting the baseline $b$ leaves the estimation unbiased, we need to show that the right hand side of the substraction evaluates to $0$. Which is indeed the case:
+
+\begin{equation}
+\begin{aligned}
+& \mathbb{E}_{\tau \sim \pi_{\theta}} [\nabla_{\theta} \log P(\tau ; \theta)b] \\
+&= \sum_{\tau} P(\tau ; \theta) \nabla_{\theta} \log P(\tau ; \theta)b \quad &(\mathbb{E}[f(x)] = \sum_{x} xf(x))\\
+&= \sum_{\tau} P(\tau ; \theta) \frac{\nabla_{\theta} P(\tau ; \theta)}{P(\tau ; \theta)}b \quad & (\text{Note: } \nabla_{\theta} \log P(\tau; \theta) = \frac{\nabla_{\theta}P(\tau; \theta)}{P(\tau; \theta)} )\\
+&= \sum_{\tau} 1 \times \nabla_{\theta} P(\tau ; \theta)b \quad & (\frac{P(\tau ; \theta)}{P(\tau ; \theta)} = 1)\\
+&= b \sum_{\tau} \nabla_{\theta} P(\tau ; \theta) \quad &\text{(Move baseline outside of summation)}\\
+&= b \nabla_{\theta} (\sum_{\tau} \nabla_{\theta} P(\tau ; \theta)) \quad &\text{(Move gradient operator outside of summation)}\\
+&= b \times 0 = 0 \quad & \text{(Apply gradient operator)}
+\end{aligned}
+\end{equation}
+
+Thus, adding a baseline leaves the gradient of the policy utility unbiased!
+
+\end{document}
