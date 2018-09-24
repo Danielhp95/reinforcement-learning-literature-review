@@ -83,34 +83,72 @@ A powerful idea is to make the baseline state-dependent $b(s_t)$~\citep{Baxter20
 The term $\sum_{k=t}^{H-1}R(s_k, a_k)$ can be regarded as an estimate of $Q_{\pi_{\theta}}(s_t, a_t)$ for a single roll out. This term has high variance because it is sample based, where the amount of variance depends on the stochasticity of the environment. A way to reduce variance is to include a discount factor $\gamma$, rendering the equation: $\sum_{k=t}^{H-1} \gamma^k  R(s_k, a_k)$. However, this introduces a slight bias. Even with this addition, the estimation remains sample based, which means that it is not generalizable to unseen state-action pairs. This issue can be solved by using function approximators to approximate the function $Q_{\pi_{\theta}}$. We can define another real valued parameter vector $\phi \in R^F$, where $F$ is the dimensionality of the parameter vector. From here, we can use $\phi$ to parameterize the function approximator $Q^{\phi}_{\pi_{\theta}}$. This function will be able to generalize for unseen state-action pairs. 
 
 \begin{equation}
+\label{equation:q-n-step-lookahead}
 \begin{aligned}
-Q^{\phi}_{\pi_{\theta}}(s,u) & = \mathbb{E}[r_0 + r_1 + r_2 + \cdots + r_{H-1} \mid s_0 = s, u_0 = u] \quad & (\infty\text{-step look ahead}) \\
-                      & = \mathbb{E}[r_0 + V^{\phi}_{\pi_{\theta}}(s_1) \mid s_0 = s, u_0 = u] \quad & (1\text{-step look ahead}) \\
-                      & = \mathbb{E}[r_0 + + r_1 + V^{\phi}_{\pi_{\theta}}(s_2) \mid s_0 = s, u_0 = u] \quad & (2\text{-step look ahead}) \\
+Q^{\phi}_{\pi_{\theta}}(s,a) & = \mathbb{E}[r_0 + r_1 + r_2 + \cdots + r_{H-1} \mid s_0 = s, a_0 = a] \quad & (\infty\text{-step look ahead}) \\
+                      & = \mathbb{E}[r_0 + V^{\phi}_{\pi_{\theta}}(s_1) \mid s_0 = s, a_0 = a] \quad & (1\text{-step look ahead}) \\
+                      & = \mathbb{E}[r_0 + + r_1 + V^{\phi}_{\pi_{\theta}}(s_2) \mid s_0 = s, a_0 = a] \quad & (2\text{-step look ahead}) \\
 \end{aligned}
 \end{equation}
 
-Notice how we use parameter vector $\phi$ to approximate the state value function $V_{\pi_{\theta}}$. This approach can be viewed as an actor-critic architecture where the policy $\pi_{\theta}$ is the actor and the baseline $b_t$ is the critic (Sutton and Barto, 1998; Degris et al., 2012).~\cite{Konda2000} make the key observation that in actor critic methods, the actor parameterization $\theta$ and the critic parameterization $\phi$ should \textit{not} be independent. The choice of critic parameters should be directly prescribed by the choice of the actor parameters. That is why all real world applications that implement a policy gradient algorithm using an estimated baseline use a unique parameterized model (e.g. a neural network) to represent both the policy and the baseline, to share parameters between actor and critic.
+Deciding on how many steps into the future to use for the state-value function $Q_{\pi_{\theta}}^{\phi}(s, a)$ entails a variance-bias tradeoff. The more actual sampled rewards $r_t$ used in our state-value function estimation, the more variance is introduced, whilst reducing the variance from the function approximator.
 
-\subsection{Advantage functions}
-(use Gae paper ~\citep{Schulman2015a}, and A3C)
-Let the advantage function $A_{\pi}(s_t, a_t) \in \mathbb{R}$ be the numerical advantage of taking action $a_t$ in state $s_t$ under policy $\pi$. The advantage function is often depicted as:
+Notice how we use the parameter vector $\phi$ to approximate the state value function $V_{\pi_{\theta}}$. This approach can be viewed as an actor-critic architecture where the policy $\pi_{\theta}$ is the actor and the baseline $b_t$ is the critic (Sutton and Barto, 1998; Degris et al., 2012).
+
+\subsection{Advantage function and Generalized Advantage Function (GAE)}
+
+The advantage function is denoted as $A_{t}(s_t, a_t) \in \mathbb{R}$ and it denotes how much better or worse an action is compared to the policy's default behaviour. This is captured by the expression:
 
 \begin{equation}
-A_{\pi}(t) = A_{\pi}(s_t, a_t) = Q_{\pi}(s_t, a_t) - V_{\pi}(s_t)
+A_{t}(s_t, a_t) = Q_{\pi}(s_t, a_t) - V_{\pi}(s_t)
 \end{equation}
 
-\subsection{Off-policy policy gradient methods}
-(Destroy section and move Off-PAC to categorization of algorithms?)
+Using the advantage function inside of the policy gradient estimation yields almost the lowest variance, although this equation is not known in practice, and must be estimated. This can be done, as mentioned before, by approximating the function $V_{\pi_{\theta}}$.
 
-Off-PAC, The first off-policy policy gradient method introduced by~\cite{Degris2012} used importance sampling techniques to weigh the actor gradient update against the behavioural policy being used (look this up on paper). They also used eligibility traces for a critic with linear function approximator, similar to a TD($\lambda$). Reply buffer, introduced in~\cite{Lin1993}, has seen a lot of use recently~\citep{Mnih2013, Mnih2016}. % chktex 36
+~\cite{Schulman2015a} introduces a very smart idea, which generalizes the $n$-step lookahead of equation~\ref{equation:q-n-step-lookahead}. Instead of deciding on a single value for the number of lookahead steps, it is possible to take into account \textit{all} of them simultaneously. Let's define $A^n_{\pi}$ as the $n$-step lookahead advantage function. \citep{Schulman2015a} introduces the generalized advantage estimation (GAE), parameterized by the discount factor $\gamma \in [0,1]$ and a special parameter $\lambda \in [0,1]$, which is used to manually tune yet another variance-bias tradeoff.
+
+\begin{equation}
+    A^{GAE(\gamma, \lambda)}_{t} = (1 - \lambda) (A^1_{t} + \lambda A^2_{t} + \lambda^2 A^3_{t} + \dots)
+\end{equation}
 
 
-UNREAL~\citep{Jaderberg2016} algorithm optimizes a loss function with respect to the joint parameters $\theta$, that combines the A3C loss $\mathcal{L}_{A3C}$ together with an auxiliary pixel control loss $\mathcal{L}_{PC}$, auxiliary reward prediction loss $\mathcal{L}_{RP}$ and replayed value loss $\mathcal{L}_{VR}$, with loss weightings $\lambda_{PC}$, $\lambda_{RP}$, $\lambda_{VR}$.
+By choosing low values for, we are biasing the estimation of the advantage function towards low values of $n$ for all $n$-step lookahead cases, reducing variance and increasing bias. If we use a higher value for $\lambda$, we increase the weight of the higher $n$ values of the $n$-step lookahead cases. The GAE can be analytically written as:
 
-% About DQN: DQN is able to learn value functions using such function approximators in a stable and robust way due to two innovations: 1. the network is trained off-policy with samples from a replay buffer to minimize correlations between samples; 2. the network is trained with a target Q network to give consistent targets during temporal difference backups.
+\begin{equation}
+    A_t^{GAE(\gamma, \lambda)} = \sum_{l=0}^{\infty} (\gamma \lambda)^l \delta_{t+l}^V
+\end{equation}
 
-% Notes:
-% good post on DDPG: http://pemami4911.github.io/blog/2016/08/21/ddpg-rl.html
-%(REPHRASE) One challenge when using neural networks for reinforcement learning is that most optimization al- gorithms assume that the samples are independently and identically distributed. Obviously, when the samples are generated from exploring sequentially in an environment this assumption no longer holds. This can be solved by using a mechanism that breaks down the dependency of samples, such as an experience replay.
+Where $\delta_{t}^V = r_t + \gamma V_{\pi}(s_{t+1}) - V_{\pi}(s_t)$ is the TD residual for a given policy $\pi$ as introduced in~\cite{Sutton1998}. There are two notable cases of this formula, obtained by setting $\lambda = 0$ and $\lambda = 1$:
+
+\begin{equation}
+    \begin{aligned}
+        GAE(\gamma, 0):  A_t &= \delta_{t+l}^V &= r_t + \gamma V(s_{t+1}) - V(s_t)\\
+        GAE(\gamma, 1):  A_t &= \sum_{l=0}^{\infty} \gamma^l \delta_{t+l}^V &= \sum_{l=0}^{\infty} \gamma^l r_{t+l} - V(s_t)
+    \end{aligned}
+\end{equation}
+
+\subsection{Policy gradient equation summary}
+
+In summary, policy gradient methods maximize the expected total reward by repeatedly estimating the policy's utility gradient $g = \nabla_{\theta} \mathbb{E}[\sum_{t=0}^{\infty}r_t]$. There are many expresessions for the policy gradient that have the form:
+
+\begin{equation}
+    g = \mathbb{E}[\sum_{t=0}^{\infty} \nabla_{\theta} \log \pi_{\theta}(a_t \mid s_t) \Psi]
+\end{equation}
+
+The variable $\Psi$ can be one of the following:
+
+\begin{multicols}{2}
+\begin{enumerate}
+    \item $\sum_{t=0}^{\infty} r_t$: total trajectory reward.
+    \item $\sum_{t'=t}^{\infty} r_{t'}$: reward following action $a_t$.
+    \item $\sum_{t'=t}^{\infty} r_{t'} - b(s_t)$: baseline version. 
+    \item $Q_{\pi}(s_t, a_t)$: state-action value function.
+    \item $A_{\pi}(s_t, a_t)$: Advantage function.
+    \item $\delta_t^V = r_t + V_{\pi}(s_{t+1}) - V_{\pi}(s_t)$: TD residual.
+    \item $A_t^{GAE(\gamma, \lambda)} = \sum_{l=0}^{\infty} (\gamma \lambda)^l \delta_{t+l}^V$: GAE
+\end{enumerate}
+\end{multicols}
+
+Out of the 7 different possibilities, state of the art algorithms use GAE($\gamma$,$\lambda$), as it has been proved empirically and loosely theoretically that it introduces an acceptable amount of bias, whilst being one of the methods that most reduces variance.
+
 \end{document}

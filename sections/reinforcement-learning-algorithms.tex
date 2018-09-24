@@ -16,6 +16,15 @@ Off-policy learning can be used to learn multiple tasks in parallel.~\cite{Sutto
 A method to allow algorithms to perform off policy updates to their policies is to introduce the notion of an \textit{experience replay}~\citep{Lin1993}, which was made famous after the success of~\cite{Mnih2013}. An experience replay is a list of experiences, where each experience is a 5 element tuple $<s_t, a_t, r_t, s_{t+1}, a_{t+1}>$. As an agent acts in an environment, in the same fashion as in the reinfocement learning loop presented in (reference), the experience replay is filled. At the time of updating the policy, the agent does not choose to update its policy using the last action function that was taken, as it is the case with Q-learning. Instead, the agent samples an experience (or batch of experiences) from the experience replay. Because these sampled experiences may have been generated using a previous policy, experience replay allows for policy updates to happen in an off-policy fashion. The experience replay buffer has been the focus on future research such as \citep{Schaul2015, Hessel2017} where the authors use a \textit{prioritized} experience replay. The difference is that experiences are not sampled uniformly from the replay buffer. Instead, experiences are weighted according to (READ paper).~\cite{Andrychowicz2017} expands on the idea by introducing the Hindsight Experience Replay (HER) where an experience replay is used to learn a task from failures by treating certain state transitions as goals.
 
 (DDPG uses a stochastic exploratory function whilst learning a deterministic function).
+UNREAL~\citep{Jaderberg2016} algorithm optimizes a loss function with respect to the joint parameters $\theta$, that combines the A3C loss $\mathcal{L}_{A3C}$ together with an auxiliary pixel control loss $\mathcal{L}_{PC}$, auxiliary reward prediction loss $\mathcal{L}_{RP}$ and replayed value loss $\mathcal{L}_{VR}$, with loss weightings $\lambda_{PC}$, $\lambda_{RP}$, $\lambda_{VR}$.
+
+Off-PAC, The first off-policy policy gradient method introduced by~\cite{Degris2012} used importance sampling techniques to weigh the actor gradient update against the behavioural policy being used. They also used eligibility traces for a critic with linear function approximator, similar to a TD($\lambda$). Reply buffer, introduced in~\cite{Lin1993}, has seen a lot of use recently~\citep{Mnih2013, Mnih2016}. % chktex 36
+
+% About DQN: DQN is able to learn value functions using such function approximators in a stable and robust way due to two innovations: 1. the network is trained off-policy with samples from a replay buffer to minimize correlations between samples; 2. the network is trained with a target Q network to give consistent targets during temporal difference backups.
+
+% Notes:
+% good post on DDPG: http://pemami4911.github.io/blog/2016/08/21/ddpg-rl.html
+%(REPHRASE) One challenge when using neural networks for reinforcement learning is that most optimization al- gorithms assume that the samples are independently and identically distributed. Obviously, when the samples are generated from exploring sequentially in an environment this assumption no longer holds. This can be solved by using a mechanism that breaks down the dependency of samples, such as an experience replay.
 
 \textbf{Famous on policy algorithms:} Sarsa~\citep{Sutton1998}, $Q(\sigma)$~\citep{Deasis2017}, Monte Carlo Tree search (MCTS), REINFORCE~\citep{Williams1992}, Asynchronous Advantage estimation Actor Critic (A3C).
 
@@ -42,6 +51,8 @@ $\mathbb{E}[\sum_{T} r(t)]$. Policy based algorithms are the main focus on Secti
 \subsection{Actor-critic}
 
 Actor-critic methods combine the strong points of both policy based and value based algorithms, and overcome some of their individual weaknesses~\citep{Konda2000}. The critic assumes the role of learning a value function, which is then used as part of the update for the actor's policy. The individual critic is analogous to value based algorithms, and the actor to policy based methods.
+
+~\cite{Konda2000} make the key observation that in actor critic methods, the actor parameterization $\theta$ and the critic parameterization $\phi$ should \textit{not} be independent. The choice of critic parameters should be directly prescribed by the choice of the actor parameters. That is why all real world applications that implement a policy gradient algorithm using an estimated baseline use a unique parameterized model (e.g. a neural network) to represent both the policy and the baseline, to share parameters between actor and critic.
 
 \textbf{Famous actor critic algorithms:} A3C~\citep{Mnih2016}, PPO~\citep{Schulman2017}, TRPO~\citep{Schulman2015}, ACKTR~\citep{Wu2017}.
 
