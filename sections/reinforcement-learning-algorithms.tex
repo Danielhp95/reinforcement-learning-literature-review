@@ -59,22 +59,21 @@ $\mathbb{E}[\sum_{T} r(t)]$. Policy based algorithms are the main focus on Secti
 
 \subsection{Actor-critic}
 
-Actor-critic methods combine the strong points of both policy based and value based algorithms, and overcome some of their individual weaknesses~\citep{Konda2000}. The critic assumes the role of learning a value function, which is then used as part of the update for the actor's policy. The individual critic is analogous to value based algorithms, and the actor to policy based methods.
+Policy based only (actor only) and value based only (critic only) algorithms feature some crippling weaknesses that make them unsuitable for complex environments.~\citep{Konda2000} states some of their key downsides:
+\begin{itemize}
+\item \textbf{Critic only algorithms}: The goal of any reinforcement learning problem is to find a policy. Spending all computational resources on calculating a value function (the critic) is an indirect way of approaching the problem. Furthermore, most value based algorithms only converge under strict assumptions.
+\item \textbf{Actor only algorithms}: These algorithms rely on estimating the gradient of a policy's performance (the actor) w.r.t the policy's parameters. Gradient estimators tend to have large variance, leading to unstable parameter updates and, potentially, lost of convergence properties. More philosophically, because new gradients are calculated independently from previous gradients, there is no "learning" in the sense of understanding and consolidation of experience.
+\end{itemize}
 
-~\cite{Konda2000} make the key observation that in actor critic methods, the actor parameterization $\theta$ and the critic parameterization $\phi$ should \textit{not} be independent. The choice of critic parameters should be directly prescribed by the choice of the actor parameters. That is why all real world applications that implement a policy gradient algorithm using an estimated baseline use a unique parameterized model (e.g. a neural network) to represent both the policy and the baseline, to share parameters between actor and critic.
+Actor-critic methods combine the strong points of both policy based and value based algorithms, and overcome some of their individual weaknesses. The critic has an approximation architecture to compute a value function. This value function is used to update the actor's policy parameters in a direction of improvement. This dynamic leads to faster convergence than actor-only methods because of a significant decrease in variance in the estimation of the gradient of the policy's performance. It also entails better convergence properties than critic-only methods. 
+
+~\cite{Konda2000} make the key observation that in actor-critic algorithms, the actor parameterization and the critic parameterization should \textit{not} be independent. The choice of critic parameters should be directly prescribed by the choice of the actor parameters. That is why all real world applications that implement a policy gradient algorithm using an estimated baseline use a unique parameterized model (e.g. a neural network) to represent both the policy and the baseline, to share parameters between actor and critic.
 
 \textbf{Famous actor critic algorithms:} A3C~\citep{Mnih2016}, PPO~\citep{Schulman2017}, TRPO~\citep{Schulman2015}, ACKTR~\citep{Wu2017}.
 
 \subsection{Model based and model free approaches}
-(Just small explanation, then scrap most of it)
-In the reinforcement learning literature the \textit{model} or the dynamics of an environment is considered to be the transition function $\mathcal{P}(s_{t+1} | s_t, a_t)$ and reward function $\mathcal{R}(s_t, a_t, s_{t+1})$. Model free algorithms aim to approximate an optimal policy $\pi^*$ without explicitly using either $\mathcal{P}$ or $\mathcal{R}$ in their calculations.
+In RL literature the \textit{model} or the dynamics of an environment is considered to be the transition function $\mathcal{P}$ and reward function $\mathcal{R}$. Model free algorithms aim to approximate an optimal policy $\pi^*$ without explicitly using either $\mathcal{P}$ or $\mathcal{R}$ in their calculations.
 
-A further categorization of algorithms is the notion of \textit{model free} and \textit{model based} algorithms. Consider a \textit{model} of an environment to be the transition function $\mathcal{P}$ and reward function $\mathcal{R}$. Model free algorithms aim to approximate an optimal policy without them. Model based algorithms are either given a prior model that they can use for planning \citep{browne2012survey, Soemers2014}, or they learn a representation via their own interaction with the environment \citep{Sutton1991, Guzdial2017}. 
-
-Curiosity! Learning a model of the environment to generate intrinsic reward (Reward shaping). \citep{Pathak2017}.
-
-Model based algorithms are either given a prior model that they can use for planning \citep{browne2012survey, Soemers2014}, or they learn a representation via their own interaction with the environment \citep{Sutton1991, Guzdial2017, Deisenroth2011}. Note that an advantage of learning your own model is that you can choose a representation of the environment that is relevant to the agent's actions, which can have the advantage of modelling uninteresting (but perhaps overly complicated) environment behaviour \citep{Pathak2017}. Another advantage of having a model is that it allows for forward planning, which is the main method of learning for search-based artificial intelligence (throw mcts papers here).
-
-
+Model based algorithms are either given a prior model that they can use for planning \citep{browne2012survey, Soemers2014}, or they learn a representation via their own interaction with the environment \citep{Sutton1991, Guzdial2017, Deisenroth2011}. Note that an advantage of learning a model specifically tailored for an agent, is that you can choose a representation of the environment that is relevant to the agent's decision making process. (Talk about curiosity and modelling only that you care about) \citep{Pathak2017}. Another advantage of having a model is that it allows for forward planning, which is the main method of learning for search-based artificial intelligence (throw mcts papers here).
 
 \end{document}
