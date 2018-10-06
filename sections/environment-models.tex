@@ -63,7 +63,7 @@ A major shortcoming of MDPs is that they assume stationary environments, which b
 
 ~\cite{Boutilier1996}~introduces Multi-agent Markov Decision Processes (MMDPs) as framework to study coordination mechanisms. MMDPs feature multiple agent policies, each of them submitting an individual action every timestep, which is executed as a joint action by the environment, producing a new state via the transition probability function. 
 
-A Multi-agent Markov Decission Process featuring $k$ agents is defined by a 5-element tuple \\ $(\mathcal{S}, \mathcal{A}_{1..k}, \mathcal{P}(\cdot, \cdot | \cdot, \cdot), \mathcal{R}(\cdot, \cdot), \gamma)$:
+A Multi-agent Markov Decission Process featuring $k$ agents is defined by a 5-element tuple \\ $(\mathcal{S}, \mathcal{A}_{1..k}, \mathcal{P}(\cdot, | \cdot, \cdot), \mathcal{R}(\cdot, \cdot), \gamma)$:
 \begin{itemize}
     \item $\mathcal{S}$ and $\gamma$ express the same concepts as in classical MDPs.
     \item $\mathcal{A}_{1..k}$ is a collection of action sets, one for each agent in the environment, with $\mathcal{A}_i$ corresponding to the action set of the $i$th agent.
